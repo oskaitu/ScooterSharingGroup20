@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ScooterShare</string>
+    <string name="inputName">Enter Döner Name</string>
+    <string name="inputLocation">Enter Kebab shop</string>
 </resources>
