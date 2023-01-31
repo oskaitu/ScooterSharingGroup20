@@ -10,7 +10,7 @@ import androidx.core.view.WindowCompat
 class MainActivity : AppCompatActivity() {
     // A set of private constants used in this class .
     companion object {
-        private val TAG = MainActivity :: class.qualifiedName
+        private val TAG = MainActivity :: class.git qualifiedName
     }
     // GUI variables .
     private lateinit var scooterName : EditText
