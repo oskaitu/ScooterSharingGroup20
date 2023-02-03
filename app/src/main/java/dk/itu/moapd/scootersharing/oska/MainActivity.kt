@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.view.WindowCompat
 
 class MainActivity : AppCompatActivity() {
@@ -39,10 +40,22 @@ class MainActivity : AppCompatActivity() {
                 val location = scooterLocation.text.toString().trim()
                 scooter.setName(name)
                 scooter.setLocation(location)
+                Toast.makeText(
+                    this,
+                    R.string.valid_scooter,
+                    Toast.LENGTH_SHORT
+                ) .show()
             // Reset the text fields and update the UI.
                 scooterName.text.clear()
                 scooterLocation.text.clear()
                 showMessage()
+            } else
+            {
+              Toast.makeText(
+                  this,
+                  R.string.invalid_scooter,
+                  Toast.LENGTH_SHORT
+              ).show()
             }
         }
     }

@@ -4,4 +4,7 @@
     <string name="StartButton">Start Ride</string>
     <string name="name_hint">Enter Scooter name</string>
     <string name="location_hint">Enter Your location</string>
+    <string name="valid_scooter">You picked a scooter!</string>
+    <string name="invalid_scooter">Please fill out both fields</string>
+
 </resources>
