@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 
 import androidx.core.view.WindowCompat
+import com.google.android.material.snackbar.Snackbar
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,15 +36,19 @@ class MainActivity : AppCompatActivity() {
             if (scooterName.text.isNotEmpty() &&
                 scooterLocation.text.isNotEmpty() ) {
         // Update the object attributes .
-                val name = scooterName.text.toString().trim()
 
+                val name = scooterName.text.toString().trim()
                 scooter.setName(name)
                 val location = scooterLocation.text.toString().trim()
                 scooter.setLocation(location)
-        // Reset the text fields and update the UI.
+                Snackbar.make(startRideButton, R.string.correct_information, Snackbar.LENGTH_SHORT).show()
+
+                // Reset the text fields and update the UI.
                 scooterName.text.clear()
                 scooterLocation.text.clear()
                 showMessage()
+            } else {
+                Snackbar.make(startRideButton, R.string.invalid_information, Snackbar.LENGTH_SHORT).show()
             }
         }
     }

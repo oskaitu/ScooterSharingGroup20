@@ -2,4 +2,6 @@
     <string name="app_name">ScooterShare</string>
     <string name="inputName">Enter Döner Name</string>
     <string name="inputLocation">Enter Kebab shop</string>
+    <string name="invalid_information">Add information to text fields!</string>
+    <string name="correct_information">You have chosen a kebab shop!</string>
 </resources>
