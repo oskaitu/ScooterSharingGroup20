@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#D1D1D1">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,7 +16,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <EditText
             android:id="@+id/scooter_name"
@@ -23,6 +25,8 @@
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:hint="@string/name_hint"
+            android:drawableLeft="@drawable/logo_scooter"
+            android:drawablePadding="2dp"
             android:inputType="text"
             android:minHeight="48dp" />
 
@@ -33,7 +37,10 @@
             android:autofillHints=""
             android:hint="@string/location_hint"
             android:inputType="text"
+            android:drawableLeft="@drawable/icon_location"
+            android:drawablePadding="2dp"
             android:minHeight="48dp"
+
             tools:ignore="VisualLintTextFieldSize" />
 
         <Button
