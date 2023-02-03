@@ -1,12 +1,15 @@
 package dk.itu.moapd.scootersharing.oska
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.WindowCompat
+import com.google.android.material.snackbar.Snackbar
+
 
 class MainActivity : AppCompatActivity() {
     // A set of private constants used in this class .
@@ -40,22 +43,23 @@ class MainActivity : AppCompatActivity() {
                 val location = scooterLocation.text.toString().trim()
                 scooter.setName(name)
                 scooter.setLocation(location)
-                Toast.makeText(
-                    this,
+                Snackbar.make(
+                    startRideButton,
                     R.string.valid_scooter,
-                    Toast.LENGTH_SHORT
-                ) .show()
+                    Snackbar.LENGTH_SHORT)
+                    .show()
+
             // Reset the text fields and update the UI.
                 scooterName.text.clear()
                 scooterLocation.text.clear()
                 showMessage()
             } else
             {
-              Toast.makeText(
-                  this,
-                  R.string.invalid_scooter,
-                  Toast.LENGTH_SHORT
-              ).show()
+                Snackbar.make(
+                    startRideButton,
+                    R.string.invalid_scooter,
+                    Snackbar.LENGTH_SHORT)
+                    .show()
             }
         }
     }
