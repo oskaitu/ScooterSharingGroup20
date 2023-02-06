@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var scooterName : EditText
     private lateinit var scooterLocation : EditText
     private lateinit var startRideButton : Button
+    private lateinit var infoText : TextView
 
     private val scooter : Scooter = Scooter ("", "")
 
@@ -34,6 +36,9 @@ class MainActivity : AppCompatActivity() {
 
         // Buttons .
         startRideButton = findViewById(R.id.register_button)
+
+        //info
+        infoText = findViewById(R.id.welcome_screen_text)
 
         startRideButton . setOnClickListener {
             if ( scooterName.text.isNotEmpty() &&
@@ -55,6 +60,8 @@ class MainActivity : AppCompatActivity() {
                 showMessage()
             } else
             {
+                var text = "API level " + applicationInfo.targetSdkVersion.toString()
+                infoText.text = text
                 Snackbar.make(
                     startRideButton,
                     R.string.invalid_scooter,
