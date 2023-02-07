@@ -1,5 +1,6 @@
 package dk.itu.moapd.scootersharing.oska
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                 showMessage()
             } else
             {
-                var text = "API level " + applicationInfo.targetSdkVersion.toString()
+                var text = getAPILevel()
                 infoText.text = text
                 Snackbar.make(
                     startRideButton,
@@ -73,6 +74,13 @@ class MainActivity : AppCompatActivity() {
     private fun showMessage () {
 // Print a message in the ‘Logcat ‘ system .
         Log.d (TAG,scooter.toString())
+    }
+
+    private fun getAPILevel () :String {
+        return buildString {
+        append("API level ")
+        append(Build.VERSION.SDK_INT)
+    }
     }
 
 }
