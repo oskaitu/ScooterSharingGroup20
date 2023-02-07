@@ -1,28 +1,9 @@
 package dk.itu.moapd.scootersharing.oska
-
-class Scooter {
-    private var name : String
-    private var location : String
-
-    constructor ( name : String , location : String ) {
-        this . name = name
-        this . location = location
-    }
-
-    fun getName () : String {
-        return name
-        4
-    }
-    fun setName ( name : String ) {
-        this . name = name
-    }
-    fun getLocation () : String {
-        return location
-    }
-    fun setLocation ( location : String ) {
-        this . location = location
-    }
-    override fun toString () : String {
-        return "[ Scooter ] $name is placed at $location ."
+data class Scooter(
+    var _name: String,
+    var _location: String
+) {
+    override fun toString(): String {
+        return "[ Scooter ] $_name is placed at $_location ."
     }
 }
