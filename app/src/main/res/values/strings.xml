@@ -2,10 +2,14 @@
     <string name="app_name">ScooterShare</string>
     <string name="question_text">Welcome to ScooterShare</string>
     <string name="StartButton">Start Ride</string>
+    <string name="UpdateButton">Update Ride</string>
     <string name="name_hint">Enter Scooter name</string>
     <string name="location_hint">Enter Your location</string>
     <string name="valid_scooter">You picked a scooter!</string>
     <string name="invalid_scooter">Please fill out both fields</string>
     <string name="API">Check API</string>
+    <string name="Blank"></string>
+    <string name="edit_location_hint">Enter Scooter Location</string>
+
 
 </resources>

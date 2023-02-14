@@ -24,6 +24,7 @@ SOFTWARE.
 
 package dk.itu.moapd.scootersharing.oska
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -34,15 +35,9 @@ import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    // A set of private constants used in this class .
-    companion object {
-        private val TAG = MainActivity :: class.qualifiedName
-    }
     // GUI variables .
     private lateinit var binding : ActivityMainBinding
     private lateinit var workableBinding : ActivityMainBinding
-
-    private val scooter : Scooter = Scooter ("", "")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -54,44 +49,19 @@ class MainActivity : AppCompatActivity() {
 
 
         with(workableBinding) {
-
-
             registerButton.setOnClickListener { view ->
-                view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-
-                if (scooterName.text.isNotEmpty() &&
-                    locationName.text.isNotEmpty()
-                ) {
-                    // Update the object attributes .
-                    val name = scooterName.text.toString().trim()
-                    val location = locationName.text.toString().trim()
-                    scooter._name = name
-                    scooter._location = location
-                    Snackbar.make(
-                        registerButton,
-                        R.string.valid_scooter,
-                        Snackbar.LENGTH_SHORT
-                    )
-                        .show()
-
-                    // Reset the text fields and update the UI.
-                    scooterName.text.clear()
-                    locationName.text.clear()
-                    showMessage()
-                } else {
-                    Snackbar.make(
-                        registerButton,
-                        R.string.invalid_scooter,
-                        Snackbar.LENGTH_SHORT
-                    )
-                        .show()
-                }
+                val intent = Intent(view.context,StartRideActivity::class.java)
+                startActivity(intent)
             }
+            updateButton.setOnClickListener { view ->
+                val intent = Intent(view.context,UpdateRideActivity::class.java)
+                startActivity(intent)
+            }
+
             APIButton.setOnClickListener { view ->
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-                if(APIversion.text.equals(""))
-                {
-                    var text = getAPILevel()
+                if (APIversion.text.equals("")) {
+                    val text = getAPILevel()
                     APIversion.text = text
                 } else {
                     APIversion.text = ""
@@ -102,21 +72,8 @@ class MainActivity : AppCompatActivity() {
 
 
         }
-
     }
 
-    /**
-     * Our logger function
-     */
-    private fun showMessage () {
-// Print a message in the ‘Logcat ‘ system .
-        Log.d (TAG,scooter.toString())
-    }
-
-    /**
-     * Returns device current android version
-     * @return String containing version number
-     */
     private fun getAPILevel () :String {
         return buildString {
         append("API level ")
