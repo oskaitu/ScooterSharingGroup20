@@ -4,4 +4,9 @@
     <string name="inputLocation">Enter Location</string>
     <string name="invalid_information">Add information to text fields!</string>
     <string name="correct_information">You have chosen a Scooter!</string>
+    <string name="app_title_name">Scooter sharing</string>
+    <string name="start_ride_button">Start ride</string>
+    <string name="update_ride_button">Update ride</string>
+
+
 </resources>
