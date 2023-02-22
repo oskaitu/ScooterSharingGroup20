@@ -44,7 +44,6 @@ class StartRideActivity : AppCompatActivity() {
                     // Update the object attributes .
                     val name = scooterName.text.toString().trim()
                     val location = locationName.text.toString().trim()
-                    scooter._name = name
                     scooter._location = location
                     scooter._timestamp = System.currentTimeMillis()
                     Snackbar.make(

@@ -38,10 +38,15 @@ class MainActivity : AppCompatActivity() {
     // GUI variables .
     private lateinit var binding : ActivityMainBinding
     private lateinit var workableBinding : ActivityMainBinding
+    companion object {
+        lateinit var ridesDB : RidesDB
+    }
+    var selectedScooter = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+        ridesDB = RidesDB.get(this)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         workableBinding = ActivityMainBinding.bind(binding.root)

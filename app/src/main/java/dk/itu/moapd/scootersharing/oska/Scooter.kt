@@ -3,7 +3,7 @@ package dk.itu.moapd.scootersharing.oska
 import java.sql.Timestamp
 
 data class Scooter(
-    var _name: String,
+    val _name: String,
     var _location: String,
     var _timestamp: Long
 ) {
