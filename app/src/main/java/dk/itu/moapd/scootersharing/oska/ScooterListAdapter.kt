@@ -1,34 +1,47 @@
 package dk.itu.moapd.scootersharing.oska
 
-import android.text.Layout
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import dk.itu.moapd.scootersharing.oska.databinding.ListItemScooterBinding
+import android.widget.ArrayAdapter
+import android.widget.TextView
+import java.util.Date
 
-class ScooterHolder (
-    val binding: ListItemScooterBinding
-)   : RecyclerView.ViewHolder(binding.root) {
-}
+class ScooterListAdapter(context: Context, private var resource: Int, data: List<Scooter>) :
+    ArrayAdapter<Scooter>(context, R.layout.list_item_scooter, data) {
 
-class ScooterListAdapter(
-    private val scooter: List<Scooter>)
-    :RecyclerView.Adapter<ScooterHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScooterHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ListItemScooterBinding.inflate(inflater, parent, false)
-        return  ScooterHolder(binding)
+    companion object {
+        private val TAG = ScooterListAdapter::class.qualifiedName
+    }
+    private class ViewHolder(view: View) {
+        val name: TextView = view.findViewById(R.id.scooter_name)
+        val location: TextView = view.findViewById(R.id.scooter_location)
+        val timestamp: TextView = view.findViewById(R.id.scooter_time)
     }
 
-    override fun getItemCount(): Int {
-       return scooter.size
-    }
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View{
 
-    override fun onBindViewHolder(holder: ScooterHolder, position: Int) {
-        val scooter = scooter[position]
-        holder.apply {
-            binding.scooterName.text = scooter._name
-            binding.scooterDate.text = scooter._timestamp.toString()
-        }
+        var view = convertView
+        val viewHolder : ViewHolder
+
+        if (view == null){
+            val inflater = LayoutInflater.from(context)
+            view = inflater.inflate(resource, parent,false)
+            viewHolder = ViewHolder(view)
+        } else
+            viewHolder = view.tag as ViewHolder
+
+        val scooter = getItem(position)
+
+        Log.d(TAG, "populate $position")
+
+        viewHolder.name.text = parent.context.getString(R.string.name, scooter?._name)
+        viewHolder.location.text = parent.context.getString(R.string.location, scooter?._location)
+        viewHolder.timestamp.text = parent.context.getString(R.string.time, Date(scooter?._timestamp!!))
+
+        view?.tag = viewHolder
+        return view!!
     }
 }

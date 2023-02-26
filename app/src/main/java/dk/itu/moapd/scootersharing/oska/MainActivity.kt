@@ -27,12 +27,11 @@ package dk.itu.moapd.scootersharing.oska
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.HapticFeedbackConstants
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.ViewModel
-import com.google.android.material.snackbar.Snackbar
+import androidx.core.view.isInvisible
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -41,24 +40,24 @@ class MainActivity : AppCompatActivity() {
     private lateinit var workableBinding : ActivityMainBinding
     companion object {
         lateinit var ridesDB : RidesDB
-        lateinit var fragment : ScooterListFragment
+        private lateinit var adapter: ScooterListAdapter
     }
-    var selectedScooter = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         ridesDB = RidesDB.get(this)
-        println("testing")
-        fragment= ScooterListFragment()
-
-        "fragment should be live"
+        adapter = ScooterListAdapter(this,R.layout.list_item_scooter, ridesDB.getRidesList())
         binding = ActivityMainBinding.inflate(layoutInflater)
+
+        binding.scooterList.adapter = adapter
+
         workableBinding = ActivityMainBinding.bind(binding.root)
         setContentView(binding.root)
 
 
         with(workableBinding) {
+            scooterList.visibility= View.INVISIBLE
             registerButton.setOnClickListener { view ->
                 val intent = Intent(view.context,StartRideActivity::class.java)
                 startActivity(intent)
@@ -77,9 +76,15 @@ class MainActivity : AppCompatActivity() {
                     APIversion.text = ""
                 }
 
-
             }
-
+            ScooterListButton.setOnClickListener { view ->
+                view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+                if(scooterList.isInvisible){
+                    scooterList.visibility=View.VISIBLE
+                } else {
+                    scooterList.visibility=View.INVISIBLE
+                }
+            }
 
         }
     }
@@ -90,15 +95,7 @@ class MainActivity : AppCompatActivity() {
         append(Build.VERSION.SDK_INT)
     }
     }
-    class ScooterListViewModel : ViewModel () {
-        val scooters = ridesDB.getRidesList()
 
-        init {
-            for (scooter in scooters) {
-                println(scooter._name)
-            }
-        }
-    }
 }
 
 

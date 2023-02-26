@@ -10,6 +10,10 @@
     <string name="API">Check API</string>
     <string name="Blank"></string>
     <string name="edit_location_hint">Enter Scooter Location</string>
+    <string name="name">%s</string>
+    <string name="location">%s</string>
+    <string name="time">%s</string>
+    <string name="ListRides">List Rides</string>
 
 
 </resources>

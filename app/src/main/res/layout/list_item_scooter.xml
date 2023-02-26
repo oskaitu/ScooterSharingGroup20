@@ -9,11 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/scooter_name"
-        android:text="Scooter Name"/>
+        android:text="@string/name"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/scooter_date"
-        android:text="Booking date"/>
+        android:id="@+id/scooter_location"
+        android:text="@string/location"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scooter_time"
+        android:text="@string/time"/>
 
 </LinearLayout>
