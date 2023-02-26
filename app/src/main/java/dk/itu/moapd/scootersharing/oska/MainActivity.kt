@@ -29,9 +29,12 @@ import android.os.Build
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.View
+import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.view.get
 import androidx.core.view.isInvisible
+import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -41,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         lateinit var ridesDB : RidesDB
         private lateinit var adapter: ScooterListAdapter
+        var selectedScooter : Scooter = Scooter("error","error",System.currentTimeMillis())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         workableBinding = ActivityMainBinding.bind(binding.root)
         setContentView(binding.root)
+
 
 
         with(workableBinding) {
@@ -85,6 +90,15 @@ class MainActivity : AppCompatActivity() {
                     scooterList.visibility=View.INVISIBLE
                 }
             }
+        scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
+            selectedScooter= ridesDB.getCurrentScooter(i)!!
+            Snackbar.make(
+                scooterList,
+                ridesDB.getCurrentScooterInfo(i)
+                ,Snackbar.LENGTH_SHORT
+            ).show()
+
+        }
 
         }
     }

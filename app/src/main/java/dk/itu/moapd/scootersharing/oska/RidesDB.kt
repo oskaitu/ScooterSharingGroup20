@@ -17,6 +17,7 @@ class RidesDB private constructor ( context : Context ) {
         rides . add (
             Scooter (" CPH003 ", " Lufthavn ", randomDate () )
         )
+
         // TODO : You can add more ‘Scooter ‘ objects if you want to.
     }
     fun getRidesList () : List < Scooter > {
@@ -27,15 +28,15 @@ class RidesDB private constructor ( context : Context ) {
         Scooter(name,location,randomDate())
     )
     }
-    fun updateCurrentScooter ( location: String, name : String) {
-        rides.find {it==getCurrentScooter(name)}?._location=location
+    fun updateCurrentScooter ( location: Long, number: Int) {
+        rides.get(number)._timestamp=location
     }
 
-    fun getCurrentScooter (name : String) : Scooter? {
-    return rides.find {it._name==name}
+    fun getCurrentScooter (number : Int) : Scooter? {
+    return rides.get(number)
     }
-    fun getCurrentScooterInfo (name : String) : String {
-    return getCurrentScooter(name).toString()
+    fun getCurrentScooterInfo (number : Int) : String {
+    return getCurrentScooter(number).toString()
     }
 
 
