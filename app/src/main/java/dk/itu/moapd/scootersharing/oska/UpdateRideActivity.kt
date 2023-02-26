@@ -37,7 +37,6 @@ class UpdateRideActivity : AppCompatActivity() {
                     editLocationName.text.isNotEmpty()){
                     val name = editTextName.text.toString().trim()
                     val location = editLocationName.text.toString().trim()
-                    scooter._name = name
                     scooter._location = location
                     scooter._timestamp = System.currentTimeMillis()
 

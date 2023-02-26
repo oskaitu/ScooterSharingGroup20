@@ -9,12 +9,16 @@ import android.widget.EditText
 import androidx.core.view.WindowCompat
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityStartRideBinding
+import java.util.*
 
 
 class StartRideActivity : AppCompatActivity() {
     /*companion object {
         private val TAG = MainActivity::class.qualifiedName
     }*/
+    companion object {
+        lateinit var ridesDB : RidesDB
+    }
 
     private lateinit var binding: ActivityStartRideBinding
 
@@ -23,6 +27,8 @@ class StartRideActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         //WindowCompat.setDecorFitsSystemWindows(window , false )
         super.onCreate(savedInstanceState)
+
+        ridesDB = RidesDB.get(this)
 
         // Edit texts .
         binding = ActivityStartRideBinding.inflate(layoutInflater)
@@ -37,10 +43,10 @@ class StartRideActivity : AppCompatActivity() {
                     editLocationName.text.isNotEmpty()){
                     val name = editTextName.text.toString().trim()
                     val location = editLocationName.text.toString().trim()
-                    scooter._name = name
                     scooter._location = location
                     scooter._timestamp = System.currentTimeMillis()
 
+                    ridesDB.addScooter(name,location)
                     Snackbar.make(view, "Ride started using scooter = ${binding.editTextName.text}, " +
                             "On location ${binding.editLocationName.text} ", Snackbar.LENGTH_SHORT).show()
 

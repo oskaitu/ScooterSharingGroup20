@@ -7,6 +7,10 @@
     <string name="app_title_name">Scooter sharing</string>
     <string name="start_ride_button">Start ride</string>
     <string name="update_ride_button">Update ride</string>
+    <string name="name">%s</string>
+    <string name="location">%s</string>
+    <string name="time">%s</string>
+
 
 
 </resources>

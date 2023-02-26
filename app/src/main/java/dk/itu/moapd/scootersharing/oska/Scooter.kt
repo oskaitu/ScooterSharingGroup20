@@ -1,11 +1,12 @@
 package dk.itu.moapd.scootersharing.oska
 
-data class Scooter (var _name: String, var _location: String, var _timestamp: Long ){
+data class Scooter (val _name: String, var _location: String, var _timestamp: Long ){
 
 
     override fun toString(): String {
-        return "[ Scooter ] $_name is placed at $_location ."
+        return "$_name : $_location $_timestamp"
     }
+
 
 
 }
