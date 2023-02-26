@@ -18,11 +18,11 @@ class UpdateRideActivity : AppCompatActivity() {
 
     private val scooter: Scooter = Scooter("", "", 0)
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_ride)
-
         binding = ActivityUpdateRideBinding.inflate(layoutInflater)
         workableBinding = ActivityUpdateRideBinding.bind(binding.root)
         setContentView(binding.root)

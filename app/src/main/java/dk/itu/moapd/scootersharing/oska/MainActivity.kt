@@ -31,6 +31,7 @@ import android.util.Log
 import android.view.HapticFeedbackConstants
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.ViewModel
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var workableBinding : ActivityMainBinding
     companion object {
         lateinit var ridesDB : RidesDB
+        lateinit var fragment : ScooterListFragment
     }
     var selectedScooter = null
 
@@ -47,7 +49,10 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         ridesDB = RidesDB.get(this)
+        println("testing")
+        fragment= ScooterListFragment()
 
+        "fragment should be live"
         binding = ActivityMainBinding.inflate(layoutInflater)
         workableBinding = ActivityMainBinding.bind(binding.root)
         setContentView(binding.root)
@@ -85,5 +90,15 @@ class MainActivity : AppCompatActivity() {
         append(Build.VERSION.SDK_INT)
     }
     }
+    class ScooterListViewModel : ViewModel () {
+        val scooters = ridesDB.getRidesList()
 
+        init {
+            for (scooter in scooters) {
+                println(scooter._name)
+            }
+        }
+    }
 }
+
+
