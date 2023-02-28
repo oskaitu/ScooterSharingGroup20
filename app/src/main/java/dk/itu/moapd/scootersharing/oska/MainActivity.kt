@@ -38,19 +38,20 @@ import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     // GUI variables .
-    private lateinit var binding : ActivityMainBinding
-    private lateinit var workableBinding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var workableBinding: ActivityMainBinding
+
     companion object {
-       // lateinit var ridesDB : RidesDB
+        lateinit var ridesDB: RidesDB
         private lateinit var adapter: ScooterListAdapter
-        var selectedScooter : Scooter = Scooter("error","error",System.currentTimeMillis())
+        var selectedScooter: Scooter = Scooter("error", "error", System.currentTimeMillis())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        //ridesDB = RidesDB.get(this)
-        //adapter = ScooterListAdapter(this,R.layout.list_item_scooter, ridesDB.getRidesList())
+        ridesDB = RidesDB.get(this)
+        adapter = ScooterListAdapter(this, R.layout.list_item_scooter, ridesDB.getRidesList())
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         binding.scooterList.adapter = adapter
@@ -61,13 +62,13 @@ class MainActivity : AppCompatActivity() {
 
 
         with(workableBinding) {
-            scooterList.visibility= View.INVISIBLE
+            scooterList.visibility = View.INVISIBLE
             registerButton.setOnClickListener { view ->
-                val intent = Intent(view.context,StartRideActivity::class.java)
+                val intent = Intent(view.context, StartRideActivity::class.java)
                 startActivity(intent)
             }
             updateButton.setOnClickListener { view ->
-                val intent = Intent(view.context,UpdateRideActivity::class.java)
+                val intent = Intent(view.context, UpdateRideActivity::class.java)
                 startActivity(intent)
             }
 
@@ -83,32 +84,32 @@ class MainActivity : AppCompatActivity() {
             }
             ScooterListButton.setOnClickListener { view ->
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-                if(scooterList.isInvisible){
-                    scooterList.visibility=View.VISIBLE
+                if (scooterList.isInvisible) {
+                    scooterList.visibility = View.VISIBLE
                 } else {
-                    scooterList.visibility=View.INVISIBLE
+                    scooterList.visibility = View.INVISIBLE
                 }
             }
-            /*
-        scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
-            selectedScooter= ridesDB.getCurrentScooter(i)!!
-            Snackbar.make(
-                scooterList,
-                //ridesDB.getCurrentScooterInfo(i)
-                ,Snackbar.LENGTH_SHORT
-            ).show()
-        */
-        }
+
+            scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
+                selectedScooter = ridesDB.getCurrentScooter(i)!!
+                Snackbar.make(
+                    scooterList,
+                    ridesDB.getCurrentScooterInfo(i), Snackbar.LENGTH_SHORT
+                ).show()
+
+            }
 
         }
     }
 
-    private fun getAPILevel () :String {
+    private fun getAPILevel(): String {
         return buildString {
-        append("API level ")
-        append(Build.VERSION.SDK_INT)
+            append("API level ")
+            append(Build.VERSION.SDK_INT)
+        }
     }
-    }
+}
 
 
 
