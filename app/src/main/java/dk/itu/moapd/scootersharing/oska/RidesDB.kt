@@ -19,6 +19,30 @@ class RidesDB private constructor(context: Context){
         rides.add(
             Scooter("CPH003", "Finland", randomDate())
         )
+        rides.add(
+            Scooter("CPH003", "Finland", randomDate())
+        )
+        rides.add(
+            Scooter("CPH003", "Finland", randomDate())
+        )
+        rides.add(
+            Scooter("CPH003", "Finland", randomDate())
+        )
+        rides.add(
+            Scooter("CPH003", "Finland", randomDate())
+        )
+        rides.add(
+            Scooter("CPH003", "Finland", randomDate())
+        )
+        rides.add(
+            Scooter("CPH003", "Finland", randomDate())
+        )
+        rides.add(
+            Scooter("CPH003", "Finland", randomDate())
+        )
+        rides.add(
+            Scooter("CPH003", "Finland", randomDate())
+        )
     }
 
     fun getRidesList(): List<Scooter> {
@@ -28,17 +52,17 @@ class RidesDB private constructor(context: Context){
         rides.add(Scooter(name, location, randomDate()))
     }
 
-    fun updateCurrentScooter(name: String, location: String){
-       rides.find { it._name == name }?._location = location
+    fun updateCurrentScooter(time: Long, number: Int){
+       rides.get(number)._timestamp=time
 
     }
 
-    fun getCurrentScooter(name: String): Scooter? {
-        return rides.find { it._name == name}
+    fun getCurrentScooter(number: Int): Scooter? {
+        return rides.get(number)
     }
 
-    fun getCurrentScooterInfo(name: String): String {
-        return getCurrentScooter(name).toString()
+    fun getCurrentScooterInfo(number: Int): String {
+        return getCurrentScooter(number).toString()
     }
 
 
