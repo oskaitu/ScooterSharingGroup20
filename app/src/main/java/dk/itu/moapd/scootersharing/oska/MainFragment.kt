@@ -15,8 +15,10 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.WindowCompat
 import androidx.core.view.isInvisible
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
@@ -27,7 +29,7 @@ import kotlin.math.log
  *
  *
  */
-public class MainFragment : AppCompatActivity() {
+public class MainFragment : Fragment() {
 
 
     private var _binding: FragmentMainBinding? = null
@@ -47,23 +49,18 @@ public class MainFragment : AppCompatActivity() {
     }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        //WindowCompat.setDecorFitsSystemWindows(window , false )
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = = FragmentMainBinding.inflate(inflater, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
 
 
-        ridesDB = RidesDB.get(this)
+        ridesDB = RidesDB.get(requireContext())
         var list = ridesDB.getRidesList()
 
-        adapter = CustomArrayAdapter(this, R.layout.scooter_list_item, list)
+        adapter = CustomArrayAdapter(requireContext(), R.layout.scooter_list_item, list)
 
         binding.scooterList.adapter = adapter
 
