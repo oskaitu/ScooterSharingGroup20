@@ -24,19 +24,19 @@ class RidesDB private constructor ( context : Context ) {
         return rides
     }
     fun addScooter ( name : String , location : String ) {
-    rides.add(
-        Scooter(name,location,randomDate())
-    )
+        rides.add(
+            Scooter(name,location,randomDate())
+        )
     }
     fun updateCurrentScooter ( location: Long, number: Int) {
         rides.get(number)._timestamp=location
     }
 
     fun getCurrentScooter (number : Int) : Scooter? {
-    return rides.get(number)
+        return rides.get(number)
     }
     fun getCurrentScooterInfo (number : Int) : String {
-    return getCurrentScooter(number).toString()
+        return getCurrentScooter(number).toString()
     }
 
 

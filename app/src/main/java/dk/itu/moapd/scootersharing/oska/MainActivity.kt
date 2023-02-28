@@ -32,7 +32,6 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import androidx.core.view.get
 import androidx.core.view.isInvisible
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     private lateinit var workableBinding : ActivityMainBinding
     companion object {
-        lateinit var ridesDB : RidesDB
+       // lateinit var ridesDB : RidesDB
         private lateinit var adapter: ScooterListAdapter
         var selectedScooter : Scooter = Scooter("error","error",System.currentTimeMillis())
     }
@@ -50,8 +49,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        ridesDB = RidesDB.get(this)
-        adapter = ScooterListAdapter(this,R.layout.list_item_scooter, ridesDB.getRidesList())
+        //ridesDB = RidesDB.get(this)
+        //adapter = ScooterListAdapter(this,R.layout.list_item_scooter, ridesDB.getRidesList())
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         binding.scooterList.adapter = adapter
@@ -90,14 +89,15 @@ class MainActivity : AppCompatActivity() {
                     scooterList.visibility=View.INVISIBLE
                 }
             }
+            /*
         scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
             selectedScooter= ridesDB.getCurrentScooter(i)!!
             Snackbar.make(
                 scooterList,
-                ridesDB.getCurrentScooterInfo(i)
+                //ridesDB.getCurrentScooterInfo(i)
                 ,Snackbar.LENGTH_SHORT
             ).show()
-
+        */
         }
 
         }
@@ -110,6 +110,5 @@ class MainActivity : AppCompatActivity() {
     }
     }
 
-}
 
 
