@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_main">
+
+
+    <fragment
+        android:id="@+id/fragment_main"
+        android:name="dk.itu.moapd.scootersharing.oska.MainFragment"
+        android:label="@string/fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/show_startride_fragment"
+            app:destination="@id/show_startride_fragment" />
+        <action
+            android:id="@+id/show_update_fragment"
+            app:destination="@id/show_update_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/show_startride_fragment"
+        android:name="dk.itu.moapd.scootersharing.oska.StartRideFragment"
+        tools:layout="@layout/fragment_start_ride">
+
+    </fragment>
+    <fragment
+        android:id="@+id/show_update_fragment"
+        android:name="dk.itu.moapd.scootersharing.oska.UpdateRideFragment"
+        tools:layout="@layout/fragment_update_ride">
+
+    </fragment>
+</navigation>

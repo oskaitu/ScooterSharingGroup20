@@ -19,6 +19,7 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.WindowCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
@@ -73,14 +74,19 @@ public class MainFragment : Fragment() {
 
             scooterList.visibility= View.INVISIBLE
 
-            StartRideButton.setOnClickListener(){ view ->
+            StartRideButton.setOnClickListener(){
+                findNavController().navigate(
+                    R.id.show_startride_fragment
+                )
+
+
+            /*view ->
                 val intent = Intent(view.context, StartRideActivity::class.java)
-                startActivity(intent)
+                startActivity(intent)*/
 
             }
-            UpdateRideButton.setOnClickListener(){view ->
-                val intent = Intent(view.context, UpdateRideActivity::class.java)
-                startActivity(intent)
+            UpdateRideButton.setOnClickListener(){
+                findNavController().navigate(R.id.show_update_fragment)
 
             }
             ShowListButton.setOnClickListener(){view ->

@@ -4,42 +4,61 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.HapticFeedbackConstants
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import dk.itu.moapd.scootersharing.oska.databinding.ActivityUpdateRideBinding
+
+import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
+import dk.itu.moapd.scootersharing.oska.databinding.FragmentStartRideBinding
+import java.util.*
 
 
-class UpdateRideActivity : AppCompatActivity() {
+class StartRideFragment : Fragment() {
     /*companion object {
         private val TAG = MainActivity::class.qualifiedName
     }*/
+    companion object {
+        lateinit var ridesDB : RidesDB
+        private lateinit var adapter: CustomArrayAdapter
+        var selectedScooter : Scooter = Scooter("error","error",System.currentTimeMillis())
+    }
 
-    private lateinit var binding: ActivityUpdateRideBinding
+    private lateinit var _binding: FragmentStartRideBinding
+    private val binding
+        get() = checkNotNull(_binding) {
 
-    private val scooter: Scooter = Scooter ("", "",0)
+        }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentStartRideBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         //WindowCompat.setDecorFitsSystemWindows(window , false )
         super.onCreate(savedInstanceState)
 
-        // Edit texts .
-        binding = ActivityUpdateRideBinding.inflate(layoutInflater)
+        ridesDB = RidesDB.get(requireContext())
 
-        setContentView(binding.root)
+
 
         with (binding) {
-            UpdateRideButton.setOnClickListener(){ view ->
+            RideButton.setOnClickListener(){ view ->
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
 
                 if(editTextName.text.isNotEmpty() &&
                     editLocationName.text.isNotEmpty()){
                     val name = editTextName.text.toString().trim()
                     val location = editLocationName.text.toString().trim()
-                    scooter._location = location
-                    scooter._timestamp = System.currentTimeMillis()
+                    selectedScooter._location = location
+                    selectedScooter._timestamp = System.currentTimeMillis()
 
+                    ridesDB.addScooter(name,location)
                     Snackbar.make(view, "Ride started using scooter = ${binding.editTextName.text}, " +
                             "On location ${binding.editLocationName.text} ", Snackbar.LENGTH_SHORT).show()
 

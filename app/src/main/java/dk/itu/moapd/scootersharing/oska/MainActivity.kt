@@ -13,6 +13,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.WindowCompat
 import androidx.core.view.isInvisible
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import kotlin.math.log
@@ -37,57 +38,21 @@ public class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         //WindowCompat.setDecorFitsSystemWindows(window , false )
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-
-        ridesDB = RidesDB.get(this)
-        var list = ridesDB.getRidesList()
-
-        adapter = CustomArrayAdapter(this, R.layout.scooter_list_item, list)
-
-        binding.scooterList.adapter = adapter
-
-
-        //binding.scooterList.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, a)
-       // binding.scooterList.adapter = ArrayAdapter(this, R.layout.scooter_list_item, R.id.scooter_name_item, list)
 
         setContentView(binding.root)
 
-        with (binding) {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.fragment_container) as NavHostFragment
+        val navController = navHostFragment.navController
 
-            scooterList.visibility= View.INVISIBLE
-
-            StartRideButton.setOnClickListener(){ view ->
-                val intent = Intent(view.context, StartRideActivity::class.java)
-                startActivity(intent)
-
-                 }
-            UpdateRideButton.setOnClickListener(){view ->
-                val intent = Intent(view.context, UpdateRideActivity::class.java)
-                startActivity(intent)
-
-            }
-            ShowListButton.setOnClickListener(){view ->
-                view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-                if(scooterList.isInvisible){
-                    scooterList.visibility= View.VISIBLE
-                } else {
-                    scooterList.visibility=View.INVISIBLE
-                }
-            }
-            scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
-                selectedScooter = ridesDB.getCurrentScooter(i)!!
-                Snackbar.make(
-                    scooterList,
-                    ridesDB.getCurrentScooterInfo(i), Snackbar.LENGTH_SHORT
-                ).show()
-            }
-
+        
 
         }
     }
 
-}
+
 
 
 
