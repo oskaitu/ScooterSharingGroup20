@@ -53,12 +53,12 @@ class RidesDB private constructor(context: Context){
     }
 
     fun updateCurrentScooter(time: Long, number: Int){
-       rides.get(number)._timestamp=time
+       rides[number]._timestamp=time
 
     }
 
     fun getCurrentScooter(number: Int): Scooter? {
-        return rides.get(number)
+        return rides[number]
     }
 
     fun getCurrentScooterInfo(number: Int): String {

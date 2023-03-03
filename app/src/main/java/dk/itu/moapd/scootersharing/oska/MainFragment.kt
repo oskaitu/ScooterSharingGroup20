@@ -2,6 +2,7 @@ package dk.itu.moapd.scootersharing.oska
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.AttributeSet
@@ -84,6 +85,16 @@ public class MainFragment : Fragment() {
                 val intent = Intent(view.context, StartRideActivity::class.java)
                 startActivity(intent)*/
 
+                APIButton.setOnClickListener { view ->
+                    view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+                    if (APIversion.text.equals("")) {
+                        val text = getAPILevel()
+                        APIversion.text = text
+                    } else {
+                        APIversion.text = ""
+                    }
+                }
+
             }
             UpdateRideButton.setOnClickListener(){
                 findNavController().navigate(R.id.show_update_fragment)
@@ -112,6 +123,15 @@ public class MainFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun getAPILevel () :String {
+        return buildString {
+            append("API level ")
+            append(Build.VERSION.SDK_INT)
+        }
+    }
+
+
 
 }
 
