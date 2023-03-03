@@ -47,6 +47,7 @@ public class MainFragment : Fragment() {
     companion object {
         lateinit var ridesDB : RidesDB
         private lateinit var adapter: CustomArrayAdapter
+        //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
         var selectedScooter : Scooter = Scooter("error","error",System.currentTimeMillis())
     }
 
