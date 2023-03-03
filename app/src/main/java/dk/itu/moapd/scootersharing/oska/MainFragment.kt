@@ -75,27 +75,29 @@ public class MainFragment : Fragment() {
 
             scooterList.visibility= View.INVISIBLE
 
-            StartRideButton.setOnClickListener(){
+            StartRideButton.setOnClickListener() {
                 findNavController().navigate(
                     R.id.show_startride_fragment
                 )
 
 
-            /*view ->
+                /*view ->
                 val intent = Intent(view.context, StartRideActivity::class.java)
                 startActivity(intent)*/
+            }
 
-                APIButton.setOnClickListener { view ->
+            APIButton.setOnClickListener() { view ->
+
                     view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                     if (APIversion.text.equals("")) {
                         val text = getAPILevel()
+
                         APIversion.text = text
                     } else {
                         APIversion.text = ""
                     }
-                }
-
             }
+
             UpdateRideButton.setOnClickListener(){
                 findNavController().navigate(R.id.show_update_fragment)
 
