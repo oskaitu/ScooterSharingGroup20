@@ -1,37 +1,22 @@
 package dk.itu.moapd.scootersharing.oska
 
-import android.content.Context
-import android.content.Intent
+
+import android.content.ContentValues
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.view.WindowCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
-import kotlin.math.log
 
-/**
- * MainActivity
- *
- *
- */
-public class MainFragment : Fragment() {
+class MainFragment : Fragment() {
 
 
     private var _binding: FragmentMainBinding? = null
@@ -67,68 +52,62 @@ public class MainFragment : Fragment() {
 
         binding.scooterList.adapter = adapter
 
-
-        //binding.scooterList.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, a)
-        // binding.scooterList.adapter = ArrayAdapter(this, R.layout.scooter_list_item, R.id.scooter_name_item, list)
-
-
         with (binding) {
 
             scooterList.visibility= View.INVISIBLE
 
-            StartRideButton.setOnClickListener() {
+            StartRideButton.setOnClickListener {
                 findNavController().navigate(
                     R.id.show_startride_fragment
                 )
-
-
-                /*view ->
-                val intent = Intent(view.context, StartRideActivity::class.java)
-                startActivity(intent)*/
             }
 
-            APIButton.setOnClickListener() { view ->
+            APIButton.setOnClickListener { view ->
 
                     view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                     if (APIversion.text.equals("")) {
                         val text = getAPILevel()
-
                         APIversion.text = text
+                        showMessage("printing api version ")
                     } else {
                         APIversion.text = ""
                     }
             }
-            DeleteRideButton.setOnClickListener() {
+            DeleteRideButton.setOnClickListener {
                     for (i in 0 until ridesDB.getRidesList().size-1)
                     {
                         if (ridesDB.getRidesList()[i] == selectedScooter)
                         {
                             ridesDB.deleteSelectedScooter(i)
                             adapter.notifyDataSetChanged()
+                            showMessage("deleting $i from list")
                             break
                         }}
             }
 
-            UpdateRideButton.setOnClickListener(){
+            UpdateRideButton.setOnClickListener {
                 findNavController().navigate(R.id.show_update_fragment)
 
             }
-            ShowListButton.setOnClickListener(){view ->
+            ShowListButton.setOnClickListener { view ->
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                 if(scooterList.isInvisible){
                     scooterList.visibility= View.VISIBLE
+                    showMessage("showing scooterlist")
                 } else {
                     scooterList.visibility=View.INVISIBLE
+                    showMessage("hiding scooterlist")
+
                 }
             }
             scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
                 selectedScooter = ridesDB.getCurrentScooter(i)!!
+                showMessage("found ${selectedScooter._name}")
                 Snackbar.make(
                     scooterList,
                     ridesDB.getCurrentScooterInfo(i), Snackbar.LENGTH_SHORT
                 ).show()
             }
-
 
         }
     }
@@ -144,7 +123,10 @@ public class MainFragment : Fragment() {
         }
     }
 
-
+    private fun showMessage (message : String) {
+        // Print a message in the ‘Logcat ‘ system .
+        Log.d(ContentValues.TAG, message)
+    }
 
 }
 

@@ -19,9 +19,6 @@ import java.util.*
 
 
 class StartRideFragment : Fragment() {
-    /*companion object {
-        private val TAG = MainActivity::class.qualifiedName
-    }*/
     companion object {
         lateinit var ridesDB : RidesDB
         private lateinit var adapter: CustomArrayAdapter
@@ -40,15 +37,12 @@ class StartRideFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
-        //WindowCompat.setDecorFitsSystemWindows(window , false )
         super.onCreate(savedInstanceState)
 
         ridesDB = RidesDB.get(requireContext())
 
-
-
         with (binding) {
-            RideButton.setOnClickListener(){ view ->
+            RideButton.setOnClickListener { view ->
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
 
                 if(editTextName.text.isNotEmpty() &&
@@ -73,11 +67,5 @@ class StartRideFragment : Fragment() {
         }
 
     }
-    /* private fun showMessage () {
- // Print a message in the ‘Logcat ‘ system .
-         Log.d( TAG , scooter.toString())
-     }*/
-
-
 
 }

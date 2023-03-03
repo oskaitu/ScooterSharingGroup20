@@ -1,7 +1,6 @@
 package dk.itu.moapd.scootersharing.oska
 
 import android.content.Context
-import android.os.Parcelable.ClassLoaderCreator
 import java.util.Random
 
 class RidesDB private constructor(context: Context){
@@ -98,7 +97,6 @@ open class  RidesDBHolder<out T: Any, in A>(creator: (A) -> T) {
                 creator = null
                 created
             }
-
 
         }
     }
