@@ -74,7 +74,7 @@ class MainFragment : Fragment() {
                     }
             }
             DeleteRideButton.setOnClickListener {
-                    for (i in 0 until ridesDB.getRidesList().size-1)
+                    for (i in 0 until ridesDB.getRidesList().size)
                     {
                         if (ridesDB.getRidesList()[i] == selectedScooter)
                         {
