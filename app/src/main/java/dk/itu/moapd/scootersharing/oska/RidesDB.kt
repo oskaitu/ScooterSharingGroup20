@@ -20,28 +20,28 @@ class RidesDB private constructor(context: Context){
             Scooter("CPH003", "Finland", randomDate())
         )
         rides.add(
-            Scooter("CPH003", "Finland", randomDate())
+            Scooter("CPH004", "Finland", randomDate())
         )
         rides.add(
-            Scooter("CPH003", "Finland", randomDate())
+            Scooter("CPH006", "Finland", randomDate())
         )
         rides.add(
-            Scooter("CPH003", "Finland", randomDate())
+            Scooter("CPH007", "Finland", randomDate())
         )
         rides.add(
-            Scooter("CPH003", "Finland", randomDate())
+            Scooter("CPH008", "Finland", randomDate())
         )
         rides.add(
-            Scooter("CPH003", "Finland", randomDate())
+            Scooter("CPH009", "Finland", randomDate())
         )
         rides.add(
-            Scooter("CPH003", "Finland", randomDate())
+            Scooter("CPH0010", "Finland", randomDate())
         )
         rides.add(
-            Scooter("CPH003", "Finland", randomDate())
+            Scooter("CPH0011", "Finland", randomDate())
         )
         rides.add(
-            Scooter("CPH003", "Finland", randomDate())
+            Scooter("CPH0012", "Finland", randomDate())
         )
     }
 
