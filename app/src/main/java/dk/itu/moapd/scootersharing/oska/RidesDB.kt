@@ -60,6 +60,9 @@ class RidesDB private constructor(context: Context){
     fun getCurrentScooter(number: Int): Scooter? {
         return rides[number]
     }
+    fun deleteSelectedScooter(number: Int) {
+        rides.remove(rides[number])
+    }
 
     fun getCurrentScooterInfo(number: Int): String {
         return getCurrentScooter(number).toString()

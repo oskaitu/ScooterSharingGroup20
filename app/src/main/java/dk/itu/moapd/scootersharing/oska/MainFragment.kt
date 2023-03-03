@@ -98,6 +98,16 @@ public class MainFragment : Fragment() {
                         APIversion.text = ""
                     }
             }
+            DeleteRideButton.setOnClickListener() {
+                    for (i in 0 until ridesDB.getRidesList().size-1)
+                    {
+                        if (ridesDB.getRidesList()[i] == selectedScooter)
+                        {
+                            ridesDB.deleteSelectedScooter(i)
+                            adapter.notifyDataSetChanged()
+                            break
+                        }}
+            }
 
             UpdateRideButton.setOnClickListener(){
                 findNavController().navigate(R.id.show_update_fragment)
