@@ -59,7 +59,7 @@ class MainFragment : Fragment() {
 
         with (binding) {
 
-            //scooterList.visibility= View.INVISIBLE
+            recyclerView.visibility= View.INVISIBLE
 
             StartRideButton.setOnClickListener {
                 findNavController().navigate(
@@ -94,17 +94,17 @@ class MainFragment : Fragment() {
                 findNavController().navigate(R.id.show_update_fragment)
 
             }
-            /*ShowListButton.setOnClickListener { view ->
+            ShowListButton.setOnClickListener { view ->
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-                if(scooterList.isInvisible){
-                    scooterList.visibility= View.VISIBLE
+                if(recyclerView.isInvisible){
+                    recyclerView.visibility= View.VISIBLE
                     showMessage("showing scooterlist")
                 } else {
-                    scooterList.visibility=View.INVISIBLE
+                    recyclerView.visibility=View.INVISIBLE
                     showMessage("hiding scooterlist")
 
                 }
-            }*/
+            }
             /*scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
                 selectedScooter = ridesDB.getCurrentScooter(i)!!
                 showMessage("found ${selectedScooter._name}")
@@ -113,7 +113,6 @@ class MainFragment : Fragment() {
                     ridesDB.getCurrentScooterInfo(i), Snackbar.LENGTH_SHORT
                 ).show()
             }*/
-
         }
     }
     override fun onDestroyView() {
