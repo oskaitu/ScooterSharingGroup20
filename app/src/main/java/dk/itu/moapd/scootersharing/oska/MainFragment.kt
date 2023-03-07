@@ -13,6 +13,7 @@ import android.widget.AdapterView
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
 
@@ -31,7 +32,7 @@ class MainFragment : Fragment() {
 
     companion object {
         lateinit var ridesDB : RidesDB
-        private lateinit var adapter: CustomArrayAdapter
+        private lateinit var adapter: RecyclerViewAdapter
         //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
         var selectedScooter : Scooter = Scooter("error","error",System.currentTimeMillis())
     }
@@ -48,13 +49,17 @@ class MainFragment : Fragment() {
         ridesDB = RidesDB.get(requireContext())
         var list = ridesDB.getRidesList()
 
-        adapter = CustomArrayAdapter(requireContext(), R.layout.scooter_list_item, list)
+        adapter = RecyclerViewAdapter(list)
 
-        binding.scooterList.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = adapter
+
+
+        //binding.scooterList.adapter = adapter
 
         with (binding) {
 
-            scooterList.visibility= View.INVISIBLE
+            //scooterList.visibility= View.INVISIBLE
 
             StartRideButton.setOnClickListener {
                 findNavController().navigate(
@@ -89,7 +94,7 @@ class MainFragment : Fragment() {
                 findNavController().navigate(R.id.show_update_fragment)
 
             }
-            ShowListButton.setOnClickListener { view ->
+            /*ShowListButton.setOnClickListener { view ->
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                 if(scooterList.isInvisible){
                     scooterList.visibility= View.VISIBLE
@@ -99,15 +104,15 @@ class MainFragment : Fragment() {
                     showMessage("hiding scooterlist")
 
                 }
-            }
-            scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
+            }*/
+            /*scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
                 selectedScooter = ridesDB.getCurrentScooter(i)!!
                 showMessage("found ${selectedScooter._name}")
                 Snackbar.make(
                     scooterList,
                     ridesDB.getCurrentScooterInfo(i), Snackbar.LENGTH_SHORT
                 ).show()
-            }
+            }*/
 
         }
     }
