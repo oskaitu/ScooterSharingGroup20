@@ -15,14 +15,13 @@ import androidx.fragment.app.DialogFragment
 class ConfirmationFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         var scooterToBeChanged = MainFragment.selectedScooter
-        var main = MainFragment
         return activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.setMessage("Are you sure you want to delete ${scooterToBeChanged._name}?")
                 .setPositiveButton("Yes") { _, index ->
-                    main.ridesDB.deleteSelectedScooter(scooterToBeChanged._name)
-                    main.adapter.notifyItemRemoved(index)
-                    main.selectedScooter= defaultScooter()
+                    MainFragment.ridesDB.deleteSelectedScooter(scooterToBeChanged._name)
+                    MainFragment.adapter.notifyItemRemoved(index)
+                    MainFragment.selectedScooter= defaultScooter()
                 }
                 .setNegativeButton("No", DialogInterface.OnClickListener { _, _ -> //nothing
                 })
