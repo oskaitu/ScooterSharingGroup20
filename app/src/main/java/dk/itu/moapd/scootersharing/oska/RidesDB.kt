@@ -59,8 +59,8 @@ class RidesDB private constructor(context: Context){
     fun getCurrentScooter(number: Int): Scooter? {
         return rides[number]
     }
-    fun deleteSelectedScooter(number: Int) {
-        rides.remove(rides[number])
+    fun deleteSelectedScooter(id: String) {
+        rides.remove(rides.find { scooter -> scooter._name == id })
     }
 
     fun getCurrentScooterInfo(number: Int): String {

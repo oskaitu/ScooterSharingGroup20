@@ -32,9 +32,9 @@ class MainFragment : Fragment() {
 
     companion object {
         lateinit var ridesDB : RidesDB
-        private lateinit var adapter: RecyclerViewAdapter
+        public lateinit var adapter: RecyclerViewAdapter
         //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
-        var selectedScooter : Scooter = Scooter("error","error",System.currentTimeMillis())
+        var selectedScooter : Scooter = defaultScooter()
     }
 
 
@@ -79,16 +79,8 @@ class MainFragment : Fragment() {
                     }
             }
             DeleteRideButton.setOnClickListener {
-                    for (i in 0 until ridesDB.getRidesList().size)
-                    {
-                        if (ridesDB.getRidesList()[i] == selectedScooter)
-                        {
-                            ridesDB.deleteSelectedScooter(i)
-                            adapter.notifyDataSetChanged()
-                            showMessage("deleting $i from list")
-                            break
-                        }}
-            }
+                if(selectedScooter._name=="error") Snackbar.make(it,"You need to select a scooter first!", Snackbar.LENGTH_SHORT).show()
+                else findNavController().navigate(R.id.confirmationFragment) }
 
             UpdateRideButton.setOnClickListener {
                 findNavController().navigate(R.id.show_update_fragment)
@@ -132,8 +124,12 @@ class MainFragment : Fragment() {
         Log.d(ContentValues.TAG, message)
     }
 
+
+
 }
 
-
+ fun defaultScooter () : Scooter {
+    return Scooter("error","error",System.currentTimeMillis())
+}
 
 
