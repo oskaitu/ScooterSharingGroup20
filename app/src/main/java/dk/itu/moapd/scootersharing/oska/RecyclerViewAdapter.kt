@@ -3,7 +3,9 @@ package dk.itu.moapd.scootersharing.oska
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.ScooterListItemBinding
 import java.util.*
 
@@ -12,6 +14,7 @@ class RecyclerViewAdapter(private val data: List<Scooter>) :
     companion object {
         private val TAG = RecyclerViewAdapter::class.qualifiedName
     }
+
 
 
      class ViewHolder(private val binding: ScooterListItemBinding) :
@@ -27,6 +30,15 @@ class RecyclerViewAdapter(private val data: List<Scooter>) :
             binding.scooterTimeItem.text = binding.root.context.getString(
                 R.string.time, Date(scooter?._timestamp!!)
             )
+
+            binding.root.setOnClickListener{
+                MainFragment.selectedScooter=scooter
+                Snackbar.make(
+                    binding.root.rootView,
+                    "${scooter._name} Selected!",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
