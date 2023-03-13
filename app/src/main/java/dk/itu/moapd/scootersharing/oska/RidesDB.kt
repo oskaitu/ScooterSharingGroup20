@@ -51,9 +51,9 @@ class RidesDB private constructor(context: Context){
         rides.add(Scooter(name, location, randomDate()))
     }
 
-    fun updateCurrentScooter(time: Long, number: Int){
-       rides[number]._timestamp=time
-
+    fun updateCurrentScooter(id: String, location: String){
+        deleteSelectedScooter(id)
+        addScooter(id,location)
     }
 
     fun getCurrentScooter(number: Int): Scooter? {

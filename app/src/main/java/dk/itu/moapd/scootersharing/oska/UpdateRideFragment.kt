@@ -15,7 +15,7 @@ import dk.itu.moapd.scootersharing.oska.databinding.FragmentUpdateRideBinding
 class UpdateRideFragment : Fragment() {
     companion object {
         lateinit var ridesDB : RidesDB
-        var selectedScooter : Scooter = Scooter("error","error",System.currentTimeMillis())
+        var selectedScooter : Scooter = defaultScooter()
     }
 
     private lateinit var _binding: FragmentUpdateRideBinding
@@ -24,6 +24,7 @@ class UpdateRideFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentUpdateRideBinding.inflate(inflater, container, false)
+        _binding.editTextName.text=MainFragment.selectedScooter._name
         return binding.root
     }
 
@@ -32,9 +33,12 @@ class UpdateRideFragment : Fragment() {
 
         ridesDB = RidesDB.get(requireContext())
 
+
+
         with (binding) {
             UpdateRideButton.setOnClickListener { view ->
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+
 
                 if(editTextName.text.isNotEmpty() &&
                     editLocationName.text.isNotEmpty()){
@@ -42,10 +46,10 @@ class UpdateRideFragment : Fragment() {
                     selectedScooter._location = location
                     selectedScooter._timestamp = System.currentTimeMillis()
 
+                    ridesDB.updateCurrentScooter(MainFragment.selectedScooter._name,location)
                     Snackbar.make(view, "Ride started using scooter = ${binding.editTextName.text}, " +
                             "On location ${binding.editLocationName.text} ", Snackbar.LENGTH_SHORT).show()
 
-                    editTextName.text.clear()
                     editLocationName.text.clear()
                     showMessage("updated Ride fragment successfully")
 
