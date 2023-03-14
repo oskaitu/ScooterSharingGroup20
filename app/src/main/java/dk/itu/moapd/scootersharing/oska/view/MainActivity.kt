@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.oska
+package dk.itu.moapd.scootersharing.oska.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

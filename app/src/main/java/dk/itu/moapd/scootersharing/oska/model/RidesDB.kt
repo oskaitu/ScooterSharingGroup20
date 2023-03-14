@@ -1,6 +1,7 @@
 package dk.itu.moapd.scootersharing.oska
 
 import android.content.Context
+import dk.itu.moapd.scootersharing.oska.model.Scooter
 import java.util.Random
 
 class RidesDB private constructor(context: Context){

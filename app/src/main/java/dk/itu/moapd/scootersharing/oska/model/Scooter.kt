@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.oska
+package dk.itu.moapd.scootersharing.oska.model
 
 import java.util.*
 

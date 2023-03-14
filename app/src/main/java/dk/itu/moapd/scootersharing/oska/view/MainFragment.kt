@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.oska
+package dk.itu.moapd.scootersharing.oska.view
 
 
 import android.content.ContentValues
@@ -9,13 +9,16 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import dk.itu.moapd.scootersharing.oska.R
+import dk.itu.moapd.scootersharing.oska.RidesDB
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
+import dk.itu.moapd.scootersharing.oska.model.Scooter
+import dk.itu.moapd.scootersharing.oska.viewModel.RecyclerViewAdapter
 
 class MainFragment : Fragment() {
 

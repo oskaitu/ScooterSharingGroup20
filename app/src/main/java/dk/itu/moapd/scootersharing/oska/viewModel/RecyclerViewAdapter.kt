@@ -1,12 +1,14 @@
-package dk.itu.moapd.scootersharing.oska
+package dk.itu.moapd.scootersharing.oska.viewModel
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import dk.itu.moapd.scootersharing.oska.view.MainFragment
+import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ScooterListItemBinding
+import dk.itu.moapd.scootersharing.oska.model.Scooter
 import java.util.*
 
 class RecyclerViewAdapter(private val data: List<Scooter>) :
@@ -32,7 +34,7 @@ class RecyclerViewAdapter(private val data: List<Scooter>) :
             )
 
             binding.root.setOnClickListener{
-                MainFragment.selectedScooter=scooter
+                MainFragment.selectedScooter =scooter
                 Snackbar.make(
                     binding.root.rootView,
                     "${scooter._name} Selected!",

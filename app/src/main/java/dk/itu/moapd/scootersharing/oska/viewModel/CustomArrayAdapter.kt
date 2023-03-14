@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.oska
+package dk.itu.moapd.scootersharing.oska.viewModel
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,12 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
 import android.widget.ArrayAdapter
-import android.widget.BaseAdapter
-import android.widget.ListAdapter
 import android.widget.TextView
-import java.text.FieldPosition
+import dk.itu.moapd.scootersharing.oska.R
+import dk.itu.moapd.scootersharing.oska.model.Scooter
 import java.util.Date
 
 class CustomArrayAdapter( context: Context, private var resource: Int, data: List<Scooter>) :

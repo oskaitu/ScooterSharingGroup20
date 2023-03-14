@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/fragment_main"
-        android:name="dk.itu.moapd.scootersharing.oska.MainFragment"
+        android:name="dk.itu.moapd.scootersharing.oska.view.MainFragment"
         android:label="@string/fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/show_startride_fragment"
-        android:name="dk.itu.moapd.scootersharing.oska.StartRideFragment"
+        android:name="dk.itu.moapd.scootersharing.oska.view.StartRideFragment"
         tools:layout="@layout/fragment_start_ride">
 
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/show_update_fragment"
-        android:name="dk.itu.moapd.scootersharing.oska.UpdateRideFragment"
+        android:name="dk.itu.moapd.scootersharing.oska.view.UpdateRideFragment"
         tools:layout="@layout/fragment_update_ride">
 
         <action
@@ -43,7 +43,7 @@
     </fragment>
     <dialog
         android:id="@+id/confirmationFragment"
-        android:name="dk.itu.moapd.scootersharing.oska.ConfirmationFragment"
+        android:name="dk.itu.moapd.scootersharing.oska.view.ConfirmationFragment"
         android:label="fragment_confirmation"
         tools:layout="@layout/fragment_confirmation" />
 </navigation>
