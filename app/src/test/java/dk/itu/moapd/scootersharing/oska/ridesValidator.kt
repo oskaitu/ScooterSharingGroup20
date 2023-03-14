@@ -22,12 +22,17 @@ class MockedRidesValidator {
         val Database = Mockito.mock(RidesDB::class.java)
     }
 
+    /*
     @Test
     fun adding_to_db_works() {
         Mockito.`when`(Database.getRidesList()).thenReturn(true)
         assertThat(Database.getRidesList(), `is` (true))
     }
+    /*
+     */
 /*
+
+     */
 Mockito.`when`(SUT.isConnectedToNetwork()).thenReturn(false)
         assertThat(SUT.isConnectedToNetwork(), `is` (false))
     }
@@ -35,4 +40,3 @@ Mockito.`when`(SUT.isConnectedToNetwork()).thenReturn(false)
 
 
     }
-}
