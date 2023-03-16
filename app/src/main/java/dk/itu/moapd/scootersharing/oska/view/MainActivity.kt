@@ -53,7 +53,6 @@ class MainActivity : AppCompatActivity() {
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
             .setLogo(R.mipmap.ic_launcher_round)
-            .setAlwaysShowSignInMethodScreen(true)
             .build()
         signInLauncher.launch(signInIntent)
         // [END auth_fui_create_intent]
