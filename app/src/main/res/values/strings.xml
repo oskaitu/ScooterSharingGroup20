@@ -16,6 +16,7 @@
     <string name="API">Check API version </string>
     <string name="delete_ride_button">Delete ride</string>
     <string name="List_rides_button">List rides</string>
+    <string name="logout">Logout</string>
 
 
 </resources>

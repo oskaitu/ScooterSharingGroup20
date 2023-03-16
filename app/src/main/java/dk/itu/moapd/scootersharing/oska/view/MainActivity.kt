@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         this.onSignInResult(res)
     }
 
-    private fun createSignInIntent() {
+    public fun createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers
         val providers = arrayListOf(
@@ -52,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         val signInIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
+            .setLogo(R.mipmap.ic_launcher_round)
+            .setAlwaysShowSignInMethodScreen(true)
             .build()
         signInLauncher.launch(signInIntent)
         // [END auth_fui_create_intent]
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         }
 
-    private fun signOut() {
+    public fun signOut() {
         // [START auth_fui_signout]
         AuthUI.getInstance()
             .signOut(this)

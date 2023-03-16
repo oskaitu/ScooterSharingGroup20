@@ -13,6 +13,7 @@ import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.RidesDB
@@ -89,6 +90,12 @@ class MainFragment : Fragment() {
                 findNavController().navigate(R.id.show_update_fragment)
 
             }
+
+            LogoutButton.setOnClickListener{
+                (activity as MainActivity).signOut()
+                (activity as MainActivity).createSignInIntent()
+
+            }
             ShowListButton.setOnClickListener { view ->
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                 if(recyclerView.isInvisible){
@@ -126,6 +133,7 @@ class MainFragment : Fragment() {
         // Print a message in the ‘Logcat ‘ system .
         Log.d(ContentValues.TAG, message)
     }
+
 
 
 
