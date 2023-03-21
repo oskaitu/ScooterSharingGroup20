@@ -38,6 +38,7 @@ class MainFragment : Fragment() {
         public lateinit var adapter: RecyclerViewAdapter
         //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
         var selectedScooter : Scooter = defaultScooter()
+        var rider = false
     }
 
 
@@ -65,9 +66,16 @@ class MainFragment : Fragment() {
             recyclerView.visibility= View.INVISIBLE
 
             StartRideButton.setOnClickListener {
-                findNavController().navigate(
-                    R.id.startFragment
-                )
+                if(rider)
+                {
+                    findNavController().navigate(R.id.activeFragment)
+
+                }else
+                {
+                    findNavController().navigate(
+                        R.id.startFragment)
+                }
+
             }
 
             APIButton.setOnClickListener { view ->

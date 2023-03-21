@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
@@ -24,7 +25,8 @@ class StartRideFragmentDialogue : DialogFragment() {
             builder.setTitle("Start driving ${scooterToBeChanged._name}?")
             builder.setMessage("Cost 50 \n Fuel 50 \n range 20 meters \n \n \n test")
                 .setPositiveButton("Yes") { _, _ ->
-                MainFragment.
+                    MainFragment.rider=true
+
                 }
                 .setNegativeButton("No", DialogInterface.OnClickListener { _, _ -> //nothing
                 })

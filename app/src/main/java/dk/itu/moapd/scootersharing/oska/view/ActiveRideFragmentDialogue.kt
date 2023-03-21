@@ -23,9 +23,6 @@ class ActiveRideFragmentDialogue : DialogFragment() {
 
             builder.setMessage("You are driving ${scooterToBeChanged._name} Vroom Vroom")
                 .setPositiveButton("Stop driving") { h, _ ->
-                    println("nonon")
-                    Thread.sleep(5000)
-                    h.dismiss()
                     //todo implement riding functionality
                 }
                 .setNegativeButton("Pause", DialogInterface.OnClickListener { _, _ -> //nothing
