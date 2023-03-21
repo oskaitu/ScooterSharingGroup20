@@ -12,38 +12,39 @@
         android:label="@string/fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/show_startride_fragment"
-            app:destination="@id/show_startride_fragment" />
-        <action
-            android:id="@+id/show_update_fragment"
-            app:destination="@id/show_update_fragment" />
-        <action
             android:id="@+id/action_fragment_main_to_confirmationFragment"
             app:destination="@id/confirmationFragment" />
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/show_startride_fragment"
-        android:name="dk.itu.moapd.scootersharing.oska.view.StartRideFragment"
-        tools:layout="@layout/fragment_start_ride">
-
         <action
-            android:id="@+id/action_show_startride_fragment_to_confirmationFragment"
-            app:destination="@id/confirmationFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/show_update_fragment"
-        android:name="dk.itu.moapd.scootersharing.oska.view.UpdateRideFragment"
-        tools:layout="@layout/fragment_update_ride">
-
+            android:id="@+id/action_fragment_main_to_updateFragment"
+            app:destination="@id/updateFragment" />
         <action
-            android:id="@+id/action_show_update_fragment_to_confirmationFragment"
-            app:destination="@id/confirmationFragment" />
+            android:id="@+id/action_fragment_main_to_startFragment2"
+            app:destination="@id/startFragment" />
+
     </fragment>
+
     <dialog
         android:id="@+id/confirmationFragment"
         android:name="dk.itu.moapd.scootersharing.oska.view.ConfirmationFragment"
         android:label="fragment_confirmation"
         tools:layout="@layout/fragment_confirmation" />
+    <dialog
+        android:id="@+id/updateFragment"
+        android:name="dk.itu.moapd.scootersharing.oska.view.UpdateFragmentDialogue"
+        android:label="fragment_update"
+        tools:layout="@layout/fragment_update" />
+    <dialog
+        android:id="@+id/startFragment"
+        android:name="dk.itu.moapd.scootersharing.oska.view.StartRideFragmentDialogue"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_activeFragment"
+            app:destination="@id/activeFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/activeFragment"
+        android:name="dk.itu.moapd.scootersharing.oska.view.ActiveRideFragmentDialogue"
+        android:label="fragment_active"
+        tools:layout="@layout/fragment_active" />
 </navigation>

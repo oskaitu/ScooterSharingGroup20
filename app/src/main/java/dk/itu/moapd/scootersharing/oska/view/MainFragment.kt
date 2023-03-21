@@ -13,7 +13,6 @@ import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.RidesDB
@@ -67,7 +66,7 @@ class MainFragment : Fragment() {
 
             StartRideButton.setOnClickListener {
                 findNavController().navigate(
-                    R.id.show_startride_fragment
+                    R.id.startFragment
                 )
             }
 
@@ -87,7 +86,7 @@ class MainFragment : Fragment() {
                 else findNavController().navigate(R.id.confirmationFragment) }
 
             UpdateRideButton.setOnClickListener {
-                findNavController().navigate(R.id.show_update_fragment)
+                findNavController().navigate(R.id.updateFragment)
 
             }
 
@@ -107,6 +106,7 @@ class MainFragment : Fragment() {
 
                 }
             }
+
             /*scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
                 selectedScooter = ridesDB.getCurrentScooter(i)!!
                 showMessage("found ${selectedScooter._name}")
@@ -128,6 +128,9 @@ class MainFragment : Fragment() {
             append(Build.VERSION.SDK_INT)
         }
     }
+    fun startDriving () {
+        findNavController().navigate(R.id.activeFragment)
+    }
 
     private fun showMessage (message : String) {
         // Print a message in the ‘Logcat ‘ system .
@@ -142,5 +145,4 @@ class MainFragment : Fragment() {
  fun defaultScooter () : Scooter {
     return Scooter("error","error",System.currentTimeMillis())
 }
-
 
