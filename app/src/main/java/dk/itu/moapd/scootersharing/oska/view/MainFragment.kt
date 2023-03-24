@@ -2,7 +2,6 @@ package dk.itu.moapd.scootersharing.oska.view
 
 
 import android.content.ContentValues
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -26,6 +25,7 @@ class MainFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
 
+
     /**
      * This property is only valid between `onCreateView()` and `onDestroyView()` methods.
      */
@@ -40,7 +40,7 @@ class MainFragment : Fragment() {
         //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
         var selectedScooter : Scooter = defaultScooter()
         var rider = false
-        var  newUser = true
+
     }
 
 
@@ -51,24 +51,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
 
-
-
-        val users = (activity as MainActivity).getUser()
         val database = (activity as MainActivity).db
-        val lookup = users.toString()
-        database.collection("user")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result){
-                    if(lookup ==  document.id){
-                        newUser = false
-                    }
-                }
-            }
-        if(newUser)
-        {
-        database.collection("user").add(lookup)
-        }
 
         ridesDB = RidesDB.get(requireContext())
         var list = ridesDB.getRidesList()
@@ -108,16 +91,7 @@ class MainFragment : Fragment() {
 
             APIButton.setOnClickListener { view ->
 
-                (activity as MainActivity).db
-                    .collection("user")
-                    .get()
-                    .addOnSuccessListener { result ->
-                        for (document in result){
-                            println(document.id)
-                        }
-                    }
-
-                    view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+                view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                     if (APIversion.text.equals("")) {
                         val text = getAPILevel()
                         APIversion.text = text
@@ -185,9 +159,16 @@ class MainFragment : Fragment() {
 
 
 
+
+
+
+
+
 }
 
  fun defaultScooter () : Scooter {
     return Scooter("error","error",System.currentTimeMillis())
 }
+
+
 

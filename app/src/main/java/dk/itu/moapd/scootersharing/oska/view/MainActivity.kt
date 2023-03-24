@@ -1,8 +1,10 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 import android.content.Intent
+import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.findNavController
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     val db = Firebase.firestore
+    var newUser = true
 
 
 
@@ -98,7 +101,32 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            // ...
+            db.collection("user")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result){
+                        if(user.toString() ==  document.id){
+                            newUser = false
+                        }
+                    }
+                }
+            if(newUser)
+            {
+                val data = hashMapOf(
+                    "authref" to user.toString(),
+                    "name" to user?.displayName,
+                    "email" to user?.email
+                )
+                db.collection("user")
+                    .add(data)
+                    .addOnSuccessListener { documentReference ->
+                        println("DocumentSnapshot written with ID: ${documentReference.id}")
+                    }
+                    .addOnFailureListener { e ->
+                        println("Error adding document ${e.message}")
+                    }
+            }
+
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
