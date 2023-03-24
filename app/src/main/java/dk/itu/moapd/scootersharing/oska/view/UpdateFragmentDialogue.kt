@@ -24,6 +24,7 @@ class UpdateFragmentDialogue : DialogFragment() {
                     //todo update functionality
                 }
                 .setNegativeButton("No", DialogInterface.OnClickListener { _, _ -> //nothing
+
                 })
             builder.create()
         } ?: throw IllegalStateException("something exploded")

@@ -26,9 +26,9 @@ class StartRideFragmentDialogue : DialogFragment() {
             builder.setMessage("Cost 50 \n Fuel 50 \n range 20 meters \n \n \n test")
                 .setPositiveButton("Yes") { _, _ ->
                     MainFragment.rider=true
-
                 }
-                .setNegativeButton("No", DialogInterface.OnClickListener { _, _ -> //nothing
+                .setNegativeButton("No", DialogInterface.OnClickListener { _, _ ->
+                    MainFragment.rider=false
                 })
             builder.create()
         } ?: throw IllegalStateException("something exploded")

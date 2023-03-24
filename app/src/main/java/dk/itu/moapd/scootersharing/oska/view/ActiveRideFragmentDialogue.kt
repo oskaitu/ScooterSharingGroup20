@@ -1,20 +1,16 @@
 package dk.itu.moapd.scootersharing.oska.view
 
-import android.R
 import android.app.Dialog
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Chronometer
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment½
+import androidx.fragment.app.DialogFragment
 
 
 class ActiveRideFragmentDialogue : DialogFragment() {
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val scooterToBeChanged = MainFragment.selectedScooter
         val view = View.inflate(context, dk.itu.moapd.scootersharing.oska.R.layout.fragment_active, null)
@@ -22,28 +18,33 @@ class ActiveRideFragmentDialogue : DialogFragment() {
         var cost = 0
         return activity?.let {
         val builder = AlertDialog.Builder(requireActivity())
+            .setCancelable(false)
             .setTitle("Ride time")
-            .setMessage("You are driving ${scooterToBeChanged._name} Vroom Vroom")
+            .setMessage("You are driving ${scooterToBeChanged._name} Vroom Vroom \n price ${simpleChronometer.base.compareTo(0)}")
             .setPositiveButton("Stop driving") { _, _ ->
                 dismiss()
                 MainFragment.rider = false
                 MainFragment.selectedScooter = defaultScooter()
+                simpleChronometer.stop()
                 cost = 5 * simpleChronometer.base.compareTo(0)
 
-            }
-            .setNegativeButton("Pause") { _, _ ->
-                simpleChronometer.stop()
+
             }
 
 
             builder.setView(view)
             simpleChronometer.start()
             builder.create()
+            builder.show()
 
 
 
         } ?: throw IllegalStateException("something exploded")
 
+    }
+
+    override fun dismiss() {
+        println("test")
     }
 }
 
