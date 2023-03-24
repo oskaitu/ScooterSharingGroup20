@@ -21,7 +21,7 @@ class ConfirmationFragment : DialogFragment() {
             val builder = AlertDialog.Builder(it)
             builder.setMessage("Are you sure you want to delete ${scooterToBeChanged._name}?")
                 .setPositiveButton("Yes") { _, index ->
-                    MainFragment.ridesDB.deleteSelectedScooter(scooterToBeChanged._name)
+                    //MainFragment.ridesDB.deleteSelectedScooter(scooterToBeChanged._name)
                     MainFragment.adapter.notifyItemRemoved(index)
                     MainFragment.selectedScooter = defaultScooter()
                 }

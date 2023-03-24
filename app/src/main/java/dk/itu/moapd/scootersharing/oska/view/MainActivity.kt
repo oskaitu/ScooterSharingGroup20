@@ -17,6 +17,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.tasks.await
 
 /**
  * MIT License
@@ -101,31 +103,34 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            db.collection("user")
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result){
-                        if(user.toString() ==  document.id){
+            val tasks = db.collection("user").get()
+
+            tasks.addOnSuccessListener { result ->
+                for (document in result){
+                        if(user?.email!!.equals(document.get("email"))){
                             newUser = false
                         }
                     }
                 }
-            if(newUser)
-            {
-                val data = hashMapOf(
-                    "authref" to user.toString(),
-                    "name" to user?.displayName,
-                    "email" to user?.email
-                )
-                db.collection("user")
-                    .add(data)
-                    .addOnSuccessListener { documentReference ->
-                        println("DocumentSnapshot written with ID: ${documentReference.id}")
-                    }
-                    .addOnFailureListener { e ->
-                        println("Error adding document ${e.message}")
-                    }
-            }
+            tasks.addOnCompleteListener { _ ->
+                if(newUser)
+                {
+                    val data = hashMapOf(
+                        "authref" to user.toString(),
+                        "name" to user?.displayName,
+                        "email" to user?.email
+                    )
+                    db.collection("user")
+                        .add(data)
+                        .addOnSuccessListener { documentReference ->
+                            println("DocumentSnapshot written with ID: ${documentReference.id} b")
+                        }
+                        .addOnFailureListener { e ->
+                            println("Error adding document ${e.message}")
+                        }
+                }}
+
+
 
         } else {
             // Sign in failed. If response is null the user canceled the

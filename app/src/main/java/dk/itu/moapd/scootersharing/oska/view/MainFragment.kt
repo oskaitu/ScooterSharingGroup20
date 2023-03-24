@@ -15,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.R
-import dk.itu.moapd.scootersharing.oska.RidesDB
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
 import dk.itu.moapd.scootersharing.oska.viewModel.RecyclerViewAdapter
@@ -35,7 +34,6 @@ class MainFragment : Fragment() {
         }
 
     companion object {
-        lateinit var ridesDB : RidesDB
         public lateinit var adapter: RecyclerViewAdapter
         //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
         var selectedScooter : Scooter = defaultScooter()
@@ -53,8 +51,26 @@ class MainFragment : Fragment() {
 
         val database = (activity as MainActivity).db
 
-        ridesDB = RidesDB.get(requireContext())
-        var list = ridesDB.getRidesList()
+        var list =ArrayList<Scooter>()
+
+        list.add(Scooter("test","test",12345))
+
+        database.collection("scooters")
+            .get()
+            .addOnSuccessListener { result ->
+            for (document in result) {
+                list.add(Scooter(
+                    _name = document.get("name") as String,
+                    _location = document.get("location") as String,
+                    _timestamp = document.get("timestamp") as Long)
+
+                )
+                println("addded scooter til list with ${document.id} as ID and ${document.data}")
+            }
+        }
+            .addOnFailureListener { exception ->
+                println( "Error getting documents. ${exception.message}")
+            }
 
         adapter = RecyclerViewAdapter(list)
 
@@ -116,6 +132,7 @@ class MainFragment : Fragment() {
             }
             ShowListButton.setOnClickListener { view ->
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+                println(list.size)
                 if(recyclerView.isInvisible){
                     recyclerView.visibility= View.VISIBLE
                     showMessage("showing scooterlist")
