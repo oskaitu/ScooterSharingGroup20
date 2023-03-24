@@ -131,8 +131,9 @@ class MainFragment : Fragment() {
 
             }
             ShowListButton.setOnClickListener { view ->
+                adapter.notifyDataSetChanged()
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-                println(list.size)
+                list.iterator().forEach { println("scooter name is ${it._name}") }
                 if(recyclerView.isInvisible){
                     recyclerView.visibility= View.VISIBLE
                     showMessage("showing scooterlist")
