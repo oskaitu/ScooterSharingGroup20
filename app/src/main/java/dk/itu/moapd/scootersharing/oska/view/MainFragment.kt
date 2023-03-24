@@ -2,6 +2,7 @@ package dk.itu.moapd.scootersharing.oska.view
 
 
 import android.content.ContentValues
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -66,16 +67,24 @@ class MainFragment : Fragment() {
             recyclerView.visibility= View.INVISIBLE
 
             StartRideButton.setOnClickListener {
-                if(rider)
+                if(selectedScooter._name!="error")
                 {
-                    findNavController().navigate(R.id.activeFragment)
+                    if(rider)
+                    {
+                        findNavController().navigate(R.id.activeFragment)
 
-                }else
+
+                    }else
+                    {
+                        rider=true
+                        findNavController().navigate(
+                            R.id.startFragment)
+                    }
+
+                } else
                 {
-                    findNavController().navigate(
-                        R.id.startFragment)
+                    Snackbar.make(it,"You need to select a scooter first!", Snackbar.LENGTH_SHORT).show()
                 }
-
             }
 
             APIButton.setOnClickListener { view ->
