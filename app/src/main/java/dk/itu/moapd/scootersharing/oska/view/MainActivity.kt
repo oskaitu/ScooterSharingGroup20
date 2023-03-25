@@ -5,6 +5,7 @@ import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.findNavController
@@ -14,9 +15,11 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
+import dk.itu.moapd.scootersharing.oska.model.Scooter
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.tasks.await
 
@@ -42,6 +45,7 @@ SOFTWARE.
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
 
     val db = Firebase.firestore
     var newUser = true
@@ -84,9 +88,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        }
+
+    }
 
     public fun signOut() {
         // [START auth_fui_signout]
@@ -139,7 +145,9 @@ class MainActivity : AppCompatActivity() {
             // ...
         }
     }
+
     }
+
 
 
 

@@ -9,18 +9,27 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
 import dk.itu.moapd.scootersharing.oska.viewModel.RecyclerViewAdapter
+import dk.itu.moapd.scootersharing.oska.viewModel.ScooterViewModel
 
 class MainFragment : Fragment() {
 
+    private val scooterCollectionRef = Firebase.firestore.collection("scooters")
+
+    var list = ArrayList<Scooter>()
 
     private var _binding: FragmentMainBinding? = null
 
@@ -35,6 +44,7 @@ class MainFragment : Fragment() {
 
     companion object {
         public lateinit var adapter: RecyclerViewAdapter
+        private lateinit var viewModel : ScooterViewModel
         //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
         var selectedScooter : Scooter = defaultScooter()
         var rider = false
@@ -44,18 +54,20 @@ class MainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(ScooterViewModel::class.java)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
 
+
         val database = (activity as MainActivity).db
 
-        var list =ArrayList<Scooter>()
 
-        list.add(Scooter("test","test",12345))
+        //list.add(Scooter("test","test",12345))
 
-        database.collection("scooters")
+        /*database.collection("scooters")
             .get()
             .addOnSuccessListener { result ->
             for (document in result) {
@@ -70,18 +82,17 @@ class MainFragment : Fragment() {
         }
             .addOnFailureListener { exception ->
                 println( "Error getting documents. ${exception.message}")
-            }
+            }*/
 
-        adapter = RecyclerViewAdapter(list)
+        adapter = RecyclerViewAdapter(viewModel)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-
+        viewModel.loadData()
         //binding.scooterList.adapter = adapter
 
         with (binding) {
-
             recyclerView.visibility= View.INVISIBLE
 
             StartRideButton.setOnClickListener {
@@ -130,7 +141,7 @@ class MainFragment : Fragment() {
                 (activity as MainActivity).createSignInIntent()
 
             }
-            ShowListButton.setOnClickListener { view ->
+           ShowListButton.setOnClickListener { view ->
                 adapter.notifyDataSetChanged()
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                 list.iterator().forEach { println("scooter name is ${it._name}") }
@@ -173,13 +184,6 @@ class MainFragment : Fragment() {
         // Print a message in the ‘Logcat ‘ system .
         Log.d(ContentValues.TAG, message)
     }
-
-
-
-
-
-
-
 
 
 }

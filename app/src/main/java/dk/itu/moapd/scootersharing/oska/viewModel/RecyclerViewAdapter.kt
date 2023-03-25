@@ -3,6 +3,7 @@ package dk.itu.moapd.scootersharing.oska.viewModel
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
@@ -11,14 +12,18 @@ import dk.itu.moapd.scootersharing.oska.databinding.ScooterListItemBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
 import java.util.*
 
-class RecyclerViewAdapter(private val data: List<Scooter>) :
+class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
     companion object {
         private val TAG = RecyclerViewAdapter::class.qualifiedName
     }
 
 
-
+    init {
+        scooterViewModel.scooters.observeForever { newData ->
+            notifyDataSetChanged()
+        }
+    }
      class ViewHolder(private val binding: ScooterListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -97,17 +102,22 @@ class RecyclerViewAdapter(private val data: List<Scooter>) :
      * @param position The position of the item within the adapter's data set.
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val scooter = data[position]
+        val scooter = scooterViewModel.scooters.value?.get(position)
         Log.d(TAG, "Populate an item at position: $position")
 
 
-        holder.bind(scooter)
+        if (scooter != null) {
+            holder.bind(scooter)
+        }
     }
     /**
      * Returns the total number of items in the data set held by the adapter.
      *
      * @return The total number of items in this adapter.
      */
-    override fun getItemCount() = data.size
+    override fun getItemCount(): Int {
+        return scooterViewModel.scooters.value?.size ?: 0
+    }
+
 
 }

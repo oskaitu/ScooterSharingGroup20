@@ -17,10 +17,15 @@ import dk.itu.moapd.scootersharing.oska.view.defaultScooter
 class ConfirmationFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         var scooterToBeChanged = MainFragment.selectedScooter
+        var database = (activity as MainActivity).db
+
+
         return activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.setMessage("Are you sure you want to delete ${scooterToBeChanged._name}?")
                 .setPositiveButton("Yes") { _, index ->
+
+
                     //MainFragment.ridesDB.deleteSelectedScooter(scooterToBeChanged._name)
                     MainFragment.adapter.notifyItemRemoved(index)
                     MainFragment.selectedScooter = defaultScooter()
