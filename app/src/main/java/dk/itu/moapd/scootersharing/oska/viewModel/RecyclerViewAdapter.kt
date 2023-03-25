@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
 import dk.itu.moapd.scootersharing.oska.R
+import dk.itu.moapd.scootersharing.oska.databinding.CardviewitemBinding
 import dk.itu.moapd.scootersharing.oska.databinding.ScooterListItemBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
 import java.util.*
@@ -24,17 +25,17 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
             notifyDataSetChanged()
         }
     }
-     class ViewHolder(private val binding: ScooterListItemBinding) :
+     class ViewHolder(private val binding: CardviewitemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(scooter: Scooter) {
-            binding.scooterNameItem.text = binding.root.context.getString(
+            binding.cardScooterName.text = binding.root.context.getString(
                 R.string.name, scooter._name
             )
-            binding.scooterLocationItem.text = binding.root.context.getString(
+            binding.cardScooterLocation.text = binding.root.context.getString(
                 R.string.location, scooter._location
             )
-            binding.scooterTimeItem.text = binding.root.context.getString(
+            binding.cardScooterTimestamp.text = binding.root.context.getString(
                 R.string.time, Date(scooter?._timestamp!!)
             )
 
@@ -75,7 +76,7 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
         Log.d(TAG, "Creating a new ViewHolder")
 
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ScooterListItemBinding.inflate(inflater, parent, false)
+        val binding = CardviewitemBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 
