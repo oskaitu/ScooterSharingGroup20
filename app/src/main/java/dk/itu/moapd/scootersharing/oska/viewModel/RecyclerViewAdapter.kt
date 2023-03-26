@@ -3,8 +3,10 @@ package dk.itu.moapd.scootersharing.oska.viewModel
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
 import dk.itu.moapd.scootersharing.oska.R
@@ -29,6 +31,9 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(scooter: Scooter) {
+
+            val pictureRef = MainFragment.storageRef.child("images/testscooter.jpg")
+
             binding.cardScooterName.text = binding.root.context.getString(
                 R.string.name, scooter._name
             )
@@ -38,8 +43,15 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
             binding.cardScooterTimestamp.text = binding.root.context.getString(
                 R.string.time, Date(scooter?._timestamp!!)
             )
+            val picture = binding.scooterPicture
+            pictureRef.downloadUrl.addOnSuccessListener {
+                Glide.with(binding.root)
+                    .load(it)
+                    .into(picture)
 
+                println("did the picture")
 
+            }
             binding.root.setOnClickListener{
                 MainFragment.selectedScooter =scooter
 
