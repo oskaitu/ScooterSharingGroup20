@@ -16,9 +16,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
@@ -31,7 +35,8 @@ class MainFragment : Fragment() {
 
     var list = ArrayList<Scooter>()
 
-    private var _binding: FragmentMainBinding? = null
+
+    var _binding: FragmentMainBinding? = null
 
 
     /**
@@ -43,12 +48,16 @@ class MainFragment : Fragment() {
         }
 
     companion object {
-
-        public lateinit var adapter: RecyclerViewAdapter
+        lateinit var adapter: RecyclerViewAdapter
         lateinit var viewModel : ScooterViewModel
+        lateinit var storage: FirebaseStorage
+        lateinit var storageRef : StorageReference
         //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
         var selectedScooter : Scooter = defaultScooter()
+
         var rider = false
+        val user = FirebaseAuth.getInstance().currentUser
+
 
     }
 
@@ -56,12 +65,14 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(ScooterViewModel::class.java)
-
+        storage = Firebase.storage("gs://moapd-2023-8c62e.appspot.com/")
+        storageRef = storage.reference
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
 
+        adapter = RecyclerViewAdapter(viewModel)
 
         val database = (activity as MainActivity).db
 
@@ -193,7 +204,7 @@ class MainFragment : Fragment() {
 }
 
  fun defaultScooter () : Scooter {
-    return Scooter("error","error",System.currentTimeMillis())
+    return Scooter("error","error","error",System.currentTimeMillis())
 }
 
 

@@ -42,6 +42,7 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
 
             binding.root.setOnClickListener{
                 MainFragment.selectedScooter =scooter
+
                 Snackbar.make(
                     binding.root.rootView,
                     "${scooter._name} Selected!",

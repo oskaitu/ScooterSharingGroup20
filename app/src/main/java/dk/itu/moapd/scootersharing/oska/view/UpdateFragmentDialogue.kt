@@ -21,7 +21,7 @@ class UpdateFragmentDialogue : DialogFragment() {
             val builder = AlertDialog.Builder(it)
             builder.setMessage("Are you sure you want to update ${scooterToBeChanged._name}?")
                 .setPositiveButton("Yes") { _, _ ->
-                    //todo update functionality
+                    MainFragment.viewModel.updateDocument("scooters", scooterToBeChanged._id, "timestamp", System.currentTimeMillis())
                 }
                 .setNegativeButton("No", DialogInterface.OnClickListener { _, _ -> //nothing
 
