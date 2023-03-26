@@ -44,7 +44,7 @@ class MainFragment : Fragment() {
 
     companion object {
         public lateinit var adapter: RecyclerViewAdapter
-        private lateinit var viewModel : ScooterViewModel
+        lateinit var viewModel : ScooterViewModel
         //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
         var selectedScooter : Scooter = defaultScooter()
         var rider = false
@@ -142,7 +142,10 @@ class MainFragment : Fragment() {
 
             }
            ShowListButton.setOnClickListener { view ->
-                adapter.notifyDataSetChanged()
+
+               findNavController().navigate(R.id.action_fragment_main_to_available_scooter_recyclerview)
+
+               /*adapter.notifyDataSetChanged()
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                 list.iterator().forEach { println("scooter name is ${it._name}") }
                 if(recyclerView.isInvisible){
@@ -152,7 +155,7 @@ class MainFragment : Fragment() {
                     recyclerView.visibility=View.INVISIBLE
                     showMessage("hiding scooterlist")
 
-                }
+                }*/
             }
 
             /*scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->

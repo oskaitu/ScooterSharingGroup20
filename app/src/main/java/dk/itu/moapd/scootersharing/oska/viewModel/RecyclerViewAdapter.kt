@@ -39,6 +39,7 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
                 R.string.time, Date(scooter?._timestamp!!)
             )
 
+
             binding.root.setOnClickListener{
                 MainFragment.selectedScooter =scooter
                 Snackbar.make(
