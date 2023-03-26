@@ -1,5 +1,6 @@
 package dk.itu.moapd.scootersharing.oska.viewModel
 
+import android.content.ContentValues
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -48,8 +49,8 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
                 Glide.with(binding.root)
                     .load(it)
                     .into(picture)
+                Log.w(ContentValues.TAG, "successfully loaded picture from storage bucket")
 
-                println("did the picture")
 
             }
             binding.root.setOnClickListener{
