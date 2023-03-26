@@ -20,6 +20,8 @@
     <string name="card_scooter_time">Time</string>
     <string name="card_scooter_location">Location</string>
     <string name="card_scooter_name">name</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 
 </resources>

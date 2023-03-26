@@ -43,6 +43,7 @@ class MainFragment : Fragment() {
         }
 
     companion object {
+
         public lateinit var adapter: RecyclerViewAdapter
         lateinit var viewModel : ScooterViewModel
         //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
@@ -84,16 +85,16 @@ class MainFragment : Fragment() {
                 println( "Error getting documents. ${exception.message}")
             }*/
 
-        adapter = RecyclerViewAdapter(viewModel)
+       /* adapter = RecyclerViewAdapter(viewModel)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        viewModel.loadData()
+        viewModel.loadData()*/
         //binding.scooterList.adapter = adapter
 
         with (binding) {
-            recyclerView.visibility= View.INVISIBLE
+            //recyclerView.visibility= View.INVISIBLE
 
             StartRideButton.setOnClickListener {
                 if(selectedScooter._name!="error")
@@ -141,9 +142,9 @@ class MainFragment : Fragment() {
                 (activity as MainActivity).createSignInIntent()
 
             }
-           ShowListButton.setOnClickListener { view ->
+           ShowListButton.setOnClickListener {
 
-               findNavController().navigate(R.id.action_fragment_main_to_available_scooter_recyclerview)
+               findNavController().navigate(R.id.available_scooter_recyclerview)
 
                /*adapter.notifyDataSetChanged()
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
