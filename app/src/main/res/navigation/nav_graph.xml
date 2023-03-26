@@ -20,6 +20,15 @@
         <action
             android:id="@+id/action_fragment_main_to_startFragment2"
             app:destination="@id/startFragment" />
+        <action
+            android:id="@+id/available_scooter_recyclerview"
+            app:destination="@id/available_scooter_recyclerview" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/available_scooter_recyclerview"
+        android:name="dk.itu.moapd.scootersharing.oska.view.AvailableScooterFragment"
+        tools:layout="@layout/fragment_available_scooter" >
 
     </fragment>
 

@@ -74,14 +74,38 @@ class MainFragment : Fragment() {
 
         adapter = RecyclerViewAdapter(viewModel)
 
+        val database = (activity as MainActivity).db
+
+
+        //list.add(Scooter("test","test",12345))
+
+        /*database.collection("scooters")
+            .get()
+            .addOnSuccessListener { result ->
+            for (document in result) {
+                list.add(Scooter(
+                    _name = document.get("name") as String,
+                    _location = document.get("location") as String,
+                    _timestamp = document.get("timestamp") as Long)
+
+                )
+                println("addded scooter til list with ${document.id} as ID and ${document.data}")
+            }
+        }
+            .addOnFailureListener { exception ->
+                println( "Error getting documents. ${exception.message}")
+            }*/
+
+       /* adapter = RecyclerViewAdapter(viewModel)
+
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        viewModel.loadData()
+        viewModel.loadData()*/
         //binding.scooterList.adapter = adapter
 
         with (binding) {
-            recyclerView.visibility= View.INVISIBLE
+            //recyclerView.visibility= View.INVISIBLE
 
             StartRideButton.setOnClickListener {
                 if(selectedScooter._name!="error")
@@ -129,8 +153,11 @@ class MainFragment : Fragment() {
                 (activity as MainActivity).createSignInIntent()
 
             }
-           ShowListButton.setOnClickListener { view ->
-                adapter.notifyDataSetChanged()
+           ShowListButton.setOnClickListener {
+
+               findNavController().navigate(R.id.available_scooter_recyclerview)
+
+               /*adapter.notifyDataSetChanged()
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                 list.iterator().forEach { println("scooter name is ${it._name}") }
                 if(recyclerView.isInvisible){
@@ -140,7 +167,7 @@ class MainFragment : Fragment() {
                     recyclerView.visibility=View.INVISIBLE
                     showMessage("hiding scooterlist")
 
-                }
+                }*/
             }
 
             /*scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
