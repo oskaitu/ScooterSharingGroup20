@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -31,13 +32,7 @@ import dk.itu.moapd.scootersharing.oska.viewModel.ScooterViewModel
 
 class MainFragment : Fragment() {
 
-    private val scooterCollectionRef = Firebase.firestore.collection("scooters")
-
-    var list = ArrayList<Scooter>()
-
-
     var _binding: FragmentMainBinding? = null
-
 
     /**
      * This property is only valid between `onCreateView()` and `onDestroyView()` methods.
@@ -48,16 +43,14 @@ class MainFragment : Fragment() {
         }
 
     companion object {
+        lateinit var circularProgressDrawable : CircularProgressDrawable
         lateinit var adapter: RecyclerViewAdapter
         lateinit var viewModel : ScooterViewModel
         lateinit var storage: FirebaseStorage
         lateinit var storageRef : StorageReference
-        //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
         var selectedScooter : Scooter = defaultScooter()
-
         var rider = false
         val user = FirebaseAuth.getInstance().currentUser
-
 
     }
 
@@ -73,36 +66,10 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
 
         adapter = RecyclerViewAdapter(viewModel)
-
-        val database = (activity as MainActivity).db
-
-
-        //list.add(Scooter("test","test",12345))
-
-        /*database.collection("scooters")
-            .get()
-            .addOnSuccessListener { result ->
-            for (document in result) {
-                list.add(Scooter(
-                    _name = document.get("name") as String,
-                    _location = document.get("location") as String,
-                    _timestamp = document.get("timestamp") as Long)
-
-                )
-                println("addded scooter til list with ${document.id} as ID and ${document.data}")
-            }
-        }
-            .addOnFailureListener { exception ->
-                println( "Error getting documents. ${exception.message}")
-            }*/
-
-       /* adapter = RecyclerViewAdapter(viewModel)
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = adapter
-
-        viewModel.loadData()*/
-        //binding.scooterList.adapter = adapter
+        circularProgressDrawable = CircularProgressDrawable(requireContext())
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
 
         with (binding) {
             //recyclerView.visibility= View.INVISIBLE
@@ -156,28 +123,8 @@ class MainFragment : Fragment() {
            ShowListButton.setOnClickListener {
 
                findNavController().navigate(R.id.available_scooter_recyclerview)
-
-               /*adapter.notifyDataSetChanged()
-                view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-                list.iterator().forEach { println("scooter name is ${it._name}") }
-                if(recyclerView.isInvisible){
-                    recyclerView.visibility= View.VISIBLE
-                    showMessage("showing scooterlist")
-                } else {
-                    recyclerView.visibility=View.INVISIBLE
-                    showMessage("hiding scooterlist")
-
-                }*/
             }
 
-            /*scooterList.setOnItemClickListener { _: AdapterView<*>, _: View, i: Int, _: Long ->
-                selectedScooter = ridesDB.getCurrentScooter(i)!!
-                showMessage("found ${selectedScooter._name}")
-                Snackbar.make(
-                    scooterList,
-                    ridesDB.getCurrentScooterInfo(i), Snackbar.LENGTH_SHORT
-                ).show()
-            }*/
         }
     }
     override fun onDestroyView() {
@@ -191,15 +138,11 @@ class MainFragment : Fragment() {
             append(Build.VERSION.SDK_INT)
         }
     }
-    fun startDriving () {
-        findNavController().navigate(R.id.activeFragment)
-    }
 
     private fun showMessage (message : String) {
         // Print a message in the ‘Logcat ‘ system .
         Log.d(ContentValues.TAG, message)
     }
-
 
 }
 

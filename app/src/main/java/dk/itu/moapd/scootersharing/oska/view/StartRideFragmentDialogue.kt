@@ -29,19 +29,7 @@ import kotlin.concurrent.thread
 class StartRideFragmentDialogue : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         var scooterToBeChanged = MainFragment.selectedScooter
-        val view = View.inflate(context,R.layout.fragment_start, null)
-        val picture = view.findViewById(R.id.bucketPicture) as ImageView
 
-        val pictureRef = MainFragment.storageRef.child("images/testscooter.jpg")
-
-        pictureRef.downloadUrl.addOnSuccessListener {
-            Glide.with(this)
-                .load(it)
-                .into(picture)
-
-            println("did the picture")
-
-        }
         return activity?.let {
             val builder = AlertDialog.Builder(requireActivity())
             builder.setTitle("Start driving ${scooterToBeChanged._name}?")
@@ -64,5 +52,3 @@ class StartRideFragmentDialogue : DialogFragment() {
     }
 
 }
-@GlideModule
-class Module : AppGlideModule()

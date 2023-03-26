@@ -19,7 +19,7 @@ class MockedRidesValidator {
 
     @Before
     fun setup() {
-        val Database = Mockito.mock(RidesDB::class.java)
+        val Database = mock(RidesDB::class.java)
     }
 
     /*

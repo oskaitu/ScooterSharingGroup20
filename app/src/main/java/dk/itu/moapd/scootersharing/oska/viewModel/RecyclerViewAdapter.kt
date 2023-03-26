@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
 import dk.itu.moapd.scootersharing.oska.R
@@ -42,13 +45,20 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
                 R.string.location, scooter._location
             )
             binding.cardScooterTimestamp.text = binding.root.context.getString(
-                R.string.time, Date(scooter?._timestamp!!)
+                R.string.time, Date(scooter._timestamp)
             )
+
+
             val picture = binding.scooterPicture
             pictureRef.downloadUrl.addOnSuccessListener {
-                Glide.with(binding.root)
+                Glide
+                    .with(binding.root)
                     .load(it)
+                    .centerCrop()
+                    .placeholder(MainFragment.circularProgressDrawable)
                     .into(picture)
+
+
                 Log.w(ContentValues.TAG, "successfully loaded picture from storage bucket")
 
 

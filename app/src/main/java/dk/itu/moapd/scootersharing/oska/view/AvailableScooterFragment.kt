@@ -28,7 +28,7 @@ class AvailableScooterFragment : Fragment() {
 
         }
     companion object {
-        public lateinit var adapter: RecyclerViewAdapter
+        lateinit var adapter: RecyclerViewAdapter
 
         lateinit var viewModel : ScooterViewModel
 

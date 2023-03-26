@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    public fun signOut() {
+    fun signOut() {
         // [START auth_fui_signout]
         AuthUI.getInstance()
             .signOut(this)
