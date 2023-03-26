@@ -15,6 +15,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.R
@@ -50,7 +51,9 @@ class MainActivity : AppCompatActivity() {
     val db = Firebase.firestore
     var newUser = true
 
-
+    val settings = firestoreSettings {
+        isPersistenceEnabled = true
+    }
 
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
@@ -80,6 +83,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
+        db.firestoreSettings = settings
         super.onStart()
         createSignInIntent()
     }

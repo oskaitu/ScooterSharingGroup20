@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -31,6 +32,7 @@ class MainFragment : Fragment() {
 
     var list = ArrayList<Scooter>()
 
+
     private var _binding: FragmentMainBinding? = null
 
 
@@ -44,10 +46,12 @@ class MainFragment : Fragment() {
 
     companion object {
         public lateinit var adapter: RecyclerViewAdapter
-        private lateinit var viewModel : ScooterViewModel
+        lateinit var viewModel : ScooterViewModel
         //this is pretty cursed, but we need a mutable type and we just need to get around not having the error error showing up but showing the user something if they manage to do it
         var selectedScooter : Scooter = defaultScooter()
         var rider = false
+        val user = FirebaseAuth.getInstance().currentUser
+
 
     }
 
@@ -60,29 +64,6 @@ class MainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
-
-
-        val database = (activity as MainActivity).db
-
-
-        //list.add(Scooter("test","test",12345))
-
-        /*database.collection("scooters")
-            .get()
-            .addOnSuccessListener { result ->
-            for (document in result) {
-                list.add(Scooter(
-                    _name = document.get("name") as String,
-                    _location = document.get("location") as String,
-                    _timestamp = document.get("timestamp") as Long)
-
-                )
-                println("addded scooter til list with ${document.id} as ID and ${document.data}")
-            }
-        }
-            .addOnFailureListener { exception ->
-                println( "Error getting documents. ${exception.message}")
-            }*/
 
         adapter = RecyclerViewAdapter(viewModel)
 
@@ -189,7 +170,7 @@ class MainFragment : Fragment() {
 }
 
  fun defaultScooter () : Scooter {
-    return Scooter("error","error",System.currentTimeMillis())
+    return Scooter("error","error","error",System.currentTimeMillis())
 }
 
 
