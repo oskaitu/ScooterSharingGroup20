@@ -14,10 +14,13 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
@@ -49,9 +52,11 @@ class MainActivity : AppCompatActivity() {
 
 
     val db = Firebase.firestore
+
     var newUser = true
 
-    val settings = firestoreSettings {
+    private val settings: FirebaseFirestoreSettings = firestoreSettings {
+        cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
         isPersistenceEnabled = true
     }
 
@@ -61,10 +66,7 @@ class MainActivity : AppCompatActivity() {
         this.onSignInResult(res)
     }
 
-    public fun getUser(): FirebaseUser? {
-        return FirebaseAuth.getInstance().currentUser
-    }
-    public fun createSignInIntent() {
+    fun createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers
         val providers = arrayListOf(
@@ -83,9 +85,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
-        db.firestoreSettings = settings
-        super.onStart()
         createSignInIntent()
+        super.onStart()
     }
 
 
@@ -109,10 +110,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
-        val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
+            db.firestoreSettings = settings
             val user = FirebaseAuth.getInstance().currentUser
+
             val tasks = db.collection("user").get()
 
             tasks.addOnSuccessListener { result ->
