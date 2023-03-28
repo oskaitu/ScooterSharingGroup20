@@ -22,6 +22,11 @@
     <string name="card_scooter_name">name</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="latitude_text">Latitude text</string>
+    <string name="longitude_text">Longitude text</string>
+    <string name="time_text">Time text</string>
+    <string name="content_description_location">content description</string>
+    <string name="address_text">address text</string>
 
 
 </resources>

@@ -2,6 +2,7 @@ package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
@@ -21,6 +22,8 @@ import com.google.android.gms.location.*
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import android.location.Address
+import android.location.Geocoder
+import android.location.Location
 import android.os.Build
 import android.os.Looper
 import androidx.annotation.RequiresApi
@@ -100,7 +103,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        requestUserPermissions()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -164,7 +167,7 @@ class MainActivity : AppCompatActivity() {
         // An array with location-aware permissions.
         val permissions: ArrayList<String> = ArrayList()
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        //permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
 
         // Check which permissions is needed to ask to the user.
         val permissionsToRequest = permissionsToRequest(permissions)
@@ -176,33 +179,7 @@ class MainActivity : AppCompatActivity() {
                 ALL_PERMISSIONS_RESULT
             )
     }
-    private fun startLocationAware() {
 
-        // Show a dialog to ask the user to allow the application to access the device's location.
-        requestUserPermissions()
-
-        // Start receiving location updates.
-        fusedLocationProviderClient = LocationServices
-            .getFusedLocationProviderClient(this)
-
-        // Initialize the `LocationCallback`.
-        locationCallback = object : LocationCallback() {
-
-            /**
-             * This method will be executed when `FusedLocationProviderClient` has a new location.
-             *
-             * @param locationResult The last known location.
-             */
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-
-                // Updates the user interface components with GPS data location.
-               /* locationResult.lastLocation?.let { location ->
-                    updateUI(location)
-                }*/
-            }
-        }
-    }
 
     private fun permissionsToRequest(permissions: ArrayList<String>): ArrayList<String> {
         val result: ArrayList<String> = ArrayList()
@@ -250,75 +227,8 @@ class MainActivity : AppCompatActivity() {
         return format.format(date)
     }
 
-    /**
-     * Update the UI components based on the current device's location data.
-     *
-     * @param location The current location data.
-     */
-   /* private fun updateUI(location: Location) {
-        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
-            binding.contentMain.apply {
-                latitudeTextField?.editText?.setText(location.latitude.toString())
-                longitudeTextField?.editText?.setText(location.longitude.toString())
-                timeTextField?.editText?.setText(location.time.toDateString())
-            }
-        else
-            setAddress(location.latitude, location.longitude)
-    }*/
 
-    /**
-     * Use Geocoder API to convert the current location into a `String` address, and update the
-     * corresponding UI component.
-     *
-     * @param latitude The current latitude coordinate.
-     * @param longitude The current longitude coordinate.
-     */
-   /* private fun setAddress(latitude: Double, longitude: Double) {
-        if (!Geocoder.isPresent())
-            return
 
-        // Create the `Geocoder` instance.
-        val geocoder = Geocoder(this, Locale.getDefault())
-
-        // After `Tiramisu Android OS`, it is needed to use a listener to avoid blocking the main
-        // thread waiting for results.
-        val geocodeListener = Geocoder.GeocodeListener { addresses ->
-            addresses.firstOrNull()?.toAddressString()?.let { address ->
-                binding.contentMain.addressTextField?.editText?.setText(address)
-            }
-        }
-
-        // Return an array of Addresses that attempt to describe the area immediately surrounding
-        // the given latitude and longitude.
-        if (Build.VERSION.SDK_INT >= 33)
-            geocoder.getFromLocation(latitude, longitude, 1, geocodeListener)
-        else
-            geocoder.getFromLocation(latitude, longitude, 1)?.let {  addresses ->
-                addresses.firstOrNull()?.toAddressString()?.let { address ->
-                    binding..addressTextField?.editText?.setText(address)
-                }
-            }
-    }*/
-
-    /**
-     * Converts the `Address` instance into a `String` representation.
-     *
-     * @return A `String` with the current address.
-     */
-    private fun Address.toAddressString() : String {
-        val address = this
-
-        // Create a `String` with multiple lines.
-        val stringBuilder = StringBuilder()
-        stringBuilder.apply {
-            append(address.getAddressLine(0)).append("\n")
-            append(address.postalCode).append(" ")
-            append(address.locality).append("\n")
-            append(address.countryName)
-        }
-
-        return stringBuilder.toString()
-    }
 
 
     }
