@@ -1,18 +1,10 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
-
-import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
-import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -21,28 +13,17 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import com.google.android.gms.location.*
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
-import dk.itu.moapd.scootersharing.oska.model.Scooter
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.tasks.await
-import android.content.res.Configuration
-import android.location.Geocoder
-import android.location.Location
 import android.location.Address
-import android.location.LocationRequest
 import android.os.Build
 import android.os.Looper
-import androidx.core.view.WindowCompat
+import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -77,9 +58,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    val db = Firebase.firestore
+    private val db = Firebase.firestore
 
-    var newUser = true
+    private var newUser = true
 
     private val settings: FirebaseFirestoreSettings = firestoreSettings {
         cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
@@ -143,14 +124,15 @@ class MainActivity : AppCompatActivity() {
 
             val tasks = db.collection("user").get()
 
-            tasks.addOnSuccessListener { result ->
-                for (document in result){
+            tasks.addOnSuccessListener { collection ->
+                for (document in collection){
+                    //DO NOT CHANGE THIS
                         if(user?.email!!.equals(document.get("email"))){
                             newUser = false
                         }
                     }
                 }
-            tasks.addOnCompleteListener { _ ->
+            tasks.addOnCompleteListener {
                 if(newUser)
                 {
                     val data = hashMapOf(
@@ -240,6 +222,7 @@ class MainActivity : AppCompatActivity() {
                 ) != PackageManager.PERMISSION_GRANTED
 
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun subscribeToLocationUpdates() {
 
         // Check if the user allows the application to access the location-aware resources.
@@ -247,7 +230,7 @@ class MainActivity : AppCompatActivity() {
             return
 
         // Sets the accuracy and desired interval for active location updates.
-        val locationRequest = LocationRequest.Builder(123123).build()
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_LOW_POWER, 5).build()
             
 
         // Subscribe to location changes.
