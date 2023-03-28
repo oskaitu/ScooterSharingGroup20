@@ -1,7 +1,9 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 
+import android.Manifest
 import android.content.ContentValues
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -51,6 +54,7 @@ class MainFragment : Fragment() {
         var selectedScooter : Scooter = defaultScooter()
         var rider = false
         val user = FirebaseAuth.getInstance().currentUser
+
 
     }
 
@@ -143,6 +147,8 @@ class MainFragment : Fragment() {
         // Print a message in the ‘Logcat ‘ system .
         Log.d(ContentValues.TAG, message)
     }
+
+
 
 }
 

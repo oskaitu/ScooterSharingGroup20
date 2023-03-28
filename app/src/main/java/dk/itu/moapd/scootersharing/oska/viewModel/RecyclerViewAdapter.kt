@@ -36,7 +36,7 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
 
         fun bind(scooter: Scooter) {
 
-            val pictureRef = MainFragment.storageRef.child("images/testscooter.jpg")
+            val pictureRef = MainFragment.storageRef.child("images/${scooter._name}.jpg")
 
             binding.cardScooterName.text = binding.root.context.getString(
                 R.string.name, scooter._name
@@ -54,7 +54,6 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
                 Glide
                     .with(binding.root)
                     .load(it)
-                    .centerCrop()
                     .placeholder(MainFragment.circularProgressDrawable)
                     .into(picture)
 
