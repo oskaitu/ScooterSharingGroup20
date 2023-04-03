@@ -23,12 +23,21 @@
         <action
             android:id="@+id/available_scooter_recyclerview"
             app:destination="@id/available_scooter_recyclerview" />
+        <action
+            android:id="@+id/fragment_geolocation"
+            app:destination="@id/fragment_geolocation" />
 
     </fragment>
     <fragment
         android:id="@+id/available_scooter_recyclerview"
         android:name="dk.itu.moapd.scootersharing.oska.view.AvailableScooterFragment"
         tools:layout="@layout/fragment_available_scooter" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_geolocation"
+        android:name="dk.itu.moapd.scootersharing.oska.view.GeolocationFragment"
+        tools:layout="@layout/fragment_geolocation" >
 
     </fragment>
 

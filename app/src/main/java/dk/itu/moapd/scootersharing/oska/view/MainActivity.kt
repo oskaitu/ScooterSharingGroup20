@@ -27,6 +27,7 @@ import android.location.Location
 import android.os.Build
 import android.os.Looper
 import androidx.annotation.RequiresApi
+import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         private const val ALL_PERMISSIONS_RESULT = 1337
+
     }
 
 
@@ -103,9 +105,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestUserPermissions()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        startLocationAware()
 
     }
 
@@ -162,12 +166,80 @@ class MainActivity : AppCompatActivity() {
             // ...
         }
     }
+    private fun startLocationAware() {
+
+        // Show a dialog to ask the user to allow the application to access the device's location.
+        requestUserPermissions()
+
+        // Start receiving location updates.
+        fusedLocationProviderClient = LocationServices
+            .getFusedLocationProviderClient(this)
+
+        // Initialize the `LocationCallback`.
+        locationCallback = object : LocationCallback() {
+
+            /**
+             * This method will be executed when `FusedLocationProviderClient` has a new location.
+             *
+             * @param locationResult The last known location.
+             */
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+
+                // Updates the user interface components with GPS data location.
+                locationResult.lastLocation?.let { location ->
+                    updateUI(location)
+                }
+            }
+        }
+    }
+
+
+    private fun updateUI(location: Location) {
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+            binding.fragmentGeolocation.apply {
+                latitudeTextField?.editText?.setText(location.latitude.toString())
+                longitudeTextField?.editText?.setText(location.longitude.toString())
+                timeTextField?.editText?.setText(location.time.toDateString())
+                //addressTextField?.editText?.setText(setAddress(location.latitude, location.longitude))
+            }
+        else{
+
+        }
+            setAddress(location.latitude, location.longitude)
+    }
+    private fun setAddress(latitude: Double, longitude: Double) {
+        if (!Geocoder.isPresent())
+            return
+
+        // Create the `Geocoder` instance.
+        val geocoder = Geocoder(this, Locale.getDefault())
+
+        // After `Tiramisu Android OS`, it is needed to use a listener to avoid blocking the main
+        // thread waiting for results.
+        val geocodeListener = Geocoder.GeocodeListener { addresses ->
+            addresses.firstOrNull()?.toAddressString()?.let { address ->
+                binding.fragmentGeolocation.addressTextField?.editText?.setText(address)
+            }
+        }
+
+        // Return an array of Addresses that attempt to describe the area immediately surrounding
+        // the given latitude and longitude.
+        if (Build.VERSION.SDK_INT >= 33)
+            geocoder.getFromLocation(latitude, longitude, 1, geocodeListener)
+        else
+            geocoder.getFromLocation(latitude, longitude, 1)?.let {  addresses ->
+                addresses.firstOrNull()?.toAddressString()?.let { address ->
+                    binding.fragmentGeolocation.addressTextField?.editText?.setText(address)
+                }
+            }
+    }
     private fun requestUserPermissions() {
 
         // An array with location-aware permissions.
         val permissions: ArrayList<String> = ArrayList()
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        //permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
 
         // Check which permissions is needed to ask to the user.
         val permissionsToRequest = permissionsToRequest(permissions)
@@ -199,7 +271,7 @@ class MainActivity : AppCompatActivity() {
                 ) != PackageManager.PERMISSION_GRANTED
 
 
-    @RequiresApi(Build.VERSION_CODES.S)
+
     private fun subscribeToLocationUpdates() {
 
         // Check if the user allows the application to access the location-aware resources.
@@ -221,17 +293,39 @@ class MainActivity : AppCompatActivity() {
         fusedLocationProviderClient
             .removeLocationUpdates(locationCallback)
     }
+
     private fun Long.toDateString() : String {
         val date = Date(this)
         val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
         return format.format(date)
     }
-
-
-
-
-
+    override fun onPause() {
+        super.onPause()
+        unsubscribeToLocationUpdates()
     }
+    override fun onResume() {
+        super.onResume()
+        subscribeToLocationUpdates()
+    }
+    private fun Address.toAddressString() : String {
+        val address = this
+
+        // Create a `String` with multiple lines.
+        val stringBuilder = StringBuilder()
+        stringBuilder.apply {
+            append(address.getAddressLine(0)).append("\n")
+            append(address.postalCode).append(" ")
+            append(address.locality).append("\n")
+            append(address.countryName)
+        }
+
+        return stringBuilder.toString()
+    }
+
+
+
+
+}
 
 
 
