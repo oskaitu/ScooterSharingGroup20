@@ -1,9 +1,14 @@
 package dk.itu.moapd.scootersharing.oska.view
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +19,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentGeolocationBinding
+import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,65 +43,38 @@ class GeolocationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        _binding = FragmentGeolocationBinding.inflate(inflater, container, false)
         super.onCreate(savedInstanceState)
         return binding.root
 
 
     }
+    override fun onStart() {
+        super.onStart()
 
-    /*override fun onPause() {
-        super.onPause()
-        unsubscribeToLocationUpdates()
-    }
-    override fun onResume() {
-        super.onResume()
-        subscribeToLocationUpdates()
-    }*/
-
-    private fun startLocationAware() {
-
-
-        // Start receiving location updates.
-        fusedLocationProviderClient = LocationServices
-            .getFusedLocationProviderClient(requireContext())
-
-        // Initialize the `LocationCallback`.
-        locationCallback = object : LocationCallback() {
-
-            /**
-             * This method will be executed when `FusedLocationProviderClient` has a new location.
-             *
-             * @param locationResult The last known location.
-             */
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-
-                // Updates the user interface components with GPS data location.
-                locationResult.lastLocation?.let { location ->
-                    updateUI(location)
-                }
-            }
-        }
+        updateUI((activity as MainActivity).deviceLocation)
     }
     private fun updateUI(location: Location) {
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+
             binding.apply {
                 latitudeTextField?.editText?.setText(location.latitude.toString())
                 longitudeTextField?.editText?.setText(location.longitude.toString())
                 timeTextField?.editText?.setText(location.time.toDateString())
+                //addressTextField?.editText?.setText(setAddress(location.latitude, location.longitude))
             }
         else{
 
         }
-        //setAddress(location.latitude, location.longitude)
+        setAddress(location.latitude, location.longitude)
     }
 
-    /*private fun setAddress(latitude: Double, longitude: Double) {
+    private fun setAddress(latitude: Double, longitude: Double) {
         if (!Geocoder.isPresent())
             return
 
         // Create the `Geocoder` instance.
-        val geocoder = Geocoder(this, Locale.getDefault())
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
 
         // After `Tiramisu Android OS`, it is needed to use a listener to avoid blocking the main
         // thread waiting for results.
@@ -112,15 +91,29 @@ class GeolocationFragment : Fragment() {
         else
             geocoder.getFromLocation(latitude, longitude, 1)?.let {  addresses ->
                 addresses.firstOrNull()?.toAddressString()?.let { address ->
-                    binding.contentMain.addressTextField?.editText?.setText(address)
+                    binding.addressTextField?.editText?.setText(address)
                 }
             }
-    }*/
+    }
 
     private fun Long.toDateString() : String {
         val date = Date(this)
         val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
         return format.format(date)
+    }
+    private fun Address.toAddressString() : String {
+        val address = this
+
+        // Create a `String` with multiple lines.
+        val stringBuilder = StringBuilder()
+        stringBuilder.apply {
+            append(address.getAddressLine(0)).append("\n")
+            append(address.postalCode).append(" ")
+            append(address.locality).append("\n")
+            append(address.countryName)
+        }
+
+        return stringBuilder.toString()
     }
 
 

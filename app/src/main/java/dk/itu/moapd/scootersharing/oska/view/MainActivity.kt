@@ -26,7 +26,9 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.os.Looper
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -56,12 +58,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+    public lateinit var deviceLocation : Location
 
     companion object{
         private const val ALL_PERMISSIONS_RESULT = 1337
 
     }
-
 
     private val db = Firebase.firestore
 
@@ -188,52 +190,16 @@ class MainActivity : AppCompatActivity() {
 
                 // Updates the user interface components with GPS data location.
                 locationResult.lastLocation?.let { location ->
-                    updateUI(location)
+                    deviceLocation = location
+
                 }
             }
         }
     }
 
 
-    private fun updateUI(location: Location) {
-        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
-            binding.fragmentGeolocation.apply {
-                latitudeTextField?.editText?.setText(location.latitude.toString())
-                longitudeTextField?.editText?.setText(location.longitude.toString())
-                timeTextField?.editText?.setText(location.time.toDateString())
-                //addressTextField?.editText?.setText(setAddress(location.latitude, location.longitude))
-            }
-        else{
 
-        }
-            setAddress(location.latitude, location.longitude)
-    }
-    private fun setAddress(latitude: Double, longitude: Double) {
-        if (!Geocoder.isPresent())
-            return
 
-        // Create the `Geocoder` instance.
-        val geocoder = Geocoder(this, Locale.getDefault())
-
-        // After `Tiramisu Android OS`, it is needed to use a listener to avoid blocking the main
-        // thread waiting for results.
-        val geocodeListener = Geocoder.GeocodeListener { addresses ->
-            addresses.firstOrNull()?.toAddressString()?.let { address ->
-                binding.fragmentGeolocation.addressTextField?.editText?.setText(address)
-            }
-        }
-
-        // Return an array of Addresses that attempt to describe the area immediately surrounding
-        // the given latitude and longitude.
-        if (Build.VERSION.SDK_INT >= 33)
-            geocoder.getFromLocation(latitude, longitude, 1, geocodeListener)
-        else
-            geocoder.getFromLocation(latitude, longitude, 1)?.let {  addresses ->
-                addresses.firstOrNull()?.toAddressString()?.let { address ->
-                    binding.fragmentGeolocation.addressTextField?.editText?.setText(address)
-                }
-            }
-    }
     private fun requestUserPermissions() {
 
         // An array with location-aware permissions.
@@ -279,7 +245,7 @@ class MainActivity : AppCompatActivity() {
             return
 
         // Sets the accuracy and desired interval for active location updates.
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_LOW_POWER, 5).build()
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_LOW_POWER, 1000).build()
             
 
         // Subscribe to location changes.
@@ -307,20 +273,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         subscribeToLocationUpdates()
     }
-    private fun Address.toAddressString() : String {
-        val address = this
 
-        // Create a `String` with multiple lines.
-        val stringBuilder = StringBuilder()
-        stringBuilder.apply {
-            append(address.getAddressLine(0)).append("\n")
-            append(address.postalCode).append(" ")
-            append(address.locality).append("\n")
-            append(address.countryName)
-        }
-
-        return stringBuilder.toString()
-    }
 
 
 

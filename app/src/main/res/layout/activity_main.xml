@@ -18,10 +18,6 @@
     tools:context=".view.MainActivity">
 
 </androidx.fragment.app.FragmentContainerView>
-    <include
-
-        android:id="@+id/fragment_geolocation"
-        layout="@layout/fragment_geolocation" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
