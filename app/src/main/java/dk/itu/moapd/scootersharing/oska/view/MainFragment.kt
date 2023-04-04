@@ -156,7 +156,7 @@ class MainFragment : Fragment() {
 }
 
  fun defaultScooter () : Scooter {
-    return Scooter("error","error","error",System.currentTimeMillis())
+    return Scooter("error","error","error",System.currentTimeMillis(),"")
 }
 
 

@@ -28,10 +28,6 @@ class GeolocationFragment : Fragment() {
 
     private lateinit var _binding: FragmentGeolocationBinding
 
-
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var locationCallback: LocationCallback
-
     private val binding
         get() = checkNotNull(_binding) {
 
@@ -70,11 +66,7 @@ class GeolocationFragment : Fragment() {
     }
 
     private fun setAddress(latitude: Double, longitude: Double) {
-        if (!Geocoder.isPresent())
-            return
-
-        // Create the `Geocoder` instance.
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        val geocoder = (activity as MainActivity).geocoder
 
         // After `Tiramisu Android OS`, it is needed to use a listener to avoid blocking the main
         // thread waiting for results.

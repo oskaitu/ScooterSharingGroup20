@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.model.Scooter
+import dk.itu.moapd.scootersharing.oska.view.MainActivity
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
 
 class ScooterViewModel : ViewModel() {
@@ -35,7 +36,8 @@ class ScooterViewModel : ViewModel() {
                             _id = doc.id,
                             _name = doc.get("name") as String,
                             _location = doc.get("location") as String,
-                            _timestamp = doc.get("timestamp") as Long
+                            _timestamp = doc.get("timestamp") as Long,
+                            _translated_location = doc.get("translated_location") as String
                         )
 
                     )
@@ -118,6 +120,9 @@ class ScooterViewModel : ViewModel() {
             .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
         // [END delete_document]
     }
+
+
+
 
 
 }

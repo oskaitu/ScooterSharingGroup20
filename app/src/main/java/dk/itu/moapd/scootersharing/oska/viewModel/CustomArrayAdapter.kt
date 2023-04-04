@@ -42,10 +42,11 @@ class CustomArrayAdapter( context: Context, private var resource: Int, data: Lis
             Log.d(TAG, "populate $position")
 
             viewHolder.name.text = parent.context.getString(R.string.name, scooter?._name)
-            viewHolder.location.text = parent.context.getString(R.string.location, scooter?._location)
+            viewHolder.location.text = parent.context.getString(R.string.location, scooter?._translated_location)
             viewHolder.timestamp.text = parent.context.getString(R.string.time, Date(scooter?._timestamp!!))
 
             view?.tag = viewHolder
             return view!!
         }
+
 }

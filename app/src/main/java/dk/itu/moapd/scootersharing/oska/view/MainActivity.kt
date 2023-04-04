@@ -58,7 +58,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
-    public lateinit var deviceLocation : Location
+    lateinit var deviceLocation : Location
+    lateinit var geocoder : Geocoder
 
     companion object{
         private const val ALL_PERMISSIONS_RESULT = 1337
@@ -109,7 +110,9 @@ class MainActivity : AppCompatActivity() {
 
 
         binding = ActivityMainBinding.inflate(layoutInflater)
+        geocoder = Geocoder(this,Locale.getDefault())
         setContentView(binding.root)
+
 
         startLocationAware()
 

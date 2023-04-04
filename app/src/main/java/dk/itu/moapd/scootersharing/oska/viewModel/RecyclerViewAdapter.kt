@@ -42,7 +42,7 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
                 R.string.name, scooter._name
             )
             binding.cardScooterLocation.text = binding.root.context.getString(
-                R.string.location, scooter._location
+                R.string.location, scooter._translated_location
             )
             binding.cardScooterTimestamp.text = binding.root.context.getString(
                 R.string.time, Date(scooter._timestamp)

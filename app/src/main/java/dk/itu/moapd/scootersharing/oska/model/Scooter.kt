@@ -2,7 +2,7 @@ package dk.itu.moapd.scootersharing.oska.model
 
 import java.util.*
 
-data class Scooter (val _id : String, val _name: String, var _location: String, var _timestamp: Long ){
+data class Scooter (val _id : String, val _name: String, var _location: String, var _timestamp: Long, var _translated_location: String ){
 
     override fun toString(): String {
         var temp = Date(_timestamp)
