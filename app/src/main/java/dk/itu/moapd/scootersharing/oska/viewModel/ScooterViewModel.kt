@@ -17,6 +17,7 @@ class ScooterViewModel : ViewModel() {
     private val _scooters = MutableLiveData<List<Scooter>>()
     val scooters: LiveData<List<Scooter>> = _scooters
 
+
     /*
     Loader for making sure ScooterData is consistent across all users
      */
@@ -29,7 +30,9 @@ class ScooterViewModel : ViewModel() {
                 }
 
                 val scooterList = mutableListOf<Scooter>()
+
                 for (doc in value!!) {
+
 
                     scooterList.add(
                         Scooter(
@@ -120,6 +123,8 @@ class ScooterViewModel : ViewModel() {
             .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
         // [END delete_document]
     }
+
+
 
 
 

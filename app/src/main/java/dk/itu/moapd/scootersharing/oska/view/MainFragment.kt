@@ -69,6 +69,8 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
 
+
+
         adapter = RecyclerViewAdapter(viewModel)
         circularProgressDrawable = CircularProgressDrawable(requireContext())
         circularProgressDrawable.strokeWidth = 5f
@@ -132,6 +134,7 @@ class MainFragment : Fragment() {
                 findNavController().navigate((R.id.fragment_geolocation))
             }
             Gotomap.setOnClickListener{
+
                 findNavController().navigate((R.id.fragment_map))
             }
 
