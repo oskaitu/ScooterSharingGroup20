@@ -231,7 +231,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun checkPermission() =
+    fun checkPermission() =
         ActivityCompat.checkSelfPermission(
             this, Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED &&

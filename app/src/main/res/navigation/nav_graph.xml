@@ -26,6 +26,9 @@
         <action
             android:id="@+id/fragment_geolocation"
             app:destination="@id/fragment_geolocation" />
+        <action
+            android:id="@+id/fragment_map"
+            app:destination="@id/fragment_map" />
 
     </fragment>
     <fragment
@@ -38,6 +41,12 @@
         android:id="@+id/fragment_geolocation"
         android:name="dk.itu.moapd.scootersharing.oska.view.GeolocationFragment"
         tools:layout="@layout/fragment_geolocation" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_map"
+        android:name="dk.itu.moapd.scootersharing.oska.view.MapFragment"
+        tools:layout="@layout/fragment_map" >
 
     </fragment>
 

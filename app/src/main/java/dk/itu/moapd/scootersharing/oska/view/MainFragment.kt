@@ -129,7 +129,7 @@ class MainFragment : Fragment() {
                findNavController().navigate(R.id.available_scooter_recyclerview)
             }
             Gotolocation.setOnClickListener{
-                findNavController().navigate((R.id.fragment_geolocation))
+                findNavController().navigate((R.id.fragment_map))
             }
 
         }
