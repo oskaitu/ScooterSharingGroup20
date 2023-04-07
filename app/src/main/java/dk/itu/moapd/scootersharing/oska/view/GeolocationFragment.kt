@@ -47,8 +47,7 @@ class GeolocationFragment : Fragment() {
     }
     override fun onStart() {
         super.onStart()
-
-        updateUI((activity as MainActivity).deviceLocation)
+        updateUI((activity as MainActivity).gps.getLocation()!!)
     }
     private fun updateUI(location: Location) {
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)

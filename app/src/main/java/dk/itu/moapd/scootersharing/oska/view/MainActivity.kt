@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
         requestUserPermissions()
 
         gps = LocationService(this, this.getSystemService(LOCATION_SERVICE) as LocationManager)
-        deviceLocation= gps.getLocation()!!
+        deviceLocation = gps.getLocation()!!
 
         /*
         // Start receiving location updates.
@@ -182,13 +182,7 @@ class MainActivity : AppCompatActivity() {
         locationCallback = object : LocationCallback() {
 
             /**
-             * This method will be exe
-
-
-             cuted when `FusedLocationProviderClient` has a new location.
-         */
-         */
-         */
+             * This method will be executed when `FusedLocationProviderClient` has a new location.
              *
              * @param locationResult The last known location.
              */
