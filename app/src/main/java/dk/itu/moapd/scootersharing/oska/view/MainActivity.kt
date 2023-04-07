@@ -2,34 +2,25 @@ package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
-import com.google.android.gms.location.*
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
-import android.location.Address
-import android.location.Geocoder
-import android.location.Location
-import android.os.Build
-import android.os.Looper
-import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
+import dk.itu.moapd.scootersharing.oska.viewModel.LocationService
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -56,10 +47,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var locationCallback: LocationCallback
+    //private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    //private lateinit var locationCallback: LocationCallback
     lateinit var deviceLocation : Location
+    lateinit var deviceLocation2 : Location
     lateinit var geocoder : Geocoder
+    lateinit var gps: LocationService
+
 
     companion object{
         private const val ALL_PERMISSIONS_RESULT = 1337
@@ -176,6 +170,10 @@ class MainActivity : AppCompatActivity() {
         // Show a dialog to ask the user to allow the application to access the device's location.
         requestUserPermissions()
 
+        gps = LocationService(this, this.getSystemService(LOCATION_SERVICE) as LocationManager)
+        deviceLocation = gps.getLocation()!!
+
+        /*
         // Start receiving location updates.
         fusedLocationProviderClient = LocationServices
             .getFusedLocationProviderClient(this)
@@ -193,11 +191,14 @@ class MainActivity : AppCompatActivity() {
 
                 // Updates the user interface components with GPS data location.
                 locationResult.lastLocation?.let { location ->
-                    deviceLocation = location
-
+                    deviceLocation = deviceLocation2
+                    println(deviceLocation2)
+                    println(deviceLocation)
                 }
             }
         }
+
+         */
     }
 
 
@@ -240,7 +241,7 @@ class MainActivity : AppCompatActivity() {
                 ) != PackageManager.PERMISSION_GRANTED
 
 
-
+/*
     private fun subscribeToLocationUpdates() {
 
         // Check if the user allows the application to access the location-aware resources.
@@ -256,6 +257,9 @@ class MainActivity : AppCompatActivity() {
             locationRequest, locationCallback, Looper.getMainLooper()
         )
     }
+
+ */
+    /*
 
     private fun unsubscribeToLocationUpdates() {
         // Unsubscribe to location changes.
@@ -276,6 +280,8 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         subscribeToLocationUpdates()
     }
+
+     */
 
 
 
