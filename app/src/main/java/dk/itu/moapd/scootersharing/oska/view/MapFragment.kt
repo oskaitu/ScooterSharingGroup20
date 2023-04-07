@@ -50,6 +50,7 @@ class MapFragment : Fragment() {
             //googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
             googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 
+
             // Setup the UI settings state.
             googleMap.uiSettings.apply {
                 isCompassEnabled = true
