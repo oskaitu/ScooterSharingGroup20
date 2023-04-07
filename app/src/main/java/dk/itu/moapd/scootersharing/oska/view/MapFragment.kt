@@ -61,54 +61,16 @@ class MapFragment : Fragment() {
                 isZoomControlsEnabled = true
                 isZoomGesturesEnabled = true
             }
-            // When map is loaded
-           /* googleMap.setOnMapClickListener { latLng -> // When clicked on map
-                // Initialize marker options
-                val markerOptions = MarkerOptions()
-                // Set position of marker
-                markerOptions.position(latLng)
-                // Set title of marker
+            googleMap.setPadding(0, 100, 0, 0)
 
-                // Remove all marker
-                googleMap.clear()
-                // Animating to zoom the marker
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
-                // Add marker on map
-                googleMap.addMarker(markerOptions)
-            }*/
         }
+
 
 
         return binding.root
     }
 
-     /*fun onMapReady(googleMap: GoogleMap) {
 
-        // Check if the user allows the application to access the location-aware resources.
-        if ((activity as MainActivity).checkPermission())
-            return
-
-        // Show the current device's location as a blue dot.
-        googleMap.isMyLocationEnabled = true
-
-        // Set the default map type.
-        googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
-
-        // Setup the UI settings state.
-        googleMap.uiSettings.apply {
-            isCompassEnabled = true
-            isIndoorLevelPickerEnabled = true
-            isMyLocationButtonEnabled = true
-            isRotateGesturesEnabled = true
-            isScrollGesturesEnabled = true
-            isTiltGesturesEnabled = true
-            isZoomControlsEnabled = true
-            isZoomGesturesEnabled = true
-        }
-
-        // Move the Google Maps UI buttons under the OS top bar.
-        googleMap.setPadding(0, 100, 0, 0)
-    }*/
 
 
 }

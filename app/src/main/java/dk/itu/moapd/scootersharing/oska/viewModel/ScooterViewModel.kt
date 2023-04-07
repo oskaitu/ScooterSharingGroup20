@@ -37,7 +37,7 @@ class ScooterViewModel : ViewModel() {
                             _name = doc.get("name") as String,
                             _location = doc.get("location") as String,
                             _timestamp = doc.get("timestamp") as Long,
-                            _translated_location = doc.get("translated_location") as String
+                            _translated_location = doc.get("translated_location") as String?
                         )
 
                     )
