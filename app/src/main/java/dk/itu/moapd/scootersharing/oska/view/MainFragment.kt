@@ -131,11 +131,18 @@ class MainFragment : Fragment() {
                findNavController().navigate(R.id.available_scooter_recyclerview)
             }
             Gotolocation.setOnClickListener{
-                findNavController().navigate((R.id.fragment_geolocation))
+                if(!(activity as MainActivity).checkPermission())
+                {
+                    findNavController().navigate((R.id.fragment_geolocation))
+                }else
+                    Snackbar.make(it,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
             }
             Gotomap.setOnClickListener{
-
+                if(!(activity as MainActivity).checkPermission())
+                {
                 findNavController().navigate((R.id.fragment_map))
+                }else
+                    Snackbar.make(it,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
             }
 
         }
