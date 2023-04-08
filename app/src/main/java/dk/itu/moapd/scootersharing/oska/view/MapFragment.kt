@@ -1,24 +1,27 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 import android.content.ContentValues
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory.fromAsset
+import com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMapBinding
-import dk.itu.moapd.scootersharing.oska.model.Scooter
-import dk.itu.moapd.scootersharing.oska.viewModel.ScooterViewModel
 
 
 class MapFragment : Fragment() {
@@ -65,7 +68,6 @@ class MapFragment : Fragment() {
             //googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
             googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 
-
             db.collection("scooters")
                 .addSnapshotListener { value, error ->
                     if (error != null) {
@@ -79,7 +81,7 @@ class MapFragment : Fragment() {
                             MarkerOptions()
                                 .position(parseLatLngFromString(doc.get("location") as String))
                                 .title(doc.get("name") as String)
-
+                                .icon(BitmapFromVector(requireContext(),R.drawable.logo_scooter))
                         )
                     }
                 }
@@ -121,6 +123,36 @@ class MapFragment : Fragment() {
         val lat = latLon[0].toDouble() // Convert latitude string to double
         val lon = latLon[1].toDouble() // Convert longitude string to double
         return LatLng(lat, lon) // Return a new LatLng object
+    }
+    private fun BitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+        // below line is use to generate a drawable.
+        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+
+        // below line is use to set bounds to our vector drawable.
+        vectorDrawable!!.setBounds(
+            0,
+            0,
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight
+        )
+
+        // below line is use to create a bitmap for our
+        // drawable which we have added.
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+
+        // below line is use to add bitmap in our canvas.
+        val canvas = Canvas(bitmap)
+
+        // below line is use to draw our
+        // vector drawable in canvas.
+        vectorDrawable.draw(canvas)
+
+        // after generating our bitmap we are returning our bitmap.
+        return fromBitmap(bitmap)
     }
 
 
