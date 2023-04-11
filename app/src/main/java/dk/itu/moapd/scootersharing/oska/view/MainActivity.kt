@@ -171,7 +171,10 @@ class MainActivity : AppCompatActivity() {
         requestUserPermissions()
 
         gps = LocationService(this, this.getSystemService(LOCATION_SERVICE) as LocationManager)
-        deviceLocation = gps.getLocation()!!
+        if(checkPermission())
+        {
+            deviceLocation = gps.getLocation()!!
+        }
 
         /*
         // Start receiving location updates.

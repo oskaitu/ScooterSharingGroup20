@@ -1,14 +1,17 @@
 package dk.itu.moapd.scootersharing.oska.viewModel
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.ActivityCompat
 
 
 public open class LocationService(context: Context, locationManager: LocationManager) : Service(), LocationListener
@@ -47,6 +50,7 @@ public open class LocationService(context: Context, locationManager: LocationMan
     }
 
     @SuppressLint("MissingPermission")
+    //List is supressed here, but we handle checking permissions if the user clicks something that needs a location
     fun getLocation(): Location? {
         try {
             // getting GPS status
@@ -137,5 +141,14 @@ public open class LocationService(context: Context, locationManager: LocationMan
     override fun onLocationChanged(p0: Location) {
         getLocation()
     }
+
+    fun checkPermission() =
+        ActivityCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    this, Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+
 
 }
