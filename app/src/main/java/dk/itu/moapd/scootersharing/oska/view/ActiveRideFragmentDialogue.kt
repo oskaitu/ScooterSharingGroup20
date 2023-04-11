@@ -31,26 +31,54 @@ class ActiveRideFragmentDialogue : DialogFragment() {
             .setTitle("Ride time")
             .setMessage("You are driving ${scooterToBeChanged._name} Vroom Vroom \n")
             .setPositiveButton("Stop driving") { _, _ ->
-                simpleChronometer.stop()
-                val endLocation = (activity as MainActivity).deviceLocation
-                var results = FloatArray(1)
-                var readableLocation =convertCordsToAddress(endLocation.latitude,endLocation.longitude)
-                Location.distanceBetween(startLocation.latitude,startLocation.longitude,endLocation.latitude,endLocation.longitude,results)
-                val rideData = hashMapOf<String,Any>()
-                    rideData["cost"] = results[0].toInt() * simpleChronometer.base/60 //cost is meters times minutes
+                try {
+                    simpleChronometer.stop()
+                    val endLocation = (activity as MainActivity).deviceLocation
+                    var results = FloatArray(1)
+                    var readableLocation =
+                        convertCordsToAddress(endLocation.latitude, endLocation.longitude)
+                    Location.distanceBetween(
+                        startLocation.latitude,
+                        startLocation.longitude,
+                        endLocation.latitude,
+                        endLocation.longitude,
+                        results
+                    )
+                    val rideData = hashMapOf<String, Any>()
+                    rideData["cost"] =
+                        results[0].toInt() * simpleChronometer.base / 60 //cost is meters times minutes
                     rideData["end_time"] = System.currentTimeMillis()
                     rideData["scooterid"] = scooterToBeChanged._id
                     rideData["start_time"] = startTime
-                    rideData["start_location"] = "${startLocation.latitude}, ${startLocation.longitude}"
+                    rideData["start_location"] =
+                        "${startLocation.latitude}, ${startLocation.longitude}"
                     rideData["end_location"] = "${endLocation.latitude}, ${endLocation.longitude}"
                     rideData["distance"] = results[0].toInt()
-                val rentalData = hashMapOf<String, Any>()
-                 rentalData["date"] = startTime
-                MainFragment.viewModel.addDocumentRentalAndRides(rideData = rideData, rentalData = rentalData)
-                MainFragment.viewModel.updateDocument(collection = "scooters", item = MainFragment.selectedScooter._id, fieldToUpdate = "location", newData = "${endLocation.latitude}, ${endLocation.longitude}")
-                MainFragment.viewModel.updateDocument(collection = "scooters", item = MainFragment.selectedScooter._id, fieldToUpdate = "translated_location", newData = readableLocation )
-                MainFragment.rider = false
-                MainFragment.selectedScooter = defaultScooter()
+                    val rentalData = hashMapOf<String, Any>()
+                    rentalData["date"] = startTime
+                    MainFragment.viewModel.addDocumentRentalAndRides(
+                        rideData = rideData,
+                        rentalData = rentalData
+                    )
+                    MainFragment.viewModel.updateDocument(
+                        collection = "scooters",
+                        item = MainFragment.selectedScooter._id,
+                        fieldToUpdate = "location",
+                        newData = "${endLocation.latitude}, ${endLocation.longitude}"
+                    )
+                    MainFragment.viewModel.updateDocument(
+                        collection = "scooters",
+                        item = MainFragment.selectedScooter._id,
+                        fieldToUpdate = "translated_location",
+                        newData = readableLocation
+                    )
+                    MainFragment.rider = false
+                    MainFragment.selectedScooter = defaultScooter()
+
+                } catch (e :IllegalArgumentException) //fix for oneplus specific error on this
+                {
+                    println(e.message)
+                }
             }
             builder.setView(view)
             simpleChronometer.start()

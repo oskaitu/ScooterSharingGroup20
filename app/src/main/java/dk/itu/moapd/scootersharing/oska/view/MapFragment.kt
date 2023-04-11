@@ -124,6 +124,8 @@ class MapFragment : Fragment() {
         val lon = latLon[1].toDouble() // Convert longitude string to double
         return LatLng(lat, lon) // Return a new LatLng object
     }
+
+    //source https://www.geeksforgeeks.org/how-to-add-custom-marker-to-google-maps-in-android/
     private fun BitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
         // below line is use to generate a drawable.
         val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
