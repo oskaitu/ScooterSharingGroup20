@@ -357,9 +357,6 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
         ) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(
                     this, Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED  &&
-                ActivityCompat.checkSelfPermission(
-                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) != PackageManager.PERMISSION_GRANTED
 
     override fun onResume() {
