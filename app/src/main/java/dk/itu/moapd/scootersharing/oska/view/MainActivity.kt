@@ -1,13 +1,15 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.hardware.camera2.CameraCharacteristics
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.os.Looper
+import android.os.Environment
+import android.util.Log
 import android.view.SurfaceView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -35,8 +37,10 @@ import org.opencv.android.OpenCVLoader
 import org.opencv.core.Core
 import org.opencv.core.CvType.CV_8UC4
 import org.opencv.core.Mat
-import java.text.SimpleDateFormat
+import org.opencv.imgproc.Imgproc
+import java.io.File
 import java.util.*
+import org.opencv.*
 
 /**
  * MIT License
@@ -188,6 +192,9 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
                 methodId %= 4
                 viewModel.onMethodChanged(methodId)
             }
+            cameraCaptureButton.setOnClickListener{
+                println("capture")
+            }
         }
         geocoder = Geocoder(this,Locale.getDefault())
         setContentView(binding.root)
@@ -300,6 +307,8 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
         val permissions: ArrayList<String> = ArrayList()
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
 
         // Check which permissions is needed to ask to the user.
         val permissionsToRequest = permissionsToRequest(permissions)
@@ -348,6 +357,9 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
         ) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(
                     this, Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED  &&
+                ActivityCompat.checkSelfPermission(
+                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) != PackageManager.PERMISSION_GRANTED
 
     override fun onResume() {
@@ -404,6 +416,7 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
             3 -> OpenCVUtils.convertToCanny(image)
             else -> image
         }
+
     }
 
     /**
@@ -419,6 +432,7 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
             setCvCameraViewListener(this@MainActivity)
         }
 
+
         // Initialize the callback from OpenCV Manager to handle the OpenCV library.
         loaderCallback = object : BaseLoaderCallback(this) {
             override fun onManagerConnected(status: Int) {
@@ -429,6 +443,24 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
             }
         }
     }
+
+    /*
+    fun SaveImage(mat: Mat?, name: String) {
+        val path: File =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        var filename = "$name.png"
+        val file = File(path, filename)
+        var bool: Boolean? = null
+        filename = file.toString()
+
+        bool = Highgui.imwrite(filename, mat)
+        if (bool == true) Log.d(TAG, "SUCCESS writing image to external storage") else Log.d(
+            TAG,
+            "Fail writing image to external storage"
+        )
+    }
+
+     */
 
 
     /**
@@ -444,6 +476,8 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
             .make(findViewById(R.id.camera_content), text, duration)
             .show()
     }
+
+
 
 /*
     private fun subscribeToLocationUpdates() {
