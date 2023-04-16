@@ -2,17 +2,22 @@ package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.hardware.camera2.CameraCharacteristics
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
+import android.view.SurfaceView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.gms.location.*
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
@@ -21,7 +26,15 @@ import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.viewModel.LocationService
+import dk.itu.moapd.scootersharing.oska.viewModel.MainActivityVM
+import dk.itu.moapd.scootersharing.oska.viewModel.OpenCVUtils
+import org.opencv.android.BaseLoaderCallback
+import org.opencv.android.CameraBridgeViewBase
+import org.opencv.android.LoaderCallbackInterface
 import org.opencv.android.OpenCVLoader
+import org.opencv.core.Core
+import org.opencv.core.CvType.CV_8UC4
+import org.opencv.core.Mat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,9 +57,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListener2 {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val viewModel: MainActivityVM by lazy {
+        ViewModelProvider(this)[MainActivityVM::class.java]
+    }
+    /**
+     * A callback from OpenCV Manager to handle the OpenCV library.
+     */
+    private lateinit var loaderCallback: BaseLoaderCallback
+
+    /**
+     * The OpenCV image storage.
+     */
+    private lateinit var imageMat: Mat
+
+    /**
+     * The camera characteristics allows to select a camera or return a filtered set of cameras.
+     */
+    private var cameraCharacteristics = CameraCharacteristics.LENS_FACING_BACK
+
+    /**
+     * A variable to control the image analysis method to apply in the input image.
+     */
+    private var currentMethodId = 0
+
 
     //private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     //private lateinit var locationCallback: LocationCallback
@@ -58,6 +95,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         private const val ALL_PERMISSIONS_RESULT = 1337
+        private const val REQUEST_CODE_PERMISSIONS = 10
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+
 
     }
 
@@ -100,14 +140,58 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
+
         binding = ActivityMainBinding.inflate(layoutInflater)
+
+        cameraCharacteristics =
+            viewModel.characteristics.value ?: CameraCharacteristics.LENS_FACING_BACK
+        viewModel.characteristics.observe(this) {
+            cameraCharacteristics = it
+        }
+        currentMethodId =
+            viewModel.methodId.value ?: 0
+        viewModel.methodId.observe(this) {
+            currentMethodId = it
+        }
+        if (allPermissionsGranted())
+            startCamera()
+        else
+            ActivityCompat.requestPermissions(
+                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+
+        // Define the UI behavior.
+        binding.cameraContent.apply {
+
+            // Listener for button used to switch cameras.
+            cameraSwitchButton.setOnClickListener {
+                viewModel.onCameraCharacteristicsChanged(
+                    if (CameraCharacteristics.LENS_FACING_FRONT == cameraCharacteristics)
+                        CameraCharacteristics.LENS_FACING_BACK
+                    else
+                        CameraCharacteristics.LENS_FACING_FRONT
+                )
+
+                // Re-start use cases to update selected camera.
+                cameraView.disableView()
+                cameraView.setCameraIndex(cameraCharacteristics)
+                cameraView.enableView()
+            }
+
+            // Listener for button used to change the image analysis method.
+            imageAnalysisButton.setOnClickListener {
+                var methodId = currentMethodId + 1
+                methodId %= 4
+                viewModel.onMethodChanged(methodId)
+            }
+        }
         geocoder = Geocoder(this,Locale.getDefault())
-        OpenCVLoader.initDebug()
         setContentView(binding.root)
+
 
 
         startLocationAware()
@@ -236,6 +320,26 @@ class MainActivity : AppCompatActivity() {
                 result.add(permission)
         return result
     }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        // Check if the user has accepted the permissions to access the camera.
+        if (requestCode == REQUEST_CODE_PERMISSIONS)
+            if (allPermissionsGranted())
+                startCamera()
+
+            // If permissions are not granted, present a toast to notify the user that the
+            // permissions were not granted.
+            else {
+                snackBar("Permissions not granted by the user.")
+                finish()
+            }
+    }
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
 
 
     fun checkPermission() =
@@ -246,6 +350,100 @@ class MainActivity : AppCompatActivity() {
                     this, Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
 
+    override fun onResume() {
+        super.onResume()
+
+        // Try to initialize OpenCV using the newest init method. Otherwise, use the asynchronous
+        // one.
+        if (!OpenCVLoader.initDebug())
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION,
+                this, loaderCallback)
+        else
+            loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
+    }
+    override fun onPause() {
+        super.onPause()
+        binding.cameraContent.cameraView.disableView()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.cameraContent.cameraView.disableView()
+    }
+
+    override fun onCameraViewStarted(width: Int, height: Int) {
+        // Create the OpenCV Mat structure to represent images in the library.
+        imageMat = Mat(height, width, CV_8UC4)
+    }
+
+    /**
+     * This method is invoked when camera preview has been stopped for some reason. No frames will
+     * be delivered via `onCameraFrame()` callback after this method is called.
+     */
+    override fun onCameraViewStopped() {
+        imageMat.release()
+    }
+
+    /**
+     * This method is invoked when delivery of the frame needs to be done. The returned values - is
+     * a modified frame which needs to be displayed on the screen.
+     *
+     * @param inputFrame The current frame grabbed from the video camera device stream.
+     */
+    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
+
+        // Get the current frame and copy it to the OpenCV Mat structure.
+        val image = inputFrame?.rgba()
+        imageMat = image!!
+
+        if (cameraCharacteristics == CameraCharacteristics.LENS_FACING_BACK)
+            Core.flip(image, image, 1)
+
+        return when (currentMethodId) {
+            1 -> OpenCVUtils.convertToGrayscale(image)
+            2 -> OpenCVUtils.convertToBgra(image)
+            3 -> OpenCVUtils.convertToCanny(image)
+            else -> image
+        }
+    }
+
+    /**
+     * This method is used to start the video camera device stream.
+     */
+    private fun startCamera() {
+
+        // Setup the OpenCV camera view.
+        binding.cameraContent.cameraView.apply {
+            visibility = SurfaceView.VISIBLE
+            setCameraIndex(cameraCharacteristics)
+            setCameraPermissionGranted()
+            setCvCameraViewListener(this@MainActivity)
+        }
+
+        // Initialize the callback from OpenCV Manager to handle the OpenCV library.
+        loaderCallback = object : BaseLoaderCallback(this) {
+            override fun onManagerConnected(status: Int) {
+                when (status) {
+                    SUCCESS -> binding.cameraContent.cameraView.enableView()
+                    else -> super.onManagerConnected(status)
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Make a standard toast that just contains text.
+     *
+     * @param text The text to show. Can be formatted text.
+     * @param duration How long to display the message. Either `Toast.LENGTH_SHORT` or
+     *      `Toast.LENGTH_LONG`.
+     */
+    private fun snackBar(text: CharSequence,
+                         duration: Int = Snackbar.LENGTH_SHORT) {
+        Snackbar
+            .make(findViewById(R.id.camera_content), text, duration)
+            .show()
+    }
 
 /*
     private fun subscribeToLocationUpdates() {
@@ -282,10 +480,7 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         unsubscribeToLocationUpdates()
     }
-    override fun onResume() {
-        super.onResume()
-        subscribeToLocationUpdates()
-    }
+
 
      */
 
