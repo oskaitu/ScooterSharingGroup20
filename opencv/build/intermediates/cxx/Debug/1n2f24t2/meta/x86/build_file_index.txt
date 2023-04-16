@@ -1,1 +1,0 @@
-C:\Users\Nicol\StudioProjects\ScooterSharingGroup20\openCV\libcxx_helper\CMakeLists.txt

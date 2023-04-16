@@ -1,1 +1,0 @@
-C:\Users\Nicol\StudioProjects\ScooterSharingGroup20\sdk\libcxx_helper\CMakeLists.txt
