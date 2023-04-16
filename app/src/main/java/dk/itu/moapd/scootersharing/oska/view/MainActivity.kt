@@ -21,6 +21,7 @@ import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.viewModel.LocationService
+import org.opencv.android.OpenCVLoader
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -105,6 +106,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         geocoder = Geocoder(this,Locale.getDefault())
+        OpenCVLoader.initDebug()
         setContentView(binding.root)
 
 
@@ -121,6 +123,7 @@ class MainActivity : AppCompatActivity() {
             }
         // [END auth_fui_signout]
     }
+
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
