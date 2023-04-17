@@ -18,9 +18,7 @@
     tools:context=".view.MainActivity">
 
 </androidx.fragment.app.FragmentContainerView>
-    <include
-        android:id="@+id/camera_content"
-        layout="@layout/camera_content" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

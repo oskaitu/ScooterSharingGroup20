@@ -144,6 +144,13 @@ class MainFragment : Fragment() {
                 }else
                     Snackbar.make(it,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
             }
+            Gotocamera.setOnClickListener{
+                if(!(activity as MainActivity).checkPermission())
+                {
+                    findNavController().navigate((R.id.fragment_camera))
+                }else
+                    Snackbar.make(it,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
+            }
 
         }
     }

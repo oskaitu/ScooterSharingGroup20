@@ -61,7 +61,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListener2 {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
      * The OpenCV image storage.
      */
     private lateinit var imageMat: Mat
+
 
     /**
      * The camera characteristics allows to select a camera or return a filtered set of cameras.
@@ -99,8 +100,8 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
 
     companion object{
         private const val ALL_PERMISSIONS_RESULT = 1337
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        const val REQUEST_CODE_PERMISSIONS = 10
+        val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
 
     }
@@ -152,7 +153,7 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-        cameraCharacteristics =
+       /* cameraCharacteristics =
             viewModel.characteristics.value ?: CameraCharacteristics.LENS_FACING_BACK
         viewModel.characteristics.observe(this) {
             cameraCharacteristics = it
@@ -195,12 +196,12 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
             cameraCaptureButton.setOnClickListener{
                 println("capture")
             }
-        }
+        }*/
         geocoder = Geocoder(this,Locale.getDefault())
         setContentView(binding.root)
 
 
-
+        requestUserPermissions()
         startLocationAware()
 
     }
@@ -308,6 +309,7 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        permissions.add(Manifest.permission.CAMERA)
 
 
         // Check which permissions is needed to ask to the user.
@@ -336,12 +338,12 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
         // Check if the user has accepted the permissions to access the camera.
         if (requestCode == REQUEST_CODE_PERMISSIONS)
             if (allPermissionsGranted())
-                startCamera()
+                //startCamera()
 
             // If permissions are not granted, present a toast to notify the user that the
             // permissions were not granted.
             else {
-                snackBar("Permissions not granted by the user.")
+                //snackBar("Permissions not granted by the user.")
                 finish()
             }
     }
@@ -359,7 +361,7 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
                     this, Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
 
-    override fun onResume() {
+    /*override fun onResume() {
         super.onResume()
 
         // Try to initialize OpenCV using the newest init method. Otherwise, use the asynchronous
@@ -382,15 +384,15 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
     override fun onCameraViewStarted(width: Int, height: Int) {
         // Create the OpenCV Mat structure to represent images in the library.
         imageMat = Mat(height, width, CV_8UC4)
-    }
+    }*/
 
     /**
      * This method is invoked when camera preview has been stopped for some reason. No frames will
      * be delivered via `onCameraFrame()` callback after this method is called.
      */
-    override fun onCameraViewStopped() {
+   /* override fun onCameraViewStopped() {
         imageMat.release()
-    }
+    }*/
 
     /**
      * This method is invoked when delivery of the frame needs to be done. The returned values - is
@@ -398,7 +400,7 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
      *
      * @param inputFrame The current frame grabbed from the video camera device stream.
      */
-    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
+   /* override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
 
         // Get the current frame and copy it to the OpenCV Mat structure.
         val image = inputFrame?.rgba()
@@ -414,12 +416,12 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
             else -> image
         }
 
-    }
+    }*/
 
     /**
      * This method is used to start the video camera device stream.
      */
-    private fun startCamera() {
+    /*private fun startCamera() {
 
         // Setup the OpenCV camera view.
         binding.cameraContent.cameraView.apply {
@@ -440,7 +442,7 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
             }
         }
     }
-
+*/
     /*
     fun SaveImage(mat: Mat?, name: String) {
         val path: File =
@@ -467,12 +469,12 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
      * @param duration How long to display the message. Either `Toast.LENGTH_SHORT` or
      *      `Toast.LENGTH_LONG`.
      */
-    private fun snackBar(text: CharSequence,
+    /*private fun snackBar(text: CharSequence,
                          duration: Int = Snackbar.LENGTH_SHORT) {
         Snackbar
             .make(findViewById(R.id.camera_content), text, duration)
             .show()
-    }
+    }*/
 
 
 
