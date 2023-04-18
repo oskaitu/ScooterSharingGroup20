@@ -1,17 +1,22 @@
 package dk.itu.moapd.scootersharing.oska.view
 
+import android.Manifest
 import android.content.pm.PackageManager
 import android.hardware.camera2.CameraCharacteristics
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
+import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentCameraBinding
+import dk.itu.moapd.scootersharing.oska.view.MainActivity.Companion.REQUEST_CODE_PERMISSIONS
+import dk.itu.moapd.scootersharing.oska.view.MainActivity.Companion.REQUIRED_PERMISSIONS
 import dk.itu.moapd.scootersharing.oska.viewModel.MainActivityVM
 import dk.itu.moapd.scootersharing.oska.viewModel.OpenCVUtils
 import org.opencv.android.BaseLoaderCallback
@@ -61,22 +66,29 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
-        super.onCreate(savedInstanceState)
 
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         cameraCharacteristics =
             viewModel.characteristics.value ?: CameraCharacteristics.LENS_FACING_BACK
-        viewModel.characteristics.observe( viewLifecycleOwner) {
+        viewModel.characteristics.observe((activity as MainActivity)) {
             cameraCharacteristics = it
         }
         currentMethodId =
             viewModel.methodId.value ?: 0
-        viewModel.methodId.observe(viewLifecycleOwner) {
+        viewModel.methodId.observe((activity as MainActivity)) {
             currentMethodId = it
         }
 
-        if (allPermissionsGranted())
+        //if (checkPermission())
             startCamera()
-        else
+        /*else
+            ActivityCompat.requestPermissions(requireActivity(),
+                REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS )*/
 
 
 
@@ -108,23 +120,21 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
                 println("capture")
             }
         }
-
-
-
-        return binding.root
     }
+
 
     override fun onResume() {
         super.onResume()
 
+        OpenCVLoader.initDebug()
         // Try to initialize OpenCV using the newest init method. Otherwise, use the asynchronous
         // one.
-        if (!OpenCVLoader.initDebug())
+        /*if (!OpenCVLoader.initDebug())
             OpenCVLoader.initAsync(
                 OpenCVLoader.OPENCV_VERSION,
                 this.activity, loaderCallback)
         else
-            loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
+            loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)*/
     }
     override fun onPause() {
         super.onPause()
@@ -178,9 +188,10 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
      * This method is used to start the video camera device stream.
      */
     private fun startCamera() {
+        //OpenCVLoader.initDebug()
 
         // Setup the OpenCV camera view.
-        _binding.fragmentCameraView.apply {
+        binding.fragmentCameraView.apply {
             visibility = SurfaceView.VISIBLE
             setCameraIndex(cameraCharacteristics)
             setCameraPermissionGranted()
@@ -189,21 +200,14 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
 
         // Initialize the callback from OpenCV Manager to handle the OpenCV library.
-        var loaderCallback = object : BaseLoaderCallback(this.activity) {
-            override fun onManagerConnected(status: Int) {
-                when (status) {
-                    SUCCESS -> _binding.fragmentCameraView.enableView()
-                    else -> super.onManagerConnected(status)
-                }
-            }
-        }
+        binding.fragmentCameraView.enableView()
     }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         // Check if the user has accepted the permissions to access the camera.
-        if (requestCode == MainActivity.REQUEST_CODE_PERMISSIONS)
+        if (requestCode == REQUEST_CODE_PERMISSIONS)
             if (allPermissionsGranted())
             startCamera()
 
@@ -213,11 +217,16 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
                 //snackBar("Permissions not granted by the user.")
                 //finish()
             }
-    }
-    private fun allPermissionsGranted() = MainActivity.REQUIRED_PERMISSIONS.all {
+    }*/
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
             requireContext(), it) == PackageManager.PERMISSION_GRANTED
     }
+
+
+
+
+
 
 
 

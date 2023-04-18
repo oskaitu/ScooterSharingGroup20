@@ -1,16 +1,12 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
-import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.hardware.camera2.CameraCharacteristics
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
-import android.view.SurfaceView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -19,7 +15,6 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.gms.location.*
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
@@ -29,18 +24,10 @@ import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.viewModel.LocationService
 import dk.itu.moapd.scootersharing.oska.viewModel.MainActivityVM
-import dk.itu.moapd.scootersharing.oska.viewModel.OpenCVUtils
-import org.opencv.android.BaseLoaderCallback
-import org.opencv.android.CameraBridgeViewBase
-import org.opencv.android.LoaderCallbackInterface
-import org.opencv.android.OpenCVLoader
-import org.opencv.core.Core
-import org.opencv.core.CvType.CV_8UC4
-import org.opencv.core.Mat
-import org.opencv.imgproc.Imgproc
-import java.io.File
-import java.util.*
 import org.opencv.*
+import org.opencv.android.BaseLoaderCallback
+import org.opencv.core.Mat
+import java.util.*
 
 /**
  * MIT License
@@ -65,35 +52,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel: MainActivityVM by lazy {
-        ViewModelProvider(this)[MainActivityVM::class.java]
-    }
-    /**
-     * A callback from OpenCV Manager to handle the OpenCV library.
-     */
-    private lateinit var loaderCallback: BaseLoaderCallback
 
-    /**
-     * The OpenCV image storage.
-     */
-    private lateinit var imageMat: Mat
-
-
-    /**
-     * The camera characteristics allows to select a camera or return a filtered set of cameras.
-     */
-    private var cameraCharacteristics = CameraCharacteristics.LENS_FACING_BACK
-
-    /**
-     * A variable to control the image analysis method to apply in the input image.
-     */
-    private var currentMethodId = 0
-
-
-    //private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    //private lateinit var locationCallback: LocationCallback
-    lateinit var deviceLocation : Location
-    lateinit var deviceLocation2 : Location
+   lateinit var deviceLocation : Location
+    //lateinit var deviceLocation2 : Location
     lateinit var geocoder : Geocoder
     lateinit var gps: LocationService
 
@@ -153,50 +114,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-       /* cameraCharacteristics =
-            viewModel.characteristics.value ?: CameraCharacteristics.LENS_FACING_BACK
-        viewModel.characteristics.observe(this) {
-            cameraCharacteristics = it
-        }
-        currentMethodId =
-            viewModel.methodId.value ?: 0
-        viewModel.methodId.observe(this) {
-            currentMethodId = it
-        }
-        if (allPermissionsGranted())
-            startCamera()
-        else
-            ActivityCompat.requestPermissions(
-                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
 
-        // Define the UI behavior.
-        binding.cameraContent.apply {
-
-            // Listener for button used to switch cameras.
-            cameraSwitchButton.setOnClickListener {
-                viewModel.onCameraCharacteristicsChanged(
-                    if (CameraCharacteristics.LENS_FACING_FRONT == cameraCharacteristics)
-                        CameraCharacteristics.LENS_FACING_BACK
-                    else
-                        CameraCharacteristics.LENS_FACING_FRONT
-                )
-
-                // Re-start use cases to update selected camera.
-                cameraView.disableView()
-                cameraView.setCameraIndex(cameraCharacteristics)
-                cameraView.enableView()
-            }
-
-            // Listener for button used to change the image analysis method.
-            imageAnalysisButton.setOnClickListener {
-                var methodId = currentMethodId + 1
-                methodId %= 4
-                viewModel.onMethodChanged(methodId)
-            }
-            cameraCaptureButton.setOnClickListener{
-                println("capture")
-            }
-        }*/
         geocoder = Geocoder(this,Locale.getDefault())
         setContentView(binding.root)
 
@@ -271,32 +189,7 @@ class MainActivity : AppCompatActivity() {
             deviceLocation = gps.getLocation()!!
         }
 
-        /*
-        // Start receiving location updates.
-        fusedLocationProviderClient = LocationServices
-            .getFusedLocationProviderClient(this)
 
-        // Initialize the `LocationCallback`.
-        locationCallback = object : LocationCallback() {
-
-            /**
-             * This method will be executed when `FusedLocationProviderClient` has a new location.
-             *
-             * @param locationResult The last known location.
-             */
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-
-                // Updates the user interface components with GPS data location.
-                locationResult.lastLocation?.let { location ->
-                    deviceLocation = deviceLocation2
-                    println(deviceLocation2)
-                    println(deviceLocation)
-                }
-            }
-        }
-
-         */
     }
 
 
@@ -359,167 +252,10 @@ class MainActivity : AppCompatActivity() {
         ) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(
                     this, Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-
-    /*override fun onResume() {
-        super.onResume()
-
-        // Try to initialize OpenCV using the newest init method. Otherwise, use the asynchronous
-        // one.
-        if (!OpenCVLoader.initDebug())
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION,
-                this, loaderCallback)
-        else
-            loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
-    }
-    override fun onPause() {
-        super.onPause()
-        binding.cameraContent.cameraView.disableView()
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.cameraContent.cameraView.disableView()
-    }
-
-    override fun onCameraViewStarted(width: Int, height: Int) {
-        // Create the OpenCV Mat structure to represent images in the library.
-        imageMat = Mat(height, width, CV_8UC4)
-    }*/
-
-    /**
-     * This method is invoked when camera preview has been stopped for some reason. No frames will
-     * be delivered via `onCameraFrame()` callback after this method is called.
-     */
-   /* override fun onCameraViewStopped() {
-        imageMat.release()
-    }*/
-
-    /**
-     * This method is invoked when delivery of the frame needs to be done. The returned values - is
-     * a modified frame which needs to be displayed on the screen.
-     *
-     * @param inputFrame The current frame grabbed from the video camera device stream.
-     */
-   /* override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
-
-        // Get the current frame and copy it to the OpenCV Mat structure.
-        val image = inputFrame?.rgba()
-        imageMat = image!!
-
-        if (cameraCharacteristics == CameraCharacteristics.LENS_FACING_BACK)
-            Core.flip(image, image, 1)
-
-        return when (currentMethodId) {
-            1 -> OpenCVUtils.convertToGrayscale(image)
-            2 -> OpenCVUtils.convertToBgra(image)
-            3 -> OpenCVUtils.convertToCanny(image)
-            else -> image
-        }
-
-    }*/
-
-    /**
-     * This method is used to start the video camera device stream.
-     */
-    /*private fun startCamera() {
-
-        // Setup the OpenCV camera view.
-        binding.cameraContent.cameraView.apply {
-            visibility = SurfaceView.VISIBLE
-            setCameraIndex(cameraCharacteristics)
-            setCameraPermissionGranted()
-            setCvCameraViewListener(this@MainActivity)
-        }
-
-
-        // Initialize the callback from OpenCV Manager to handle the OpenCV library.
-        loaderCallback = object : BaseLoaderCallback(this) {
-            override fun onManagerConnected(status: Int) {
-                when (status) {
-                    SUCCESS -> binding.cameraContent.cameraView.enableView()
-                    else -> super.onManagerConnected(status)
-                }
-            }
-        }
-    }
-*/
-    /*
-    fun SaveImage(mat: Mat?, name: String) {
-        val path: File =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        var filename = "$name.png"
-        val file = File(path, filename)
-        var bool: Boolean? = null
-        filename = file.toString()
-
-        bool = Highgui.imwrite(filename, mat)
-        if (bool == true) Log.d(TAG, "SUCCESS writing image to external storage") else Log.d(
-            TAG,
-            "Fail writing image to external storage"
-        )
-    }
-
-     */
-
-
-    /**
-     * Make a standard toast that just contains text.
-     *
-     * @param text The text to show. Can be formatted text.
-     * @param duration How long to display the message. Either `Toast.LENGTH_SHORT` or
-     *      `Toast.LENGTH_LONG`.
-     */
-    /*private fun snackBar(text: CharSequence,
-                         duration: Int = Snackbar.LENGTH_SHORT) {
-        Snackbar
-            .make(findViewById(R.id.camera_content), text, duration)
-            .show()
-    }*/
-
-
-
-/*
-    private fun subscribeToLocationUpdates() {
-
-        // Check if the user allows the application to access the location-aware resources.
-        if (checkPermission())
-            return
-
-        // Sets the accuracy and desired interval for active location updates.
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_LOW_POWER, 1000).build()
-            
-
-        // Subscribe to location changes.
-        fusedLocationProviderClient.requestLocationUpdates(
-            locationRequest, locationCallback, Looper.getMainLooper()
-        )
-    }
-
- */
-    /*
-
-    private fun unsubscribeToLocationUpdates() {
-        // Unsubscribe to location changes.
-        fusedLocationProviderClient
-            .removeLocationUpdates(locationCallback)
-    }
-
-    private fun Long.toDateString() : String {
-        val date = Date(this)
-        val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
-        return format.format(date)
-    }
-    override fun onPause() {
-        super.onPause()
-        unsubscribeToLocationUpdates()
-    }
-
-
-     */
-
-
-
-
+                ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                    this, Manifest.permission.CAMERA
+                    ) != PackageManager.PERMISSION_GRANTED
 
 }
 

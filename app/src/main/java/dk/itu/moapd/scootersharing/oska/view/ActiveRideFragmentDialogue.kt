@@ -24,7 +24,7 @@ class ActiveRideFragmentDialogue : DialogFragment() {
         val view = View.inflate(context, dk.itu.moapd.scootersharing.oska.R.layout.fragment_active, null)
         val simpleChronometer = view.findViewById(dk.itu.moapd.scootersharing.oska.R.id.simpleChronometer) as Chronometer
         val startTime = System.currentTimeMillis()
-        val startLocation = (activity as MainActivity).deviceLocation
+        val startLocation = (activity as MainActivity).gps.getLocation()!!
         return activity?.let {
         val builder = AlertDialog.Builder(requireActivity())
             .setCancelable(false)
@@ -33,7 +33,7 @@ class ActiveRideFragmentDialogue : DialogFragment() {
             .setPositiveButton("Stop driving") { _, _ ->
                 try {
                     simpleChronometer.stop()
-                    val endLocation = (activity as MainActivity).deviceLocation
+                    val endLocation = (activity as MainActivity).gps.getLocation()!!
                     var results = FloatArray(1)
                     var readableLocation =
                         convertCordsToAddress(endLocation.latitude, endLocation.longitude)
