@@ -14,9 +14,6 @@
         android:required="false" />
     <uses-feature android:name="android.hardware.camera.front.autofocus"
         android:required="false" />
-    <!-- Without this folders will be inaccessible in Android-11 and above devices -->
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-
     <!-- Without this entry storage-permission entry will not be visible under app-info permissions list Android-10 and below -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"

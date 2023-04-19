@@ -1,8 +1,10 @@
 package dk.itu.moapd.scootersharing.oska.view
 
-import android.Manifest
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.hardware.camera2.CameraCharacteristics
 import android.os.Bundle
 import android.os.Environment
@@ -11,28 +13,23 @@ import android.view.LayoutInflater
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
-import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentCameraBinding
-import dk.itu.moapd.scootersharing.oska.view.MainActivity.Companion.REQUEST_CODE_PERMISSIONS
 import dk.itu.moapd.scootersharing.oska.view.MainActivity.Companion.REQUIRED_PERMISSIONS
 import dk.itu.moapd.scootersharing.oska.viewModel.MainActivityVM
 import dk.itu.moapd.scootersharing.oska.viewModel.OpenCVUtils
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.CameraBridgeViewBase
-import org.opencv.android.LoaderCallbackInterface
 import org.opencv.android.OpenCVLoader
 import org.opencv.core.Core
 import org.opencv.core.CvType
 import org.opencv.core.Mat
+import org.opencv.core.MatOfByte
 import org.opencv.imgcodecs.Imgcodecs
-import org.opencv.imgproc.Imgproc
+import java.io.ByteArrayOutputStream
 import java.io.File
-import kotlin.random.Random
 
 
 class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
@@ -125,7 +122,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             }
             fragmentCameraCaptureButton.setOnClickListener{
 
-                SaveImage(imageMat, "test${MainFragment.selectedScooter._name}")
+                SaveImage(imageMat, MainFragment.selectedScooter._name)
             }
         }
     }
@@ -194,7 +191,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
     fun SaveImage(mat: Mat?, name: String) {
         val path: File =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        var filename = "$name.png"
+        var filename = "${mat.toString()}.png"
         val file = File(path, filename)
         var bool: Boolean? = null
         filename = file.toString()
@@ -203,6 +200,38 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             TAG,
             "Fail writing image to external storage"
         )
+        val matOfByte = MatOfByte()
+
+
+        Imgcodecs.imencode(".png", mat, matOfByte)
+        val byteArray = matOfByte.toArray()
+        val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+        val rotated = rotateImage(90,bmp)
+        val stream = ByteArrayOutputStream()
+        rotated.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        val flippedImageByteArray: ByteArray = stream.toByteArray()
+        if(MainFragment.selectedScooter._name=="error")
+        {
+            val uploadTask = MainFragment.storageRef.child("images/captured/${mat.toString()}.png").putBytes(flippedImageByteArray)
+            uploadTask.addOnFailureListener {
+                // Handle unsuccessful uploads
+            }.addOnSuccessListener { taskSnapshot ->
+                println(taskSnapshot.toString())
+                // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+                // ...
+            }
+        } else
+        {
+            val uploadTask = MainFragment.storageRef.child("images/sverige.jpg").putBytes(flippedImageByteArray)
+            uploadTask.addOnFailureListener {
+                // Handle unsuccessful uploads
+            }.addOnSuccessListener { taskSnapshot ->
+                println(taskSnapshot.toString())
+                // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+                // ...
+            }
+        }
+
     }
 
     /**
@@ -244,7 +273,14 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             requireContext(), it) == PackageManager.PERMISSION_GRANTED
     }
 
-
+    fun rotateImage(angle: Int, bitmapSrc: Bitmap): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(angle.toFloat())
+        return Bitmap.createBitmap(
+            bitmapSrc, 0, 0,
+            bitmapSrc.width, bitmapSrc.height, matrix, true
+        )
+    }
 
 
 
