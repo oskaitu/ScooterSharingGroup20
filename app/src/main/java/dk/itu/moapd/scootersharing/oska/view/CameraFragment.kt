@@ -1,9 +1,12 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.hardware.camera2.CameraCharacteristics
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.SurfaceView
 import android.view.View
@@ -26,6 +29,10 @@ import org.opencv.android.OpenCVLoader
 import org.opencv.core.Core
 import org.opencv.core.CvType
 import org.opencv.core.Mat
+import org.opencv.imgcodecs.Imgcodecs
+import org.opencv.imgproc.Imgproc
+import java.io.File
+import kotlin.random.Random
 
 
 class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
@@ -117,7 +124,8 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
                 viewModel.onMethodChanged(methodId)
             }
             fragmentCameraCaptureButton.setOnClickListener{
-                println("capture")
+
+                SaveImage(imageMat, "test${MainFragment.selectedScooter._name}")
             }
         }
     }
@@ -183,6 +191,19 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
     }
 
 
+    fun SaveImage(mat: Mat?, name: String) {
+        val path: File =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        var filename = "$name.png"
+        val file = File(path, filename)
+        var bool: Boolean? = null
+        filename = file.toString()
+        bool = Imgcodecs.imwrite(filename, mat)
+        if (bool == true) Log.d(TAG, "SUCCESS writing image $filename to external storage") else Log.d(
+            TAG,
+            "Fail writing image to external storage"
+        )
+    }
 
     /**
      * This method is used to start the video camera device stream.

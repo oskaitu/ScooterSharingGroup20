@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     companion object{
         private const val ALL_PERMISSIONS_RESULT = 1337
         const val REQUEST_CODE_PERMISSIONS = 10
-        val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
 
     }
@@ -255,7 +255,10 @@ class MainActivity : AppCompatActivity() {
                 ) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(
                     this, Manifest.permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(
+                        this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            ) != PackageManager.PERMISSION_GRANTED
 
 }
 
