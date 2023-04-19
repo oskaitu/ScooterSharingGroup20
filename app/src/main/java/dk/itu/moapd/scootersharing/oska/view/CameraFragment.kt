@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentCameraBinding
 import dk.itu.moapd.scootersharing.oska.view.MainActivity.Companion.REQUIRED_PERMISSIONS
 import dk.itu.moapd.scootersharing.oska.viewModel.MainActivityVM
@@ -216,7 +217,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             uploadTask.addOnFailureListener {
                 // Handle unsuccessful uploads
             }.addOnSuccessListener { taskSnapshot ->
-                println(taskSnapshot.toString())
+                Snackbar.make(requireView(),"Uploaded picture with no scooter selected!", Snackbar.LENGTH_SHORT).show()
                 // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
                 // ...
             }
@@ -226,7 +227,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             uploadTask.addOnFailureListener {
                 // Handle unsuccessful uploads
             }.addOnSuccessListener { taskSnapshot ->
-                println(taskSnapshot.toString())
+                Snackbar.make(requireView(),"Uploaded picture with ${MainFragment.selectedScooter._name} selected!", Snackbar.LENGTH_SHORT).show()
                 // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
                 // ...
             }
@@ -273,6 +274,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             requireContext(), it) == PackageManager.PERMISSION_GRANTED
     }
 
+    //source for flipping images https://stackoverflow.com/questions/16950953/flip-image-stored-as-a-byte-array
     fun rotateImage(angle: Int, bitmapSrc: Bitmap): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(angle.toFloat())
