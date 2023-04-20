@@ -178,14 +178,17 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
         if (cameraCharacteristics == CameraCharacteristics.LENS_FACING_BACK)
             Core.flip(image, image, 1)
-
+        /*
         return when (currentMethodId) {
             1 -> OpenCVUtils.convertToGrayscale(image)
             2 -> OpenCVUtils.convertToBgra(image)
             3 -> OpenCVUtils.convertToCanny(image)
             else -> image
-        }
 
+
+        }
+        */
+        return image
     }
 
 
@@ -202,7 +205,6 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             "Fail writing image to external storage"
         )
         val matOfByte = MatOfByte()
-
 
         Imgcodecs.imencode(".png", mat, matOfByte)
         val byteArray = matOfByte.toArray()
