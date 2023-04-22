@@ -4,6 +4,7 @@ import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 
 
+
 /**
  * An utility class to manage a set of image analysis algorithms.
  */

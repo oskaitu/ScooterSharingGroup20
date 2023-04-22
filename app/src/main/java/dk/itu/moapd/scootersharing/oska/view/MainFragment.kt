@@ -151,6 +151,11 @@ class MainFragment : Fragment() {
                     findNavController().navigate((R.id.fragment_camera))
 
             }
+            Gotoscanner.setOnClickListener{
+                println((activity as MainActivity).checkPermission())
+                findNavController().navigate((R.id.fragment_scanner))
+
+            }
 
         }
     }

@@ -32,6 +32,9 @@
         <action
             android:id="@+id/fragment_camera"
             app:destination="@id/fragment_camera" />
+        <action
+            android:id="@+id/fragment_scanner"
+            app:destination="@id/fragment_scanner" />
 
     </fragment>
     <fragment
@@ -56,6 +59,12 @@
         android:id="@+id/fragment_camera"
         android:name="dk.itu.moapd.scootersharing.oska.view.CameraFragment"
         tools:layout="@layout/fragment_camera" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_scanner"
+        android:name="dk.itu.moapd.scootersharing.oska.view.ScannerFragment"
+        tools:layout="@layout/fragment_scanner" >
 
     </fragment>
 
