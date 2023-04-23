@@ -43,6 +43,7 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
 
     //private lateinit var codeScanner: CodeScanner
     private lateinit var _binding: FragmentScannerBinding
+    private lateinit var  scanner: QRCodeDetector
 
 
 
@@ -123,6 +124,7 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
     override fun onCameraViewStarted(width: Int, height: Int) {
         // Create the OpenCV Mat structure to represent images in the library.
         imageMat = Mat(height, width, CvType.CV_8UC4)
+        scanner = QRCodeDetector()
 
     }
 
@@ -149,7 +151,7 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
 
         if (cameraCharacteristics == CameraCharacteristics.LENS_FACING_BACK)
             Core.flip(image, image, 1)
-        val scanner = QRCodeDetector()
+
         if(MainFragment.selectedScooter._id == scanner.detectAndDecode(imageMat))
         {
             findNavController().navigate(R.id.fragment_geolocation)
@@ -158,6 +160,8 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
 
         return image
     }
+
+
 
 
 
