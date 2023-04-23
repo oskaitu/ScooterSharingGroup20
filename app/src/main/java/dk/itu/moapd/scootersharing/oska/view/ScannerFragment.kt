@@ -84,7 +84,7 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
         super.onViewCreated(view, savedInstanceState)
 
 
-    cameraCharacteristics =
+        cameraCharacteristics =
             viewModel.characteristics.value ?: CameraCharacteristics.LENS_FACING_FRONT
         viewModel.characteristics.observe((activity as MainActivity)) {
             cameraCharacteristics = it

@@ -3,22 +3,15 @@ package dk.itu.moapd.scootersharing.oska.viewModel
 import android.content.ContentValues
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.lifecycle.LiveData
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import com.bumptech.glide.annotation.GlideModule
-import com.bumptech.glide.module.AppGlideModule
 import com.google.android.material.snackbar.Snackbar
-import dk.itu.moapd.scootersharing.oska.view.MainFragment
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.CardviewitemBinding
-import dk.itu.moapd.scootersharing.oska.databinding.ScooterListItemBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
+import dk.itu.moapd.scootersharing.oska.view.MainFragment
 import java.util.*
 
 class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
@@ -72,9 +65,14 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
                     "${scooter._name} Selected!",
                     Snackbar.LENGTH_SHORT
                 ).show()
+
+                MainFragment.rider = true
+
             }
         }
     }
+
+
 
     /**
      * Called when RecyclerView needs a new [ViewHolder] of the given type to represent
@@ -131,6 +129,10 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val scooter = scooterViewModel.scooters.value?.get(position)
         Log.d(TAG, "Populate an item at position: $position")
+
+
+
+
 
 
         if (scooter != null) {
