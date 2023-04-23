@@ -67,7 +67,6 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
-    implementation 'com.github.yuriy-budiyev:code-scanner:2.3.2'
     implementation project(":opencv")
 
     testImplementation 'junit:junit:4.13.2'

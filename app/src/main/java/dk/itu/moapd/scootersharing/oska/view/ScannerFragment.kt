@@ -18,8 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.budiyev.android.codescanner.CodeScanner
-import com.budiyev.android.codescanner.DecodeCallback
+
 import com.google.android.material.snackbar.Snackbar
 import com.google.rpc.Code
 import dk.itu.moapd.scootersharing.oska.R
