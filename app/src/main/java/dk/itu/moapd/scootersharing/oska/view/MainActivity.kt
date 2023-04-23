@@ -62,7 +62,11 @@ class MainActivity : AppCompatActivity() {
     companion object{
         private const val ALL_PERMISSIONS_RESULT = 1337
         const val REQUEST_CODE_PERMISSIONS = 10
-        val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val REQUIRED_PERMISSIONS = arrayOf(
+                                            Manifest.permission.CAMERA,
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                            Manifest.permission.ACTIVITY_RECOGNITION,
+                                            Manifest.permission.HIGH_SAMPLING_RATE_SENSORS)
 
 
     }
@@ -203,6 +207,9 @@ class MainActivity : AppCompatActivity() {
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         permissions.add(Manifest.permission.CAMERA)
+        permissions.add(Manifest.permission.ACTIVITY_RECOGNITION)
+        permissions.add(Manifest.permission.HIGH_SAMPLING_RATE_SENSORS)
+
 
 
         // Check which permissions is needed to ask to the user.

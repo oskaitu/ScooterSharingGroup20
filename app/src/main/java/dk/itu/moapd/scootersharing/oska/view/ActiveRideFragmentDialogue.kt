@@ -2,6 +2,11 @@ package dk.itu.moapd.scootersharing.oska.view
 
 import android.app.Dialog
 import android.content.ContentValues
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
@@ -10,18 +15,37 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Chronometer
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import dk.itu.moapd.scootersharing.oska.R
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.absoluteValue
 
 
-class ActiveRideFragmentDialogue : DialogFragment() {
+class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
 
+    private lateinit var sensorManager: SensorManager
+    private lateinit var speedSensor : Sensor
+    private var stepCount = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        /*sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)*/
+
+        sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        speedSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
+
+        sensorManager.registerListener(this, speedSensor, SensorManager.SENSOR_DELAY_NORMAL)
+
         val scooterToBeChanged = MainFragment.selectedScooter
         val view = View.inflate(context, dk.itu.moapd.scootersharing.oska.R.layout.fragment_active, null)
+
+       /* val stepCountTextView = view.findViewById<TextView>(R.id.step_counter)
+        stepCountTextView.text = stepCount.toString()*/
+
+
         val simpleChronometer = view.findViewById(dk.itu.moapd.scootersharing.oska.R.id.simpleChronometer) as Chronometer
         val startTime = System.currentTimeMillis()
         val startLocation = (activity as MainActivity).gps.getLocation()!!
@@ -125,6 +149,67 @@ class ActiveRideFragmentDialogue : DialogFragment() {
         }
         return stringBuilder.toString()
     }
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event?.sensor?.type == Sensor.TYPE_LINEAR_ACCELERATION) {
+            val speed = event.values[0] * 3.6 // Convert m/s to km/h
+
+            val speedTextView = dialog!!.findViewById<TextView>(R.id.step_counter)
+            speedTextView.text = "${speed.toInt().absoluteValue} km/h"
+        }
+    }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        // Handle accuracy changes here...
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        sensorManager.unregisterListener(this)
+    }
+
+    /*override fun onResume() {
+        super.onResume()
+
+        val stepCountTextView = view?.findViewById<TextView>(R.id.step_counter)
+        if(stepSensor != null){
+            if (stepCountTextView != null) {
+                stepCountTextView.text = resources.getQuantityText(0,0)
+            }
+
+            sensorManager.registerListener(stepCounterListener, stepSensor, SensorManager.SENSOR_DELAY_UI)
+
+        }
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(stepCounterListener)
+    }
+
+
+
+
+    private fun updateStepCount() {
+        // Update the UI to display the current step count
+        val stepCountTextView = view?.findViewById<TextView>(R.id.step_counter )
+        stepCountTextView?.text = stepCount.toString()
+    }
+
+    private val stepCounterListener: SensorEventListener = object : SensorEventListener {
+
+
+        override fun onSensorChanged(event: SensorEvent?) {
+            if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
+                stepCount = event.values[0].toInt()
+                updateStepCount()
+            }
+        }
+
+
+        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+        }
+
+    }*/
+
 
 }
 

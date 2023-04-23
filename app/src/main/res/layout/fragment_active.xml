@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ConfirmationFragment">
+    tools:context=".view.ConfirmationFragment"
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
     <Chronometer
         android:id="@+id/simpleChronometer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
+        android:layout_gravity="center"
         android:textAlignment="center"
         android:lineSpacingExtra="14sp"
         android:textAllCaps="true"
         android:textSize="60sp"
         android:typeface="monospace" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/step_counter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="60sp"
+        android:text="@string/unavailable" />
+
+
+</LinearLayout>

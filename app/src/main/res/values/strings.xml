@@ -31,6 +31,7 @@
     <string name="capture_button_alt">Capture button</string>
     <string name="gallery_button_alt">gallery button</string>
     <string name="scan">Scan your Scooter QR code to start</string>
+    <string name="unavailable">Step sensor not available</string>
 
 
 </resources>
