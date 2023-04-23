@@ -42,7 +42,6 @@ import java.io.File
 
 class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  {
 
-    //private lateinit var codeScanner: CodeScanner
     private lateinit var _binding: FragmentScannerBinding
     private lateinit var  scanner: QRCodeDetector
 
@@ -143,25 +142,44 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
      *
      * @param inputFrame The current frame grabbed from the video camera device stream.
      */
-    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
+    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat? {
 
-        // Get the current frame and copy it to the OpenCV Mat structure.
-        val image = inputFrame?.rgba()
+        /*
+        This try catch is to handle E/cv::error(): OpenCV(4.7.0-dev)
+        We rarely get an error called A/libc: Fatal signal 11 (SIGSEGV), code 2 (SEGV_ACCERR), fault addr 0x7d945c2340 in tid 25372 (Thread-4), pid 23865 (tersharing.oska)
+        seems to be an active issue on github
+        https://github.com/opencv/opencv/issues/21532
+        and it has no effect on us
+         */
+        try {
 
-        imageMat = image!!
 
-        if (cameraCharacteristics == CameraCharacteristics.LENS_FACING_BACK)
-            Core.flip(image, image, 1)
+            // Get the current frame and copy it to the OpenCV Mat structure.
+            val image = inputFrame?.rgba()
 
-        if(MainFragment.selectedScooter._id == scanner.detectAndDecode(imageMat))
-        {
-            parentFragmentManager.popBackStack()
-            MainFragment.rider=true
-            Snackbar.make(requireView(),scanner.detectAndDecode(imageMat), Snackbar.LENGTH_SHORT).show()
+            imageMat = image!!
 
+            if (cameraCharacteristics == CameraCharacteristics.LENS_FACING_BACK)
+                Core.flip(image, image, 1)
+
+            if (MainFragment.selectedScooter._id == scanner.detectAndDecode(imageMat)) {
+                parentFragmentManager.popBackStack()
+                MainFragment.rider = true
+                Snackbar.make(
+                    requireView(),
+                    scanner.detectAndDecode(imageMat),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+
+            }
+
+            return image
         }
-
-        return image
+        catch (e: Exception)
+        {
+            println(e.message)
+        }
+        return null
     }
 
 

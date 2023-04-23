@@ -34,11 +34,10 @@ class StartRideFragmentDialogue : DialogFragment() {
             val builder = AlertDialog.Builder(requireActivity())
             builder.setTitle("Start driving ${scooterToBeChanged._name}?")
             builder.setMessage("Cost 50 \n Fuel 50 \n range 20 meters")
-                .setPositiveButton("Yes") { _, _ ->
-                    MainFragment.rider=true
+                .setPositiveButton("Scan QR") { _, _ ->
+                    findNavController().navigate((R.id.fragment_scanner))
                 }
-                .setNegativeButton("No", DialogInterface.OnClickListener { _, _ ->
-                    MainFragment.rider=false
+                .setNegativeButton("Cancel", DialogInterface.OnClickListener { _, _ ->
                 })
 
             println("did the builder")

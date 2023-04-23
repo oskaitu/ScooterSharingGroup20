@@ -9,19 +9,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.map
+import androidx.navigation.fragment.findNavController
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory.fromAsset
+import com.google.android.gms.maps.model.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMapBinding
+import dk.itu.moapd.scootersharing.oska.model.Scooter
+import kotlinx.coroutines.selects.select
 
 
 class MapFragment : Fragment() {
@@ -44,6 +48,14 @@ class MapFragment : Fragment() {
 
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if(MainFragment.rider)
+        {
+            findNavController().navigate(R.id.activeFragment)
+        }
+        super.onViewCreated(view, savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,7 +63,6 @@ class MapFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         super.onCreate(savedInstanceState)
-
 
         val supportMapFragment =
             childFragmentManager.findFragmentById(R.id.google_maps) as SupportMapFragment?
@@ -67,6 +78,12 @@ class MapFragment : Fragment() {
             // Set the default map type.
             //googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
             googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+            val copenhagen = LatLng(55.6761, 12.5683)
+            val cameraPosition = CameraPosition.Builder()
+                .target(copenhagen)
+                .zoom(12f)
+                .build()
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
             db.collection("scooters")
                 .addSnapshotListener { value, error ->
@@ -80,23 +97,30 @@ class MapFragment : Fragment() {
                         googleMap.addMarker(
                             MarkerOptions()
                                 .position(parseLatLngFromString(doc.get("location") as String))
-                                .title(doc.get("name") as String)
+                                .title(doc.id)
                                 .icon(BitmapFromVector(requireContext(),R.drawable.logo_scooter))
                         )
                     }
                 }
-
-            val cph = LatLng(55.676098, 12.568337)
-            googleMap.addMarker(
-                MarkerOptions()
-                    .position(cph)
-                    .title("Marker in Sydney")
-            )
-
-
-
-
-
+            googleMap.setOnMarkerClickListener {marker ->
+                val docRef = db.collection("scooters").document(marker.title!!)
+                docRef.get()
+                    .addOnSuccessListener { document ->
+                        if (document != null) {
+                            MainFragment.selectedScooter =
+                                Scooter(
+                                    _id = document.id,
+                                    _name = document.get("name") as String,
+                                    _location = document.get("location") as String,
+                                    _timestamp = document.get("timestamp") as Long,
+                                    _translated_location = document.get("translated_location") as String?
+                                )
+                            Toast.makeText(requireContext(), "Selected  ${MainFragment.selectedScooter._name}", Toast.LENGTH_SHORT).show()
+                            findNavController().navigate(R.id.startFragment)
+                        }
+                    }
+                true
+            }
 
             // Setup the UI settings state.
             googleMap.uiSettings.apply {

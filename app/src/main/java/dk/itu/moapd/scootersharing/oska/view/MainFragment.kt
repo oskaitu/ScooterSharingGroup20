@@ -54,6 +54,7 @@ class MainFragment : Fragment() {
         lateinit var storageRef : StorageReference
         var selectedScooter : Scooter = defaultScooter()
         var rider = false
+        var QR = false
         val user = FirebaseAuth.getInstance().currentUser
 
 
@@ -96,7 +97,6 @@ class MainFragment : Fragment() {
 
                     }else
                     {
-                        rider=true
                         findNavController().navigate(
                             R.id.startFragment)
                     }

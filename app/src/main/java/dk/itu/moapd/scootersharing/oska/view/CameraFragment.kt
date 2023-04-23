@@ -241,7 +241,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             }
         } else
         {
-            val uploadTask = MainFragment.storageRef.child("images/sverige.jpg").putBytes(flippedImageByteArray)
+            val uploadTask = MainFragment.storageRef.child("images/${MainFragment.selectedScooter._name}.jpg").putBytes(flippedImageByteArray)
             uploadTask.addOnFailureListener {
                 // Handle unsuccessful uploads
             }.addOnSuccessListener { taskSnapshot ->

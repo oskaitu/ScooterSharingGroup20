@@ -49,6 +49,26 @@ class ScooterViewModel : ViewModel() {
             }
     }
 
+    fun getScooter(id : String) : Scooter? {
+        var scooter: Scooter? = null
+        val docRef = db.collection("scooters").document(id)
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    scooter =
+                        Scooter(
+                            _id = id,
+                            _name = document.get("name") as String,
+                            _location = document.get("location") as String,
+                            _timestamp = document.get("timestamp") as Long,
+                            _translated_location = document.get("translated_location") as String?
+                        )
+
+                }
+            }
+        return scooter
+    }
+
     /*
     Updater used for updating timestamps in update scooter
      */
