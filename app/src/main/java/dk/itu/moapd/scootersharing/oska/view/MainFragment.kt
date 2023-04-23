@@ -37,7 +37,6 @@ class MainFragment : Fragment() {
 
     var _binding: FragmentMainBinding? = null
 
-
     /**
      * This property is only valid between `onCreateView()` and `onDestroyView()` methods.
      */
@@ -54,7 +53,7 @@ class MainFragment : Fragment() {
         lateinit var storageRef : StorageReference
         var selectedScooter : Scooter = defaultScooter()
         var rider = false
-        var QR = false
+        var labels = mutableListOf<String>()
         val user = FirebaseAuth.getInstance().currentUser
 
 

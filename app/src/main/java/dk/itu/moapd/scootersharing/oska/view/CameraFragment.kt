@@ -13,10 +13,15 @@ import android.view.LayoutInflater
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentCameraBinding
 import dk.itu.moapd.scootersharing.oska.view.MainActivity.Companion.REQUIRED_PERMISSIONS
 import dk.itu.moapd.scootersharing.oska.viewModel.MainActivityVM
@@ -24,6 +29,7 @@ import dk.itu.moapd.scootersharing.oska.viewModel.OpenCVUtils
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.android.OpenCVLoader
+import org.opencv.android.Utils
 import org.opencv.core.Core
 import org.opencv.core.CvType
 import org.opencv.core.Mat
@@ -37,8 +43,6 @@ import java.io.File
 class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
     private lateinit var _binding: FragmentCameraBinding
-
-
 
     private lateinit var loaderCallback: BaseLoaderCallback
 
@@ -122,13 +126,28 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
             // Listener for button used to change the image analysis method.
             fragmentImageAnalysisButton.setOnClickListener {
+
                 var methodId = currentMethodId + 1
-                methodId %= 4
+                methodId %= 2
                 viewModel.onMethodChanged(methodId)
+                if(currentMethodId == 0)
+                {
+                    Snackbar.make(requireView(),"Picture upload mode",Snackbar.LENGTH_SHORT).show()
+                } else
+                {
+                    Snackbar.make(requireView(),"Object recognition mode",Snackbar.LENGTH_SHORT).show()
+                }
             }
             fragmentCameraCaptureButton.setOnClickListener{
+                if(currentMethodId == 0)
+                {
+                    SaveImage(imageMat)
 
-                SaveImage(imageMat, MainFragment.selectedScooter._name)
+                } else
+                {
+                    classifyImage(imageMat)
+                }
+
             }
         }
     }
@@ -181,35 +200,46 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         val image = inputFrame?.rgba()
         imageMat = image!!
 
-
-
-        //val scanner = QRCodeDetector()
-        //val value = scanner.detectAndDecode(imageMat)
-
-
-
-
-
         if (cameraCharacteristics == CameraCharacteristics.LENS_FACING_BACK)
             Core.flip(image, image, 1)
-        /*
-        return when (currentMethodId) {
-            1 -> OpenCVUtils.convertToGrayscale(image)
-            2 -> OpenCVUtils.convertToBgra(image)
-            3 -> OpenCVUtils.convertToCanny(image)
-            else -> image
 
-
-        }
-        */
         return image
     }
 
+    private fun classifyImage(mat: Mat)
+    {
+        MainFragment.labels.clear()
+       val bitmap = matToBitmap(mat)
+        val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
+        val image = InputImage.fromBitmap(bitmap, 90)
+        var text = ""
+        labeler.process(image)
+            .addOnSuccessListener { labels ->
+                for (label in labels) {
+                    text = "${label.text} ${Math.floor((label.confidence*100).toDouble())} % Probability  \n "
+                    MainFragment.labels.add(text)
+                }
+                val newFragment = MlKitFragment()
+                newFragment.show(parentFragmentManager, "labels")
+            }
+            .addOnFailureListener { e ->
+                // Task failed with an exception
+                // ...
+            }
 
-    fun SaveImage(mat: Mat?, name: String) {
+    }
+
+    fun matToBitmap(mat: Mat): Bitmap {
+        val bitmap = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888)
+        Utils.matToBitmap(mat, bitmap)
+        return bitmap
+    }
+
+    fun SaveImage(mat: Mat) {
+
         val path: File =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        var filename = "${mat.toString()}.png"
+        var filename = "${MainFragment.selectedScooter._name}.png"
         val file = File(path, filename)
         var bool: Boolean? = null
         filename = file.toString()
@@ -221,6 +251,8 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         val matOfByte = MatOfByte()
 
         Imgcodecs.imencode(".png", mat, matOfByte)
+
+
         val byteArray = matOfByte.toArray()
         val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         val rotated = rotateImage(90,bmp)
@@ -228,10 +260,9 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         rotated.compress(Bitmap.CompressFormat.PNG, 100, stream)
         val flippedImageByteArray: ByteArray = stream.toByteArray()
 
-
         if(MainFragment.selectedScooter._name=="error")
         {
-            val uploadTask = MainFragment.storageRef.child("images/captured/${mat.toString()}.png").putBytes(flippedImageByteArray)
+            val uploadTask = MainFragment.storageRef.child("images/captured/${mat}.png").putBytes(flippedImageByteArray)
             uploadTask.addOnFailureListener {
                 // Handle unsuccessful uploads
             }.addOnSuccessListener { taskSnapshot ->
@@ -249,6 +280,8 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
                 // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
                 // ...
             }
+
+
         }
 
     }
@@ -301,6 +334,8 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             bitmapSrc.width, bitmapSrc.height, matrix, true
         )
     }
+
+
 
 
 
