@@ -15,12 +15,6 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class MockedRidesValidator {
 
-    lateinit var Database: RidesDB
-
-    @Before
-    fun setup() {
-        val Database = mock(RidesDB::class.java)
-    }
 
     /*
     @Test

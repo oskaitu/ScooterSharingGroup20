@@ -112,7 +112,7 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
         } ?: throw IllegalStateException("something exploded")
 
     }
-    private fun convertCordsToAddress(latitude: Double, longitude: Double) : String {
+    fun convertCordsToAddress(latitude: Double, longitude: Double) : String {
         val geocoder = (activity as MainActivity).geocoder
 
         val addresses: List<Address>?
@@ -165,50 +165,7 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
         sensorManager.unregisterListener(this)
     }
 
-    /*override fun onResume() {
-        super.onResume()
 
-        val stepCountTextView = view?.findViewById<TextView>(R.id.step_counter)
-        if(stepSensor != null){
-            if (stepCountTextView != null) {
-                stepCountTextView.text = resources.getQuantityText(0,0)
-            }
-
-            sensorManager.registerListener(stepCounterListener, stepSensor, SensorManager.SENSOR_DELAY_UI)
-
-        }
-
-    }
-
-    override fun onPause() {
-        super.onPause()
-        sensorManager.unregisterListener(stepCounterListener)
-    }
-
-
-
-
-    private fun updateStepCount() {
-        // Update the UI to display the current step count
-        val stepCountTextView = view?.findViewById<TextView>(R.id.step_counter )
-        stepCountTextView?.text = stepCount.toString()
-    }
-
-    private val stepCounterListener: SensorEventListener = object : SensorEventListener {
-
-
-        override fun onSensorChanged(event: SensorEvent?) {
-            if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
-                stepCount = event.values[0].toInt()
-                updateStepCount()
-            }
-        }
-
-
-        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
-        }
-
-    }*/
 
 
 }
