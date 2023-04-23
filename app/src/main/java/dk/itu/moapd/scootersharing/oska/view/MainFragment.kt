@@ -37,6 +37,7 @@ class MainFragment : Fragment() {
 
     var _binding: FragmentMainBinding? = null
 
+
     /**
      * This property is only valid between `onCreateView()` and `onDestroyView()` methods.
      */
@@ -79,6 +80,11 @@ class MainFragment : Fragment() {
 
         with (binding) {
             //recyclerView.visibility= View.INVISIBLE
+
+            if(rider)
+            {
+                findNavController().navigate(R.id.activeFragment)
+            }
 
             StartRideButton.setOnClickListener {
                 if(selectedScooter._name!="error")

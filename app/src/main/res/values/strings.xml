@@ -30,6 +30,7 @@
     <string name="switch_camera_button_alt">Switch camera</string>
     <string name="capture_button_alt">Capture button</string>
     <string name="gallery_button_alt">gallery button</string>
+    <string name="scan">Scan your Scooter QR code to start</string>
 
 
 </resources>

@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 
 import com.google.android.material.snackbar.Snackbar
@@ -154,7 +155,9 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
 
         if(MainFragment.selectedScooter._id == scanner.detectAndDecode(imageMat))
         {
-            findNavController().navigate(R.id.fragment_geolocation)
+            parentFragmentManager.popBackStack()
+            MainFragment.rider=true
+            Snackbar.make(requireView(),scanner.detectAndDecode(imageMat), Snackbar.LENGTH_SHORT).show()
 
         }
 
