@@ -36,6 +36,7 @@
             android:id="@+id/fragment_scanner"
             app:destination="@id/fragment_scanner" />
 
+
     </fragment>
     <fragment
         android:id="@+id/available_scooter_recyclerview"
@@ -65,6 +66,9 @@
         android:id="@+id/fragment_scanner"
         android:name="dk.itu.moapd.scootersharing.oska.view.ScannerFragment"
         tools:layout="@layout/fragment_scanner" >
+        <action
+            android:id="@+id/fragment_geolocation"
+            app:destination="@id/fragment_geolocation"/>
 
     </fragment>
 

@@ -29,6 +29,7 @@ import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.MatOfByte
 import org.opencv.imgcodecs.Imgcodecs
+import org.opencv.objdetect.QRCodeDetector
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -36,6 +37,8 @@ import java.io.File
 class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
     private lateinit var _binding: FragmentCameraBinding
+
+
 
     private lateinit var loaderCallback: BaseLoaderCallback
 
@@ -63,6 +66,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
     }
 
     override fun onCreateView(
@@ -88,6 +92,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         viewModel.methodId.observe((activity as MainActivity)) {
             currentMethodId = it
         }
+
 
         //if (checkPermission())
             startCamera()
@@ -176,6 +181,15 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         val image = inputFrame?.rgba()
         imageMat = image!!
 
+
+
+        //val scanner = QRCodeDetector()
+        //val value = scanner.detectAndDecode(imageMat)
+
+
+
+
+
         if (cameraCharacteristics == CameraCharacteristics.LENS_FACING_BACK)
             Core.flip(image, image, 1)
         /*
@@ -213,6 +227,8 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         val stream = ByteArrayOutputStream()
         rotated.compress(Bitmap.CompressFormat.PNG, 100, stream)
         val flippedImageByteArray: ByteArray = stream.toByteArray()
+
+
         if(MainFragment.selectedScooter._name=="error")
         {
             val uploadTask = MainFragment.storageRef.child("images/captured/${mat.toString()}.png").putBytes(flippedImageByteArray)

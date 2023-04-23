@@ -17,10 +17,12 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.DecodeCallback
 import com.google.android.material.snackbar.Snackbar
 import com.google.rpc.Code
+import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentScannerBinding
 import dk.itu.moapd.scootersharing.oska.view.MainActivity.Companion.REQUIRED_PERMISSIONS
 import dk.itu.moapd.scootersharing.oska.viewModel.MainActivityVM
@@ -38,35 +40,29 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 
-class ScannerFragment : Fragment() {
+class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  {
 
-    private lateinit var codeScanner: CodeScanner
+    //private lateinit var codeScanner: CodeScanner
     private lateinit var _binding: FragmentScannerBinding
 
 
 
-    //private lateinit var loaderCallback: BaseLoaderCallback
 
-    //private lateinit var imageMat: Mat
 
-    //private var cameraCharacteristics = CameraCharacteristics.LENS_FACING_FRONT
+    private lateinit var imageMat: Mat
+
+    private var cameraCharacteristics = CameraCharacteristics.LENS_FACING_FRONT
 
     private val viewModel: MainActivityVM by lazy {
         ViewModelProvider(this)[MainActivityVM::class.java]
     }
 
-    /**
-     * A variable to control the image analysis method to apply in the input image.
-     */
-    private var currentMethodId = 0
+
 
     private val binding
         get() = checkNotNull(_binding) {
 
         }
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,86 +83,23 @@ class ScannerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        codeScanner = CodeScanner(requireActivity(), binding.scannerView)
-        codeScanner.decodeCallback = DecodeCallback {
-            activity?.runOnUiThread {
-                Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
-                binding.tvTextView.text = it.text
-            }
-        }
-        binding.scannerView.setOnClickListener {
-            codeScanner.startPreview()
-        }
 
-
-
-
-    /*cameraCharacteristics =
-            viewModel.characteristics.value ?: CameraCharacteristics.LENS_FACING_BACK
+    cameraCharacteristics =
+            viewModel.characteristics.value ?: CameraCharacteristics.LENS_FACING_FRONT
         viewModel.characteristics.observe((activity as MainActivity)) {
             cameraCharacteristics = it
         }
-        currentMethodId =
-            viewModel.methodId.value ?: 0
-        viewModel.methodId.observe((activity as MainActivity)) {
-            currentMethodId = it
-        }
 
-        //if (checkPermission())
+
         startCamera()
-        /*else
-            ActivityCompat.requestPermissions(requireActivity(),
-                REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS )*/
 
 
-
-
-        binding.apply {
-
-            // Listener for button used to switch cameras.
-            fragmentScannerSwitchButton.setOnClickListener {
-                viewModel.onCameraCharacteristicsChanged(
-                    if (CameraCharacteristics.LENS_FACING_BACK == cameraCharacteristics)
-                        CameraCharacteristics.LENS_FACING_FRONT
-                    else
-                        CameraCharacteristics.LENS_FACING_BACK
-                )
-
-                // Re-start use cases to update selected camera.
-                fragmentScannerView.disableView()
-                fragmentScannerView.setCameraIndex(cameraCharacteristics)
-                fragmentScannerView.enableView()
-            }
-
-            // Listener for button used to change the image analysis method.
-            fragmentScannerImageAnalysisButton.setOnClickListener {
-                var methodId = currentMethodId + 1
-                methodId %= 4
-                viewModel.onMethodChanged(methodId)
-            }
-            fragmentScannerCaptureButton.setOnClickListener{
-
-                //SaveImage(imageMat, MainFragment.selectedScooter._name)
-                var value = scanner.detectAndDecode(imageMat)
-                println(value + "----value")
-                Log.d(TAG, "Testing")
-
-            }
-        }*/
     }
+
+
+
 
     override fun onResume() {
-        super.onResume()
-        codeScanner.startPreview()
-    }
-
-    override fun onPause() {
-        codeScanner.releaseResources()
-        super.onPause()
-    }
-
-
-    /* ------------------------override fun onResume() {
         super.onResume()
 
         OpenCVLoader.initDebug()
@@ -217,64 +150,18 @@ class ScannerFragment : Fragment() {
 
         if (cameraCharacteristics == CameraCharacteristics.LENS_FACING_BACK)
             Core.flip(image, image, 1)
-        /*
-        return when (currentMethodId) {
-            1 -> OpenCVUtils.convertToGrayscale(image)
-            2 -> OpenCVUtils.convertToBgra(image)
-            3 -> OpenCVUtils.convertToCanny(image)
-            else -> image
-
+        val scanner = QRCodeDetector()
+        if(MainFragment.selectedScooter._id == scanner.detectAndDecode(imageMat))
+        {
+            findNavController().navigate(R.id.fragment_geolocation)
 
         }
-        */
+
         return image
     }
 
 
-    fun SaveImage(mat: Mat?, name: String) {
-        val path: File =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        var filename = "${mat.toString()}.png"
-        val file = File(path, filename)
-        var bool: Boolean? = null
-        filename = file.toString()
-        bool = Imgcodecs.imwrite(filename, mat)
-        if (bool == true) Log.d(TAG, "SUCCESS writing image $filename to external storage") else Log.d(
-            TAG,
-            "Fail writing image to external storage"
-        )
-        val matOfByte = MatOfByte()
 
-        Imgcodecs.imencode(".png", mat, matOfByte)
-        val byteArray = matOfByte.toArray()
-        val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-        val rotated = rotateImage(90,bmp)
-        val stream = ByteArrayOutputStream()
-        rotated.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        val flippedImageByteArray: ByteArray = stream.toByteArray()
-        if(MainFragment.selectedScooter._name=="error")
-        {
-            val uploadTask = MainFragment.storageRef.child("images/captured/${mat.toString()}.png").putBytes(flippedImageByteArray)
-            uploadTask.addOnFailureListener {
-                // Handle unsuccessful uploads
-            }.addOnSuccessListener { taskSnapshot ->
-                Snackbar.make(requireView(),"Uploaded picture with no scooter selected!", Snackbar.LENGTH_SHORT).show()
-                // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                // ...
-            }
-        } else
-        {
-            val uploadTask = MainFragment.storageRef.child("images/sverige.jpg").putBytes(flippedImageByteArray)
-            uploadTask.addOnFailureListener {
-                // Handle unsuccessful uploads
-            }.addOnSuccessListener { taskSnapshot ->
-                Snackbar.make(requireView(),"Uploaded picture with ${MainFragment.selectedScooter._name} selected!", Snackbar.LENGTH_SHORT).show()
-                // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                // ...
-            }
-        }
-
-    }
 
     /**
      * This method is used to start the video camera device stream.
@@ -294,52 +181,6 @@ class ScannerFragment : Fragment() {
         // Initialize the callback from OpenCV Manager to handle the OpenCV library.
         binding.fragmentScannerView.enableView()
     }
-    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                            grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        // Check if the user has accepted the permissions to access the camera.
-        if (requestCode == REQUEST_CODE_PERMISSIONS)
-            if (allPermissionsGranted())
-            startCamera()
-
-            // If permissions are not granted, present a toast to notify the user that the
-            // permissions were not granted.
-            else {
-                //snackBar("Permissions not granted by the user.")
-                //finish()
-            }
-    }*/
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            requireContext(), it) == PackageManager.PERMISSION_GRANTED
-    }
-
-    //source for flipping images https://stackoverflow.com/questions/16950953/flip-image-stored-as-a-byte-array
-    fun rotateImage(angle: Int, bitmapSrc: Bitmap): Bitmap {
-        val matrix = Matrix()
-        matrix.postRotate(angle.toFloat())
-        return Bitmap.createBitmap(
-            bitmapSrc, 0, 0,
-            bitmapSrc.width, bitmapSrc.height, matrix, true
-        )
-    }
-
-    fun detectQR(mat: Mat?){
-        var value = scanner.detectAndDecode(mat)
-
-       println(value)
-
-    }-----------------------------*/
-
-
-
-
-
-
-
-
-
 
 }
 
