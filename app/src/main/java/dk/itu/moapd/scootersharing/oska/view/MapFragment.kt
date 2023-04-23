@@ -122,6 +122,7 @@ class MapFragment : Fragment() {
                 true
             }
 
+
             // Setup the UI settings state.
             googleMap.uiSettings.apply {
                 isCompassEnabled = true
