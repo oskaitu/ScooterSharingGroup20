@@ -64,9 +64,7 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_PERMISSIONS = 10
         val REQUIRED_PERMISSIONS = arrayOf(
                                             Manifest.permission.CAMERA,
-                                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                            Manifest.permission.ACTIVITY_RECOGNITION,
-                                            Manifest.permission.HIGH_SAMPLING_RATE_SENSORS)
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
 
     }
@@ -207,8 +205,7 @@ class MainActivity : AppCompatActivity() {
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         permissions.add(Manifest.permission.CAMERA)
-        permissions.add(Manifest.permission.ACTIVITY_RECOGNITION)
-        permissions.add(Manifest.permission.HIGH_SAMPLING_RATE_SENSORS)
+
 
 
 
