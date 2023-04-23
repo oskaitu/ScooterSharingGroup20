@@ -2,18 +2,19 @@ package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.hardware.camera2.CameraCharacteristics
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.location.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreSettings
@@ -23,11 +24,9 @@ import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.viewModel.LocationService
-import dk.itu.moapd.scootersharing.oska.viewModel.MainActivityVM
 import org.opencv.*
-import org.opencv.android.BaseLoaderCallback
-import org.opencv.core.Mat
 import java.util.*
+
 
 /**
  * MIT License
@@ -99,8 +98,8 @@ class MainActivity : AppCompatActivity() {
         val signInIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
-            .setLogo(R.mipmap.ic_launcher_round)
-            .setTheme(R.style.Theme_ScooterShare)
+            .setLogo(dk.itu.moapd.scootersharing.oska.R.mipmap.ic_launcher_round)
+            .setTheme(dk.itu.moapd.scootersharing.oska.R.style.Theme_ScooterShare)
             .setIsSmartLockEnabled(false)
             .build()
         signInLauncher.launch(signInIntent)
@@ -114,7 +113,6 @@ class MainActivity : AppCompatActivity() {
         {
             createSignInIntent()
         }
-
     }
 
 
@@ -257,6 +255,21 @@ class MainActivity : AppCompatActivity() {
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
             baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(dk.itu.moapd.scootersharing.oska.R.menu.logout, menu)
+        val userItem = menu?.findItem(R.id.action_user)
+        userItem?.title = FirebaseAuth.getInstance().currentUser?.displayName.toString()
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.getItemId() === dk.itu.moapd.scootersharing.oska.R.id.logout) {
+            signOut()
+            createSignInIntent()
+            true
+        } else super.onOptionsItemSelected(item)
     }
 
 

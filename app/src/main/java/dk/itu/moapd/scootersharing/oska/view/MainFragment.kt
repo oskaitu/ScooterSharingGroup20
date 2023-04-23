@@ -126,12 +126,6 @@ class MainFragment : Fragment() {
                 findNavController().navigate(R.id.updateFragment)
 
             }
-
-            LogoutButton.setOnClickListener{
-                (activity as MainActivity).signOut()
-                (activity as MainActivity).createSignInIntent()
-
-            }
            ShowListButton.setOnClickListener {
 
                findNavController().navigate(R.id.available_scooter_recyclerview)

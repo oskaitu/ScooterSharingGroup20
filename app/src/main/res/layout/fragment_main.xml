@@ -22,19 +22,6 @@
 
 
     <Button
-        android:id="@+id/LogoutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity=""
-        android:layout_marginStart="300dp"
-        android:layout_marginBottom="600dp"
-        android:text="@string/logout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/StartRideButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
