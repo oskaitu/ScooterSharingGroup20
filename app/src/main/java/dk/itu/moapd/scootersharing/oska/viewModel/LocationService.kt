@@ -14,7 +14,7 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 
 
-public open class LocationService(context: Context, locationManager: LocationManager) : Service(), LocationListener
+class LocationService(context: Context, locationManager: LocationManager) : Service(), LocationListener
 {
     private val context : Context
     private val locationManager : LocationManager
@@ -49,6 +49,7 @@ public open class LocationService(context: Context, locationManager: LocationMan
         getLocation()
     }
 
+
     @SuppressLint("MissingPermission")
     //List is supressed here, but we handle checking permissions if the user clicks something that needs a location
     fun getLocation(): Location? {
@@ -82,13 +83,13 @@ public open class LocationService(context: Context, locationManager: LocationMan
                 // if GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled) {
                     if (location == null) {
-                        locationManager!!.requestLocationUpdates(
+                        locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), this
                         )
                         Log.d("GPS Enabled", "GPS Enabled")
-                            location = locationManager!!
+                            location = locationManager
                                 .getLastKnownLocation(LocationManager.GPS_PROVIDER)
                             if (location != null) {
                                 latitude = location!!.latitude
@@ -103,11 +104,14 @@ public open class LocationService(context: Context, locationManager: LocationMan
         return location
     }
 
-    open fun stopUsingGPS() {
+    /*
+    fun stopUsingGPS() {
         {
             locationManager.removeUpdates(this@LocationService)
         }
     }
+    */
+
 
     /**
      * Function to get latitude
@@ -117,7 +121,7 @@ public open class LocationService(context: Context, locationManager: LocationMan
     /**
      * Function to get longitude
      */
-    open fun getLongitude(): Double {
+    fun getLongitude(): Double {
         if (location != null) {
             longitude = location!!.longitude
         }
@@ -130,7 +134,7 @@ public open class LocationService(context: Context, locationManager: LocationMan
      * Function to check GPS/wifi enabled
      * @return boolean
      */
-    open fun canGetLocation(): Boolean {
+    fun canGetLocation(): Boolean {
         return canGetLocation
     }
 

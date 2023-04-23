@@ -1,5 +1,6 @@
 package dk.itu.moapd.scootersharing.oska.viewModel
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +14,8 @@ import dk.itu.moapd.scootersharing.oska.databinding.CardviewitemBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
 import java.util.*
-
+//we have to supress this since we have no way of knowing what to chang
+@SuppressLint("NotifyDataSetChanged")
 class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
     companion object {
@@ -22,7 +24,7 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
 
 
     init {
-        scooterViewModel.scooters.observeForever { newData ->
+        scooterViewModel.scooters.observeForever {
             notifyDataSetChanged()
         }
     }

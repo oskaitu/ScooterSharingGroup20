@@ -5,9 +5,11 @@ plugins {
     id 'kotlin-kapt'
 }
 
+
 android {
     namespace 'dk.itu.moapd.scootersharing.oska'
     compileSdk 33
+
 
     defaultConfig {
         applicationId "dk.itu.moapd.scootersharing.oska"
@@ -18,12 +20,16 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-
         Properties properties = new Properties()
         properties.load(
                 project.rootProject.file("local.properties").newDataInputStream())
         manifestPlaceholders = [
                 MAPS_API_KEY: "${properties.getProperty("MAPS_API_KEY")}"]
+
+    }
+
+    lintOptions {
+        disable "Instantiatable"
     }
 
 
@@ -79,7 +85,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:4.0.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation 'androidx.fragment:fragment-testing:1.5.7'
+    debugImplementation 'androidx.fragment:fragment-testing:1.5.7'
 
     debugImplementation("androidx.fragment:fragment-testing:1.5.7")
 

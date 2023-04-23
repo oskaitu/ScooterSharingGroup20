@@ -32,6 +32,7 @@
     <string name="gallery_button_alt">gallery button</string>
     <string name="scan">Scan your Scooter QR code to start</string>
     <string name="unavailable">sensor not available</string>
+    <string name="address_text_">Address text</string>
 
 
 </resources>

@@ -13,10 +13,10 @@
             android:id="@+id/latitude_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="20sp"
             android:layout_marginStart="24dp"
             android:text="@string/latitude_text"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textAppearance="?attr/textAppearanceHeadlineSmall"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintTop_toBottomOf="@+id/latitude_text_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -38,7 +38,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="20sp"
 
                 android:clickable="false"
                 android:cursorVisible="false"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginStart="24dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
 
             android:text="@string/longitude_text"
             android:textAppearance="?attr/textAppearanceHeadlineSmall"
@@ -68,14 +68,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
 
             app:layout_constraintTop_toBottomOf="@+id/longitude_text_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:textSize="20dp"
+                android:textSize="20sp"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginStart="24dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
 
             android:text="@string/time_text"
             android:textAppearance="?attr/textAppearanceHeadlineSmall"
@@ -112,7 +112,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:textSize="20dp"
+                android:textSize="20sp"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -131,9 +131,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="24dp"
-        android:textSize="20dp"
+        android:textSize="20sp"
 
-        android:text="Address text"
+        android:text="@string/address_text_"
         android:textAppearance="?attr/textAppearanceHeadlineSmall"
         app:layout_constraintTop_toBottomOf="@+id/time_text_field"
         app:layout_constraintStart_toStartOf="parent" />
@@ -149,7 +149,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:textSize="20dp"
+            android:textSize="20sp"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
