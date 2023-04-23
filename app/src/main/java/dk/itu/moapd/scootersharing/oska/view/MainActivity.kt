@@ -100,6 +100,7 @@ class MainActivity : AppCompatActivity() {
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
             .setLogo(R.mipmap.ic_launcher_round)
+            .setTheme(R.style.Theme_ScooterShare)
             .setIsSmartLockEnabled(false)
             .build()
         signInLauncher.launch(signInIntent)
