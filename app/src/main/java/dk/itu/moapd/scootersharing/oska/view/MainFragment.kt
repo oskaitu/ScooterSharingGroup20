@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -179,6 +180,11 @@ class MainFragment : Fragment() {
     private fun showMessage (message : String) {
         // Print a message in the ‘Logcat ‘ system .
         Log.d(ContentValues.TAG, message)
+    }
+
+    fun getManager() : FragmentManager
+    {
+       return parentFragmentManager
     }
 
 

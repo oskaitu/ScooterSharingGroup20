@@ -14,6 +14,7 @@ import dk.itu.moapd.scootersharing.oska.databinding.CardviewitemBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
 import java.util.*
+
 //we have to supress this since we have no way of knowing what to chang
 @SuppressLint("NotifyDataSetChanged")
 class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
@@ -62,16 +63,11 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
             binding.root.setOnClickListener{
                 MainFragment.selectedScooter =scooter
 
-
-
                 Snackbar.make(
                     binding.root.rootView,
                     "${scooter._name} Selected!",
                     Snackbar.LENGTH_SHORT
                 ).show()
-
-                MainFragment.rider = true
-
             }
         }
     }
