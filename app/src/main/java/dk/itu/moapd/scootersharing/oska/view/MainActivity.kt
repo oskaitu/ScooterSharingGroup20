@@ -58,6 +58,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var geocoder : Geocoder
     lateinit var gps: LocationService
 
+    private lateinit var auth: FirebaseAuth
+
+
 
     companion object{
         private const val ALL_PERMISSIONS_RESULT = 1337
@@ -88,7 +91,8 @@ class MainActivity : AppCompatActivity() {
         // [START auth_fui_create_intent]
         // Choose authentication providers
         val providers = arrayListOf(
-            AuthUI.IdpConfig.GoogleBuilder().build())
+            AuthUI.IdpConfig.GoogleBuilder().build(),
+            AuthUI.IdpConfig.EmailBuilder().build())
 
 
         // Create and launch sign-in intent
@@ -103,8 +107,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
-        createSignInIntent()
         super.onStart()
+
+        if (auth.currentUser == null)
+        {
+            createSignInIntent()
+        }
+
     }
 
 
@@ -112,7 +121,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        auth = FirebaseAuth.getInstance()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
