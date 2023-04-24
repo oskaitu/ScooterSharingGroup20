@@ -1,16 +1,22 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -21,10 +27,14 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.viewModel.LocationService
 import org.opencv.*
+import java.io.IOException
 import java.util.*
 
 
@@ -258,11 +268,36 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(dk.itu.moapd.scootersharing.oska.R.menu.logout, menu)
+
+
         val userItem = menu?.findItem(R.id.action_user)
-        userItem?.title = FirebaseAuth.getInstance().currentUser?.displayName.toString()
+
+
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val photoUrl = currentUser?.photoUrl
+        Glide.with(this)
+            .load(photoUrl)
+            .placeholder(R.drawable.logo_scooter) // optional placeholder image
+            .into(object : CustomTarget<Drawable>() {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    val profileItem = menu?.findItem(R.id.profile_picture)
+                    profileItem?.icon = resource
+                }
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // Do nothing
+                }
+            })
+        val fullName = FirebaseAuth.getInstance().currentUser?.displayName.toString()
+        val nameWithInitial = getNameWithInitial(fullName)
+        userItem?.title = nameWithInitial
 
         return true
     }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.getItemId() === dk.itu.moapd.scootersharing.oska.R.id.logout) {
@@ -287,6 +322,16 @@ class MainActivity : AppCompatActivity() {
                         this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                             ) != PackageManager.PERMISSION_GRANTED
 
+}
+
+fun getNameWithInitial(fullName: String): String {
+    val pattern = Regex("^([^\\s]+)\\s+([^\\s])[^\\s]*\\s*([^\\s]*)$")
+    val matchResult = pattern.find(fullName)
+
+    val firstName = matchResult?.groupValues?.get(1) ?: ""
+
+    val lastNameInitial = matchResult?.groupValues?.get(2) ?: ""
+    return firstName + " " + lastNameInitial
 }
 
 

@@ -11,6 +11,12 @@
         android:id="@+id/action_user"
         android:orderInCategory="300"
         android:title="User"
-        app:showAsAction="ifRoom"></item>
+        app:showAsAction="always"></item>
+    <item
+        android:id="@+id/profile_picture"
+        android:icon="@drawable/logo_scooter"
+        android:title="profilepicture"
+        android:orderInCategory="400"
+        app:showAsAction="always"></item>
 
 </menu>
