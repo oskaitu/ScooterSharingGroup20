@@ -35,6 +35,10 @@
     <string name="address_text_">Address text</string>
     <string name="LogoutMenu">Logout</string>
     <string name="username">username</string>
+    <string name="title">Hello This is a test</string>
+    <string name="subtitle">"Yes this looks nice "</string>
+    <string name="body">woitk0wporiteorteoisrtgpoeritujgs9epiujogjsdprijpoisrjgpoesirgjspeorjigosepjigserg</string>
+    <string name="confirm">helll yeahhh</string>
 
 
 </resources>

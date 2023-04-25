@@ -119,7 +119,11 @@ class MainFragment : Fragment() {
                     }
             }
             DeleteRideButton.setOnClickListener {
-                if(selectedScooter._name=="error") Snackbar.make(it,"You need to select a scooter first!", Snackbar.LENGTH_SHORT).show()
+                if(selectedScooter._name=="error")
+                {
+                    //Snackbar.make(it,"You need to select a scooter first!", Snackbar.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.receiptFragment)
+                }
                 else findNavController().navigate(R.id.confirmationFragment) }
 
             UpdateRideButton.setOnClickListener {
