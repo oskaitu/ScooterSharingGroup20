@@ -50,7 +50,7 @@ class ScooterViewModel : ViewModel() {
             }
     }
 
-    fun loadTransactionData(userID : String) : List<Any> {
+    suspend fun loadTransactionData(userID : String) : List<Receipt> {
         val receipts = mutableListOf<Receipt>()
         db.collection("rental_history")
             .addSnapshotListener { value, error ->
@@ -68,7 +68,6 @@ class ScooterViewModel : ViewModel() {
                             doc.get("ridesid") as String)
                     }
                 }
-
                 if(history.size != 0)
                 {
                     db.collection("rides")
@@ -81,15 +80,22 @@ class ScooterViewModel : ViewModel() {
                             {
                                 var check = history.removeLast()
                                 for (doc in value!!) {
-                                    if(doc.id.toString() == check)
+                                    if(doc.id == check)
+                                    {
+                                        //var scoot = scooters.value?.filter { s -> s._id==doc.get("scooterid")}
                                         receipts.add(
-                                            Receipt() //#todo add receipt here
-                                        )
+                                            Receipt(
+                                                name = doc.id,
+                                                startTime = doc.get("start_time") as Long,
+                                                endTime = doc.get("end_time") as Long,
+                                                startLocation = doc.get("start_location") as String,
+                                                endLocation = doc.get("end_location") as String,
+                                                distance = doc.get("distance") as Number,
+                                                cost = doc.get("cost") as Number
+                                            ))
+                                    }
                                 }
-
                             }
-
-
                             }
                 }
     }

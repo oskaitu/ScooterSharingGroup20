@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var geocoder : Geocoder
     lateinit var gps: LocationService
 
-    private lateinit var auth: FirebaseAuth
+    lateinit var auth: FirebaseAuth
 
 
 

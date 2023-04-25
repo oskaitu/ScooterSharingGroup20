@@ -29,29 +29,20 @@ class ReceiptFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
+                val user = (activity as MainActivity).auth.currentUser
+                val transactions = MainFragment.viewModel.loadTransactionData(user?.email ?: "error")
                 val geocoder = (activity as MainActivity).geocoder
-                ScooterList(geocoder)
+                ScooterList(geocoder, transactions)
             }
         }
     }
 
 @Composable
-fun ScooterList(geocoder: Geocoder) {
-    val receipts = listOf(
-        Receipt("Scooter A", "10:00 AM", "11:30 AM", "Location A", "Location B", "2 km", "$5"),
-        Receipt("Scooter B", "11:00 AM", "12:30 PM", "Location C", "Location D", "3 km", "$6"),
-        Receipt("Scooter A", "10:00 AM", "11:30 AM", "Location A", "Location B", "2 km", "$5"),
-        Receipt("Scooter B", "11:00 AM", "12:30 PM", "Location C", "Location D", "3 km", "$6"),
-        Receipt("Scooter A", "10:00 AM", "11:30 AM", "Location A", "Location B", "2 km", "$5"),
-        Receipt("Scooter B", "11:00 AM", "12:30 PM", "Location C", "Location D", "3 km", "$6"),
-        Receipt("Scooter A", "10:00 AM", "11:30 AM", "Location A", "Location B", "2 km", "$5"),
-        Receipt("Scooter B", "11:00 AM", "12:30 PM", "Location C", "Location D", "3 km", "$6"),
-        Receipt("Scooter A", "10:00 AM", "11:30 AM", "Location A", "Location B", "2 km", "$5"),
-        Receipt("Scooter B", "11:00 AM", "12:30 PM", "Location C", "Location D", "3 km", "$6"),
-        Receipt("Scooter C", "12:00 PM", "1:30 PM", "Location E", "Location F", "4 km", "$7")
-    )
+fun ScooterList(geocoder: Geocoder, transactions: List<Receipt>) {
+    //val receipts = transactions.map {
+      //      t -> t.endLocation.split(",") }
     LazyColumn {
-        items(receipts) { it ->
+        items(transactions) { it ->
             ReceiptListItem(it)
         }
     }
