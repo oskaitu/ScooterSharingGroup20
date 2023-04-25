@@ -1,24 +1,24 @@
 package dk.itu.moapd.scootersharing.oska.view
 
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType.Companion.Text
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import dk.itu.moapd.scootersharing.oska.R
+import dk.itu.moapd.scootersharing.oska.model.Receipt
 
 class ReceiptFragment : Fragment() {
     override fun onCreateView(
@@ -29,30 +29,116 @@ class ReceiptFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                ReceiptFeatureScreen()
+                val geocoder = (activity as MainActivity).geocoder
+                ScooterList(geocoder)
+            }
+        }
+    }
+
+@Composable
+fun ScooterList(geocoder: Geocoder) {
+    val receipts = listOf(
+        Receipt("Scooter A", "10:00 AM", "11:30 AM", "Location A", "Location B", "2 km", "$5"),
+        Receipt("Scooter B", "11:00 AM", "12:30 PM", "Location C", "Location D", "3 km", "$6"),
+        Receipt("Scooter A", "10:00 AM", "11:30 AM", "Location A", "Location B", "2 km", "$5"),
+        Receipt("Scooter B", "11:00 AM", "12:30 PM", "Location C", "Location D", "3 km", "$6"),
+        Receipt("Scooter A", "10:00 AM", "11:30 AM", "Location A", "Location B", "2 km", "$5"),
+        Receipt("Scooter B", "11:00 AM", "12:30 PM", "Location C", "Location D", "3 km", "$6"),
+        Receipt("Scooter A", "10:00 AM", "11:30 AM", "Location A", "Location B", "2 km", "$5"),
+        Receipt("Scooter B", "11:00 AM", "12:30 PM", "Location C", "Location D", "3 km", "$6"),
+        Receipt("Scooter A", "10:00 AM", "11:30 AM", "Location A", "Location B", "2 km", "$5"),
+        Receipt("Scooter B", "11:00 AM", "12:30 PM", "Location C", "Location D", "3 km", "$6"),
+        Receipt("Scooter C", "12:00 PM", "1:30 PM", "Location E", "Location F", "4 km", "$7")
+    )
+    LazyColumn {
+        items(receipts) { it ->
+            ReceiptListItem(it)
+        }
+    }
+}
+@Composable
+fun ReceiptListItem(receipt: Receipt) {
+    Card(
+        elevation = 4.dp,
+        modifier = Modifier
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = receipt.name,
+                style = MaterialTheme.typography.h6
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Start Time: ${receipt.startTime}",
+                    style = MaterialTheme.typography.body1
+                )
+                Text(
+                    text = "End Time: ${receipt.endTime}",
+                    style = MaterialTheme.typography.body1
+                )
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Start Location: ${receipt.startLocation}",
+                    style = MaterialTheme.typography.body2
+                )
+                Text(
+                    text = "End Location: ${receipt.endLocation}",
+                    style = MaterialTheme.typography.body2
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Distance: ${receipt.distance}",
+                    style = MaterialTheme.typography.body2
+                )
+                Text(
+                    text = "Cost: ${receipt.cost}",
+                    style = MaterialTheme.typography.body2
+                )
             }
         }
     }
 }
 
-@Composable
-fun ReceiptFeatureScreen() {
-    Column(Modifier.fillMaxSize()) {
-        Text(
-            text = stringResource(R.string.title),
-            style = MaterialTheme.typography.h1
-        )
-        Text(
-            text = stringResource(R.string.subtitle),
-            style = MaterialTheme.typography.h2
-        )
-        Text(
-            text = stringResource(R.string.body),
-            style = MaterialTheme.typography.body2
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Button(onClick = { /* Handle click */ }, Modifier.fillMaxWidth()) {
-            Text(text = stringResource(R.string.confirm))
+    fun convertCordsToAddress(geocoder: Geocoder, latitude: Double, longitude: Double) : String {
+
+        val address: Address?
+        var fulladdress = ""
+        val addresses: List<Address>? = geocoder.getFromLocation(latitude, longitude, 1)
+
+        if (addresses != null) {
+            if (addresses.isNotEmpty()) {
+                address = addresses[0]
+                fulladdress = address.getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex
+                var city = address.locality;
+                var state = address.adminArea;
+                var country = address.countryName;
+                var postalCode = address.postalCode;
+                var knownName = address.featureName; // Only if available else return NULL
+            } else{
+                fulladdress = "Location not found"
+            }
         }
+        return fulladdress
     }
+
+
+
 }

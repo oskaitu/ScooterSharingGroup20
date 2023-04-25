@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dk.itu.moapd.scootersharing.oska.model.Receipt
 import dk.itu.moapd.scootersharing.oska.model.Scooter
 import dk.itu.moapd.scootersharing.oska.view.MainActivity
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
@@ -47,6 +48,52 @@ class ScooterViewModel : ViewModel() {
                 }
                 _scooters.value = scooterList
             }
+    }
+
+    fun loadTransactionData(userID : String) : List<Any> {
+        val receipts = mutableListOf<Receipt>()
+        db.collection("rental_history")
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.w(TAG, "Listen failed.", error)
+                    return@addSnapshotListener
+                }
+
+                val history = mutableListOf<String>()
+                for (doc in value!!) {
+                    if(doc.get("accountid") as String == userID)
+                    {
+                        history.add(
+
+                            doc.get("ridesid") as String)
+                    }
+                }
+
+                if(history.size != 0)
+                {
+                    db.collection("rides")
+                        .addSnapshotListener { value, error ->
+                            if (error != null) {
+                                Log.w(TAG, "Listen failed.", error)
+                                return@addSnapshotListener
+                            }
+                            while(history.isNotEmpty())
+                            {
+                                var check = history.removeLast()
+                                for (doc in value!!) {
+                                    if(doc.id.toString() == check)
+                                        receipts.add(
+                                            Receipt() //#todo add receipt here
+                                        )
+                                }
+
+                            }
+
+
+                            }
+                }
+    }
+        return receipts
     }
 
     fun getScooter(id : String) : Scooter? {

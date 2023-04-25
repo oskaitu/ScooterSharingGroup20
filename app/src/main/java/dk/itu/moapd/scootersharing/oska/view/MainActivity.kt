@@ -1,14 +1,12 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
-import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -20,22 +18,18 @@ import com.bumptech.glide.request.transition.Transition
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.location.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.label.ImageLabeling
-import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.viewModel.LocationService
-import org.opencv.*
-import java.io.IOException
+import java.lang.Math.*
 import java.util.*
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 /**
@@ -340,6 +334,18 @@ fun getNameWithInitial(fullName: String): String {
 
 
     return firstName + " " + lastNameInitial
+}
+
+fun calculateDistance(lat1: Long, lon1: Long, lat2: Long, lon2: Long): Double {
+
+    return acos(
+        sin(lat1.toDouble()) * sin(lat2.toDouble()) + cos(lat1.toDouble()) * cos(
+            lat2.toDouble()
+        ) * cos(
+            (lon2 - lon1).toDouble()
+        )
+    ) * 6371
+
 }
 
 
