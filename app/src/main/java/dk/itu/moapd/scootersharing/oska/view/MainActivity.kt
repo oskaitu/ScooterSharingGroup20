@@ -325,12 +325,20 @@ class MainActivity : AppCompatActivity() {
 }
 
 fun getNameWithInitial(fullName: String): String {
-    val pattern = Regex("^([^\\s]+)\\s+([^\\s])[^\\s]*\\s*([^\\s]*)$")
-    val matchResult = pattern.find(fullName)
 
-    val firstName = matchResult?.groupValues?.get(1) ?: ""
+    val res = fullName.toString().split(" ")
 
-    val lastNameInitial = matchResult?.groupValues?.get(2) ?: ""
+    if(res.size==1)
+    {
+        return res[0]
+    }
+
+    val firstName = res.first()
+    val lastNameInitial = res.last().first()
+
+
+
+
     return firstName + " " + lastNameInitial
 }
 
