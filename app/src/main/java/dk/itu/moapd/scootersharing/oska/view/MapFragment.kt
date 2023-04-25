@@ -115,7 +115,7 @@ class MapFragment : Fragment() {
                                     _timestamp = document.get("timestamp") as Long,
                                     _translated_location = document.get("translated_location") as String?
                                 )
-                            Toast.makeText(requireContext(), "Selected  ${MainFragment.selectedScooter._name}", Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(requireContext(), "Selected  ${MainFragment.selectedScooter._name}", Toast.LENGTH_SHORT).show()
                             findNavController().navigate(R.id.startFragment)
                         }
                     }

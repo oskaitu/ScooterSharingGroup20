@@ -35,6 +35,9 @@
         <action
             android:id="@+id/fragment_scanner"
             app:destination="@id/fragment_scanner" />
+        <action
+            android:id="@+id/action_fragment_main_to_receiptFragment"
+            app:destination="@id/receiptFragment" />
 
 
     </fragment>
@@ -96,4 +99,13 @@
         android:name="dk.itu.moapd.scootersharing.oska.view.ActiveRideFragmentDialogue"
         android:label="fragment_active"
         tools:layout="@layout/fragment_active" />
+
+    <fragment
+        android:id="@+id/receiptFragment"
+        android:name="dk.itu.moapd.scootersharing.oska.view.ReceiptFragment"
+        android:label="ReceiptFragment" >
+        <action
+            android:id="@+id/action_receiptFragment_to_fragment_main"
+            app:destination="@id/fragment_main" />
+    </fragment>
 </navigation>
