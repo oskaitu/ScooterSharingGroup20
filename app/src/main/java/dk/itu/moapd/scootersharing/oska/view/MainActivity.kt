@@ -14,7 +14,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -142,19 +144,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.action_list -> showFragment(AvailableScooterFragment())
-                R.id.action_start -> showFragment(MapFragment())
-                R.id.action_settings -> showFragment(GeolocationFragment())
-            }
-            true
-        }
+        // Set up the bottom navigation view with the NavController
+        binding.bottomNavigation.setupWithNavController(navController)
 
-        if (savedInstanceState == null) {
-            showFragment(MapFragment())
-        }
+
 
 
 

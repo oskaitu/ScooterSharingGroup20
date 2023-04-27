@@ -39,6 +39,9 @@
     <string name="subtitle">"Yes this looks nice "</string>
     <string name="body">woitk0wporiteorteoisrtgpoeritujgs9epiujogjsdprijpoisrjgpoesirgjspeorjigosepjigserg</string>
     <string name="confirm">helll yeahhh</string>
+    <string name="settings">Settings</string>
+    <string name="map">Map</string>
+    <string name="list">List</string>
 
 
 </resources>

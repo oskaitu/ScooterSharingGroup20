@@ -1,14 +1,20 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/action_list"
-        android:icon="@drawable/logo_scooter"
-        android:title="home" />
+        android:id="@+id/available_scooter_recyclerview"
+        android:icon="@drawable/baseline_format_list_bulleted_24"
+        android:title="@string/list"
+        app:destination="@id/available_scooter_recyclerview"
+        />
     <item
-        android:id="@+id/action_start"
-        android:icon="@drawable/logo_scooter"
-        android:title="search" />
+        android:id="@+id/fragment_map"
+        android:icon="@drawable/baseline_map_24"
+        android:title="@string/map"
+        app:destination="@id/fragment_map"/>
     <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/logo_scooter"
-        android:title="profile" />
+        android:id="@+id/fragment_main"
+        android:icon="@drawable/baseline_settings_24"
+        android:title="@string/settings"
+        app:destination="@id/fragment_main"/>
 </menu>

@@ -184,6 +184,7 @@ class MainFragment : Fragment() {
             }
            ShowListButton.setOnClickListener {
 
+
                findNavController().navigate(R.id.available_scooter_recyclerview)
             }
             Gotolocation.setOnClickListener{
