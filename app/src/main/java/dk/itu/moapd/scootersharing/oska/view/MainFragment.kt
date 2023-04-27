@@ -122,6 +122,7 @@ class MainFragment : Fragment() {
                     }
             }
             DeleteRideButton.setOnClickListener {
+                receipts.clear()
                 if(selectedScooter._name=="error")
                 {
                     db.collection("rental_history")
@@ -150,12 +151,17 @@ class MainFragment : Fragment() {
                                         }
                                         while (history.isNotEmpty()) {
                                             var check = history.removeLast()
-                                            println(history)
                                             for (doc in value!!) {
                                                 if (doc.id == check) {
-                                                    println("${doc.id} is $check")
-
-                                                    //var scoot = scooters.value?.filter { s -> s._id==doc.get("scooterid")}
+                                                }
+                                                    var scoot = doc.get("scooterid") as String?
+                                                    if(scoot != null)
+                                                    {
+                                                        val docRef = db.collection("scooters").document(scoot)
+                                                        docRef.get()
+                                                            .addOnSuccessListener { document ->
+                                                                if (document != null) {
+                                                                    val name = document.get("name") as String
                                                     receipts.add(
                                                         Receipt(
                                                             name = doc.id,
@@ -164,16 +170,12 @@ class MainFragment : Fragment() {
                                                             startLocation = doc.get("start_location") as String,
                                                             endLocation = doc.get("end_location") as String,
                                                             distance = doc.get("distance") as Number,
-                                                            cost = doc.get("cost") as Number
+                                                            cost = doc.get("cost") as Number,
+                                                            scooterName = name
                                                         )
                                                     ) }
-                                            }
-                                            findNavController().navigate(R.id.receiptFragment)
-                                        }
-                                    } } }
-                                //Snackbar.make(it,"You need to select a scooter first!", Snackbar.LENGTH_SHORT).show()
-
-                }
+                                                                findNavController().navigate(R.id.receiptFragment)
+                                                            } } } } } } } }
                 else findNavController().navigate(R.id.confirmationFragment) }
 
             UpdateRideButton.setOnClickListener {
@@ -229,13 +231,6 @@ class MainFragment : Fragment() {
         // Print a message in the ‘Logcat ‘ system .
         Log.d(ContentValues.TAG, message)
     }
-
-    fun getManager() : FragmentManager
-    {
-       return parentFragmentManager
-    }
-
-
 
 }
 

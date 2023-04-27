@@ -50,58 +50,6 @@ class ScooterViewModel : ViewModel() {
             }
     }
 
-    fun loadTransactionData(userID : String) : List<Receipt> {
-        val receipts = mutableListOf<Receipt>()
-        db.collection("rental_history")
-            .addSnapshotListener { value, error ->
-                if (error != null) {
-                    Log.w(TAG, "Listen failed.", error)
-                    return@addSnapshotListener
-                }
-
-                val history = mutableListOf<String>()
-                for (doc in value!!) {
-                    if(doc.get("accountid") as String == userID)
-                    {
-                        history.add(
-
-                            doc.get("ridesid") as String)
-                    }
-                }
-                if(history.size != 0)
-                {
-                    db.collection("rides")
-                        .addSnapshotListener { value, error ->
-                            if (error != null) {
-                                Log.w(TAG, "Listen failed.", error)
-                                return@addSnapshotListener
-                            }
-                            while(history.isNotEmpty())
-                            {
-                                var check = history.removeLast()
-                                for (doc in value!!) {
-                                    if(doc.id == check)
-                                    {
-                                        //var scoot = scooters.value?.filter { s -> s._id==doc.get("scooterid")}
-                                        receipts.add(
-                                            Receipt(
-                                                name = doc.id,
-                                                startTime = doc.get("start_time") as Long,
-                                                endTime = doc.get("end_time") as Long,
-                                                startLocation = doc.get("start_location") as String,
-                                                endLocation = doc.get("end_location") as String,
-                                                distance = doc.get("distance") as Number,
-                                                cost = doc.get("cost") as Number
-                                            ))
-                                    }
-                                }
-                            }
-                            }
-                }
-    }
-        return receipts
-    }
-
     fun getScooter(id : String) : Scooter? {
         var scooter: Scooter? = null
         val docRef = db.collection("scooters").document(id)

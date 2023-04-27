@@ -328,10 +328,8 @@ fun getNameWithInitial(fullName: String): String {
     }
 
     val firstName = res.first()
+
     val lastNameInitial = res.last().first()
-
-
-
 
     return firstName + " " + lastNameInitial
 }

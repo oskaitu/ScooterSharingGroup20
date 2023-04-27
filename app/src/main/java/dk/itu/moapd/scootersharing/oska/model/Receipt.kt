@@ -7,5 +7,6 @@ data class Receipt(
     val startLocation: String,
     val endLocation: String,
     val distance: Number,
-    val cost: Number
+    val cost: Number,
+    val scooterName: String,
 )

@@ -70,7 +70,7 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
                     )
                     val rideData = hashMapOf<String, Any>()
                     rideData["cost"] =
-                        results[0].toInt() * simpleChronometer.base / 60 //cost is meters times minutes
+                        15 + results[0].toInt()
                     rideData["end_time"] = System.currentTimeMillis()
                     rideData["scooterid"] = scooterToBeChanged._id
                     rideData["start_time"] = startTime

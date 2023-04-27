@@ -1,13 +1,13 @@
 package dk.itu.moapd.scootersharing.oska.view
 
-import android.content.ContentValues
 import android.location.Address
 import android.location.Geocoder
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,10 +20,11 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.model.Receipt
-import kotlinx.coroutines.awaitAll
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class ReceiptFragment : Fragment() {
     override fun onCreateView(
@@ -35,25 +36,59 @@ class ReceiptFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 val geocoder = (activity as MainActivity).geocoder
-                ScooterList(geocoder)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    ScooterList(geocoder)
+                } else
+                {
+                    ScooterListSimple(geocoder)
+                }
             }
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScooterList(geocoder: Geocoder) {
     val receipts = MainFragment.receipts
-    //val receipts = transactions.map {
-      //      t -> t.endLocation.split(",") }
+    val receiptsWithNoDuplicates = receipts.toSet().toList()
+
+    LazyColumn {
+        items(receiptsWithNoDuplicates) { it ->
+            val calc1 = it.startLocation.trim().split(",")
+            val start = convertCordsToAddress(geocoder, calc1[0].toDouble(),calc1[1].toDouble())
+            val calc2 = it.startLocation.trim().split(",")
+            val end = convertCordsToAddress(geocoder, calc2[0].toDouble(),calc2[1].toDouble())
+
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                .withZone(ZoneId.systemDefault())
+
+            val date = Instant.ofEpochMilli(it.endTime)
+            val startTime = formatter.format(date)
+            ReceiptListItem(it, start, end, startTime)
+        }
+    }
+    //MainFragment.receipts.clear()
+}
+@Composable
+fun ScooterListSimple(geocoder: Geocoder) {
+    val receipts = MainFragment.receipts
     LazyColumn {
         items(receipts) { it ->
-            ReceiptListItem(it)
+            val calc1 = it.startLocation.trim().split(",")
+            val start = convertCordsToAddress(geocoder, calc1[0].toDouble(),calc1[1].toDouble())
+            val calc2 = it.startLocation.trim().split(",")
+            val end = convertCordsToAddress(geocoder, calc2[0].toDouble(),calc2[1].toDouble())
+            ReceiptListItem(it, start, end, "")
         }
     }
 }
+
+
 @Composable
-fun ReceiptListItem(receipt: Receipt) {
+fun ReceiptListItem(receipt: Receipt, start : String, end : String, startTime: String) {
+
     Card(
         elevation = 4.dp,
         modifier = Modifier
@@ -64,20 +99,26 @@ fun ReceiptListItem(receipt: Receipt) {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = receipt.name,
+                text = receipt.scooterName,
                 style = MaterialTheme.typography.h6
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = receipt.name,
+                    style = MaterialTheme.typography.subtitle1
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Start Time: ${receipt.startTime}",
-                    style = MaterialTheme.typography.body1
-                )
-                Text(
-                    text = "End Time: ${receipt.endTime}",
+                    text = startTime,
                     style = MaterialTheme.typography.body1
                 )
             }
@@ -86,12 +127,20 @@ fun ReceiptListItem(receipt: Receipt) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
+
                 Text(
-                    text = "Start Location: ${receipt.startLocation}",
+                    text = "From :  $start",
                     style = MaterialTheme.typography.body2
                 )
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+
                 Text(
-                    text = "End Location: ${receipt.endLocation}",
+                    text = "To : $end",
                     style = MaterialTheme.typography.body2
                 )
             }
@@ -105,7 +154,7 @@ fun ReceiptListItem(receipt: Receipt) {
                     style = MaterialTheme.typography.body2
                 )
                 Text(
-                    text = "Cost: ${receipt.cost}",
+                    text = "Cost: ${receipt.cost}.00,-",
                     style = MaterialTheme.typography.body2
                 )
             }
