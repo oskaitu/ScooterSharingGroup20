@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_list"
+        android:icon="@drawable/logo_scooter"
+        android:title="home" />
+    <item
+        android:id="@+id/action_start"
+        android:icon="@drawable/logo_scooter"
+        android:title="search" />
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/logo_scooter"
+        android:title="profile" />
+</menu>
