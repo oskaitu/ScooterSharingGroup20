@@ -12,12 +12,16 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
@@ -54,9 +58,11 @@ SOFTWARE.
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var bottomNavigationView: BottomNavigationView
 
 
-   lateinit var deviceLocation : Location
+
+    lateinit var deviceLocation : Location
     //lateinit var deviceLocation2 : Location
     lateinit var geocoder : Geocoder
     lateinit var gps: LocationService
@@ -129,8 +135,27 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
 
+
+
+
         geocoder = Geocoder(this,Locale.getDefault())
         setContentView(binding.root)
+
+
+
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_list -> showFragment(AvailableScooterFragment())
+                R.id.action_start -> showFragment(MapFragment())
+                R.id.action_settings -> showFragment(GeolocationFragment())
+            }
+            true
+        }
+
+        if (savedInstanceState == null) {
+            showFragment(MapFragment())
+        }
+
 
 
         requestUserPermissions()
@@ -146,6 +171,11 @@ class MainActivity : AppCompatActivity() {
                 // ...
             }
         // [END auth_fui_signout]
+    }
+    private fun showFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 
 
