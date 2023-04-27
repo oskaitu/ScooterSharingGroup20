@@ -50,7 +50,7 @@ class ScooterViewModel : ViewModel() {
             }
     }
 
-    suspend fun loadTransactionData(userID : String) : List<Receipt> {
+    fun loadTransactionData(userID : String) : List<Receipt> {
         val receipts = mutableListOf<Receipt>()
         db.collection("rental_history")
             .addSnapshotListener { value, error ->

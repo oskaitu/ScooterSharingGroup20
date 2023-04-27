@@ -30,6 +30,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
+import dk.itu.moapd.scootersharing.oska.model.Receipt
 import dk.itu.moapd.scootersharing.oska.model.Scooter
 import dk.itu.moapd.scootersharing.oska.viewModel.RecyclerViewAdapter
 import dk.itu.moapd.scootersharing.oska.viewModel.ScooterViewModel
@@ -37,6 +38,7 @@ import dk.itu.moapd.scootersharing.oska.viewModel.ScooterViewModel
 class MainFragment : Fragment() {
 
     var _binding: FragmentMainBinding? = null
+    private val db = Firebase.firestore
 
     /**
      * This property is only valid between `onCreateView()` and `onDestroyView()` methods.
@@ -47,6 +49,7 @@ class MainFragment : Fragment() {
         }
 
     companion object {
+        val receipts = mutableListOf<Receipt>()
         lateinit var circularProgressDrawable : CircularProgressDrawable
         lateinit var adapter: RecyclerViewAdapter
         lateinit var viewModel : ScooterViewModel
@@ -121,8 +124,55 @@ class MainFragment : Fragment() {
             DeleteRideButton.setOnClickListener {
                 if(selectedScooter._name=="error")
                 {
-                    //Snackbar.make(it,"You need to select a scooter first!", Snackbar.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.receiptFragment)
+                    db.collection("rental_history")
+                        .addSnapshotListener { value, error ->
+                            if (error != null) {
+                                Log.w(ContentValues.TAG, "Listen failed.", error)
+                                return@addSnapshotListener
+                            }
+
+                            val history = mutableListOf<String>()
+                            for (doc in value!!) {
+                                if (doc.get("accountid") as String == (activity as MainActivity).auth.currentUser?.email) {
+                                    history.add(
+
+                                        doc.get("ridesid") as String
+                                    )
+                                }
+                            }
+                            if (history.size != 0) {
+
+                                db.collection("rides")
+                                    .addSnapshotListener { value, error ->
+                                        if (error != null) {
+                                            Log.w(ContentValues.TAG, "Listen failed.", error)
+                                            return@addSnapshotListener
+                                        }
+                                        while (history.isNotEmpty()) {
+                                            var check = history.removeLast()
+                                            println(history)
+                                            for (doc in value!!) {
+                                                if (doc.id == check) {
+                                                    println("${doc.id} is $check")
+
+                                                    //var scoot = scooters.value?.filter { s -> s._id==doc.get("scooterid")}
+                                                    receipts.add(
+                                                        Receipt(
+                                                            name = doc.id,
+                                                            startTime = doc.get("start_time") as Long,
+                                                            endTime = doc.get("end_time") as Long,
+                                                            startLocation = doc.get("start_location") as String,
+                                                            endLocation = doc.get("end_location") as String,
+                                                            distance = doc.get("distance") as Number,
+                                                            cost = doc.get("cost") as Number
+                                                        )
+                                                    ) }
+                                            }
+                                            findNavController().navigate(R.id.receiptFragment)
+                                        }
+                                    } } }
+                                //Snackbar.make(it,"You need to select a scooter first!", Snackbar.LENGTH_SHORT).show()
+
                 }
                 else findNavController().navigate(R.id.confirmationFragment) }
 

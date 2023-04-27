@@ -1,8 +1,10 @@
 package dk.itu.moapd.scootersharing.oska.view
 
+import android.content.ContentValues
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +20,10 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.model.Receipt
+import kotlinx.coroutines.awaitAll
 
 class ReceiptFragment : Fragment() {
     override fun onCreateView(
@@ -29,20 +34,20 @@ class ReceiptFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val user = (activity as MainActivity).auth.currentUser
-                val transactions = MainFragment.viewModel.loadTransactionData(user?.email ?: "error")
                 val geocoder = (activity as MainActivity).geocoder
-                ScooterList(geocoder, transactions)
+                ScooterList(geocoder)
             }
         }
     }
+}
 
 @Composable
-fun ScooterList(geocoder: Geocoder, transactions: List<Receipt>) {
+fun ScooterList(geocoder: Geocoder) {
+    val receipts = MainFragment.receipts
     //val receipts = transactions.map {
       //      t -> t.endLocation.split(",") }
     LazyColumn {
-        items(transactions) { it ->
+        items(receipts) { it ->
             ReceiptListItem(it)
         }
     }
@@ -129,7 +134,3 @@ fun ReceiptListItem(receipt: Receipt) {
         }
         return fulladdress
     }
-
-
-
-}
