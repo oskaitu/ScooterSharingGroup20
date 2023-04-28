@@ -8,7 +8,6 @@ import androidx.fragment.app.DialogFragment
 
 class MlKitFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        var scooterToBeChanged = MainFragment.selectedScooter
 
         return activity?.let {
             val builder = AlertDialog.Builder(requireActivity())

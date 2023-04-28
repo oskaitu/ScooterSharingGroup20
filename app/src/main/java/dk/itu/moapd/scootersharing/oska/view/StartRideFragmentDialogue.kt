@@ -3,6 +3,7 @@ package dk.itu.moapd.scootersharing.oska.view
 import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
+import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.Chronometer
@@ -29,11 +30,28 @@ import kotlin.concurrent.thread
 class StartRideFragmentDialogue : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         var scooterToBeChanged = MainFragment.selectedScooter
-
+        val yourloc = (activity as MainActivity).getLocationInGoodFormat()
+        val scooterloc = scooterToBeChanged._location.trim().split(",")
+        val results = FloatArray(5)
+        Location.distanceBetween(yourloc[0],yourloc[1],scooterloc[0].toDouble(),scooterloc[1].toDouble(),
+            results)
+        val random = (Math.random()*100).toInt()
+        var distance = ""
+        if(results[0].toInt()<1000)
+        {
+            distance = "${results[0].toInt()} meters away"
+        } else
+        {
+            distance =  "${(results[0]/1000).toInt()} km away"
+        }
         return activity?.let {
             val builder = AlertDialog.Builder(requireActivity())
             builder.setTitle("Start driving ${scooterToBeChanged._name}?")
-            builder.setMessage("Cost 50 \n Fuel 50 \n range 20 meters")
+            builder.setMessage("${scooterToBeChanged._translated_location}" +
+                    "\n" +
+                    "${random}% battery left" +
+                    "\n" +
+                    distance)
                 .setPositiveButton("Scan QR") { _, _ ->
                     findNavController().navigate((R.id.fragment_scanner))
                 }

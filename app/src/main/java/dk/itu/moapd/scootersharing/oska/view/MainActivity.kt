@@ -1,7 +1,6 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.location.Geocoder
@@ -13,10 +12,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -68,11 +64,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var deviceLocation : Location
     //lateinit var deviceLocation2 : Location
     lateinit var geocoder : Geocoder
-    lateinit var gps: LocationService
 
     lateinit var auth: FirebaseAuth
 
 
+    lateinit var gps: LocationService
 
     companion object{
         private const val ALL_PERMISSIONS_RESULT = 1337
@@ -324,6 +320,11 @@ class MainActivity : AppCompatActivity() {
         } else super.onOptionsItemSelected(item)
     }
 
+    fun getLocationInGoodFormat(): List<Double> {
+        val location = gps.getLocation()
+        return listOf(location!!.latitude, location.longitude)
+    }
+
 
     fun checkPermission() =
         ActivityCompat.checkSelfPermission(
@@ -368,6 +369,8 @@ fun calculateDistance(lat1: Long, lon1: Long, lat2: Long, lon2: Long): Double {
     ) * 6371
 
 }
+
+
 
 
 

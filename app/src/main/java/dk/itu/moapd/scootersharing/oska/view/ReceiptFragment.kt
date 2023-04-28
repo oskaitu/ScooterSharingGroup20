@@ -85,10 +85,6 @@ fun ScooterList(geocoder: Geocoder, nav : NavController, iconBack : ImageVector)
                onClick = { nav.navigate(R.id.fragment_main) },
                modifier = Modifier.fillMaxWidth(),
                shape = RoundedCornerShape(100),
-
-
-
-
            ) {
                Image(
                    imageVector = iconBack,
