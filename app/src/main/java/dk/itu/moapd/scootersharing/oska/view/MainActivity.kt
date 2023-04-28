@@ -53,6 +53,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+ Our only activity it contains most references in the project and is responsible for connecting most of our backend.
+ and binding the locationservice
  */
 class MainActivity : AppCompatActivity() {
 
@@ -60,22 +63,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
 
 
+    lateinit var deviceLocation: Location
 
-    lateinit var deviceLocation : Location
     //lateinit var deviceLocation2 : Location
-    lateinit var geocoder : Geocoder
+    lateinit var geocoder: Geocoder
 
     lateinit var auth: FirebaseAuth
 
 
     lateinit var gps: LocationService
 
-    companion object{
+    companion object {
         private const val ALL_PERMISSIONS_RESULT = 1337
         const val REQUEST_CODE_PERMISSIONS = 10
         val REQUIRED_PERMISSIONS = arrayOf(
-                                            Manifest.permission.CAMERA,
-                                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
 
 
     }
@@ -100,7 +104,8 @@ class MainActivity : AppCompatActivity() {
         // Choose authentication providers
         val providers = arrayListOf(
             AuthUI.IdpConfig.GoogleBuilder().build(),
-            AuthUI.IdpConfig.EmailBuilder().build())
+            AuthUI.IdpConfig.EmailBuilder().build()
+        )
 
 
         // Create and launch sign-in intent
@@ -118,12 +123,10 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        if (auth.currentUser == null)
-        {
+        if (auth.currentUser == null) {
             createSignInIntent()
         }
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,11 +140,12 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        geocoder = Geocoder(this,Locale.getDefault())
+        geocoder = Geocoder(this, Locale.getDefault())
         setContentView(binding.root)
 
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
         val navController = navHostFragment.navController
 
         // Set up the bottom navigation view with the NavController
@@ -167,7 +171,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
@@ -177,16 +180,15 @@ class MainActivity : AppCompatActivity() {
             val tasks = db.collection("user").get()
 
             tasks.addOnSuccessListener { collection ->
-                for (document in collection){
+                for (document in collection) {
                     //DO NOT CHANGE THIS
-                        if(user?.email!!.equals(document.get("email"))){
-                            newUser = false
-                        }
+                    if (user?.email!!.equals(document.get("email"))) {
+                        newUser = false
                     }
                 }
+            }
             tasks.addOnCompleteListener {
-                if(newUser)
-                {
+                if (newUser) {
                     val data = hashMapOf(
                         "authref" to user.toString(),
                         "name" to user?.displayName,
@@ -200,8 +202,8 @@ class MainActivity : AppCompatActivity() {
                         .addOnFailureListener { e ->
                             println("Error adding document ${e.message}")
                         }
-                }}
-
+                }
+            }
 
 
         } else {
@@ -211,21 +213,19 @@ class MainActivity : AppCompatActivity() {
             // ...
         }
     }
+
     private fun startLocationAware() {
 
         // Show a dialog to ask the user to allow the application to access the device's location.
         requestUserPermissions()
 
         gps = LocationService(this, this.getSystemService(LOCATION_SERVICE) as LocationManager)
-        if(checkPermission())
-        {
+        if (checkPermission()) {
             deviceLocation = gps.getLocation()!!
         }
 
 
     }
-
-
 
 
     private fun requestUserPermissions() {
@@ -236,8 +236,6 @@ class MainActivity : AppCompatActivity() {
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         permissions.add(Manifest.permission.CAMERA)
-
-
 
 
         // Check which permissions is needed to ask to the user.
@@ -259,14 +257,17 @@ class MainActivity : AppCompatActivity() {
                 result.add(permission)
         return result
     }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                            grantResults: IntArray) {
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         // Check if the user has accepted the permissions to access the camera.
         if (requestCode == REQUEST_CODE_PERMISSIONS)
             if (allPermissionsGranted())
-                //startCamera()
+            //startCamera()
 
             // If permissions are not granted, present a toast to notify the user that the
             // permissions were not granted.
@@ -275,10 +276,13 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
     }
+
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
-            baseContext, it) == PackageManager.PERMISSION_GRANTED
+            baseContext, it
+        ) == PackageManager.PERMISSION_GRANTED
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(dk.itu.moapd.scootersharing.oska.R.menu.logout, menu)
 
@@ -299,6 +303,7 @@ class MainActivity : AppCompatActivity() {
                     val profileItem = menu?.findItem(R.id.profile_picture)
                     profileItem?.icon = resource
                 }
+
                 override fun onLoadCleared(placeholder: Drawable?) {
                     // Do nothing
                 }
@@ -309,7 +314,6 @@ class MainActivity : AppCompatActivity() {
 
         return true
     }
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -333,12 +337,12 @@ class MainActivity : AppCompatActivity() {
                 ActivityCompat.checkSelfPermission(
                     this, Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(
+                ActivityCompat.checkSelfPermission(
                     this, Manifest.permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(
-                        this, Manifest.permission.WRITE_EXTERNAL_STORAGE
-                            ) != PackageManager.PERMISSION_GRANTED
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
 
 }
 
@@ -346,8 +350,7 @@ fun getNameWithInitial(fullName: String): String {
 
     val res = fullName.toString().split(" ")
 
-    if(res.size==1)
-    {
+    if (res.size == 1) {
         return res[0]
     }
 

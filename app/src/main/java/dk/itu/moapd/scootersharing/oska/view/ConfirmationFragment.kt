@@ -10,9 +10,9 @@ import dk.itu.moapd.scootersharing.oska.view.MainFragment
 import dk.itu.moapd.scootersharing.oska.view.defaultScooter
 
 /**
- * A simple [Fragment] subclass.
- * Use the [ConfirmationFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * Confirmation that was previously used, it still contains the logic to delete scooters directly in the app
+ * We have decided that that behavior is not fit for a program and we have no logic for checking admin users that
+ * could potentially use it.
  */
 class ConfirmationFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

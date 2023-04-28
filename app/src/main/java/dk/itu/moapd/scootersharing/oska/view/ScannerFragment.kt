@@ -39,14 +39,13 @@ import org.opencv.objdetect.QRCodeDetector
 import java.io.ByteArrayOutputStream
 import java.io.File
 
-
-class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  {
+/**
+ * A fragment containing the QR scanner, implemented using OpenCV
+ */
+class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
     private lateinit var _binding: FragmentScannerBinding
-    private lateinit var  scanner: QRCodeDetector
-
-
-
+    private lateinit var scanner: QRCodeDetector
 
 
     private lateinit var imageMat: Mat
@@ -56,7 +55,6 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
     private val viewModel: MainActivityVM by lazy {
         ViewModelProvider(this)[MainActivityVM::class.java]
     }
-
 
 
     private val binding
@@ -97,8 +95,6 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
     }
 
 
-
-
     override fun onResume() {
         super.onResume()
 
@@ -112,10 +108,12 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
         else
             loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)*/
     }
+
     override fun onPause() {
         super.onPause()
         binding.fragmentScannerView.disableView()
     }
+
     override fun onDestroy() {
         super.onDestroy()
         binding.fragmentScannerView.disableView()
@@ -175,17 +173,11 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
             }
 
             return image
-        }
-        catch (e: Exception)
-        {
+        } catch (e: Exception) {
             println(e.message)
         }
         return null
     }
-
-
-
-
 
 
     /**

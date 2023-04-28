@@ -23,7 +23,10 @@ import dk.itu.moapd.scootersharing.oska.databinding.FragmentMainBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * Proof of concept fragment for geolocator, it was used to transpile a lat-lon to a direct location,
+ * that behavoir is used directly in the fragments where it makes sense instead now.
+ */
 class GeolocationFragment : Fragment() {
 
     private lateinit var _binding: FragmentGeolocationBinding
@@ -32,7 +35,6 @@ class GeolocationFragment : Fragment() {
         get() = checkNotNull(_binding) {
 
         }
-
 
 
     override fun onCreateView(
@@ -45,10 +47,12 @@ class GeolocationFragment : Fragment() {
 
 
     }
+
     override fun onStart() {
         super.onStart()
         updateUI((activity as MainActivity).gps.getLocation()!!)
     }
+
     private fun updateUI(location: Location) {
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
 
@@ -58,7 +62,7 @@ class GeolocationFragment : Fragment() {
                 timeTextField?.editText?.setText(location.time.toDateString())
                 //addressTextField?.editText?.setText(setAddress(location.latitude, location.longitude))
             }
-        else{
+        else {
 
         }
         setAddress(location.latitude, location.longitude)
@@ -80,19 +84,20 @@ class GeolocationFragment : Fragment() {
         if (Build.VERSION.SDK_INT >= 33)
             geocoder.getFromLocation(latitude, longitude, 1, geocodeListener)
         else
-            geocoder.getFromLocation(latitude, longitude, 1)?.let {  addresses ->
+            geocoder.getFromLocation(latitude, longitude, 1)?.let { addresses ->
                 addresses.firstOrNull()?.toAddressString()?.let { address ->
                     binding.addressTextField?.editText?.setText(address)
                 }
             }
     }
 
-    private fun Long.toDateString() : String {
+    private fun Long.toDateString(): String {
         val date = Date(this)
         val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
         return format.format(date)
     }
-    private fun Address.toAddressString() : String {
+
+    private fun Address.toAddressString(): String {
         val address = this
 
         // Create a `String` with multiple lines.
@@ -106,8 +111,6 @@ class GeolocationFragment : Fragment() {
 
         return stringBuilder.toString()
     }
-
-
 
 
 }

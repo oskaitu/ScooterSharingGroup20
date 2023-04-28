@@ -35,6 +35,10 @@ import dk.itu.moapd.scootersharing.oska.model.Scooter
 import dk.itu.moapd.scootersharing.oska.viewModel.RecyclerViewAdapter
 import dk.itu.moapd.scootersharing.oska.viewModel.ScooterViewModel
 
+/**
+ * Mainfragment represents the homescreen for a user, it contains relevant shared state info such as current
+ * chosen scooter and most recent receipt.
+ */
 class MainFragment : Fragment() {
 
     var _binding: FragmentMainBinding? = null
@@ -50,13 +54,13 @@ class MainFragment : Fragment() {
 
     companion object {
         val receipts = mutableListOf<Receipt>()
-        lateinit var circularProgressDrawable : CircularProgressDrawable
+        lateinit var circularProgressDrawable: CircularProgressDrawable
         lateinit var adapter: RecyclerViewAdapter
-        lateinit var viewModel : ScooterViewModel
+        lateinit var viewModel: ScooterViewModel
         lateinit var storage: FirebaseStorage
-        lateinit var storageRef : StorageReference
-        var selectedScooter : Scooter = defaultScooter()
-        var mostRecentRide : Receipt = defaultReceipt()
+        lateinit var storageRef: StorageReference
+        var selectedScooter: Scooter = defaultScooter()
+        var mostRecentRide: Receipt = defaultReceipt()
         var rider = false
         var labels = mutableListOf<String>()
         val user = FirebaseAuth.getInstance().currentUser
@@ -65,7 +69,11 @@ class MainFragment : Fragment() {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(ScooterViewModel::class.java)
         storage = Firebase.storage("gs://moapd-2023-8c62e.appspot.com/")
@@ -73,8 +81,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 
         adapter = RecyclerViewAdapter(viewModel)
@@ -83,11 +90,10 @@ class MainFragment : Fragment() {
         circularProgressDrawable.centerRadius = 30f
         circularProgressDrawable.start()
 
-        with (binding) {
+        with(binding) {
             //recyclerView.visibility= View.INVISIBLE
 
-            if(rider)
-            {
+            if (rider) {
                 findNavController().navigate(R.id.activeFragment)
             }
 
@@ -114,18 +120,17 @@ class MainFragment : Fragment() {
             checkApiVersion.setOnClickListener { view ->
 
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-                    if (APIversion.text.equals("")) {
-                        val text = getAPILevel()
-                        APIversion.text = text
-                        showMessage("printing api version ")
-                    } else {
-                        APIversion.text = ""
-                    }
+                if (APIversion.text.equals("")) {
+                    val text = getAPILevel()
+                    APIversion.text = text
+                    showMessage("printing api version ")
+                } else {
+                    APIversion.text = ""
+                }
             }
             showReceipt.setOnClickListener {
                 receipts.clear()
-                if(selectedScooter._name=="error")
-                {
+                if (selectedScooter._name == "error") {
                     db.collection("rental_history")
                         .addSnapshotListener { value, error ->
                             if (error != null) {
@@ -155,31 +160,40 @@ class MainFragment : Fragment() {
                                             for (doc in value!!) {
                                                 if (doc.id == check) {
                                                 }
-                                                    var scoot = doc.get("scooterid") as String?
-                                                    if(scoot != null)
-                                                    {
-                                                        val docRef = db.collection("scooters").document(scoot)
-                                                        docRef.get()
-                                                            .addOnSuccessListener { document ->
-                                                                if (document != null) {
-                                                                        val name = document.get("name") as String
-                                                    receipts.add(
-                                                        Receipt(
-                                                            name = doc.id,
-                                                            startTime = doc.get("start_time") as Long,
-                                                            endTime = doc.get("end_time") as Long,
-                                                            startLocation = doc.get("start_location") as String,
-                                                            endLocation = doc.get("end_location") as String,
-                                                            distance = doc.get("distance") as Number,
-                                                            cost = doc.get("cost") as Number,
-                                                            scooterName = name
-                                                        )
-                                                    ) }
-                                                                findNavController().navigate(R.id.receiptFragment)
-                                                            } } } } } } } }
-                else findNavController().navigate(R.id.confirmationFragment) }
+                                                var scoot = doc.get("scooterid") as String?
+                                                if (scoot != null) {
+                                                    val docRef =
+                                                        db.collection("scooters").document(scoot)
+                                                    docRef.get()
+                                                        .addOnSuccessListener { document ->
+                                                            if (document != null) {
+                                                                val name =
+                                                                    document.get("name") as String
+                                                                receipts.add(
+                                                                    Receipt(
+                                                                        name = doc.id,
+                                                                        startTime = doc.get("start_time") as Long,
+                                                                        endTime = doc.get("end_time") as Long,
+                                                                        startLocation = doc.get("start_location") as String,
+                                                                        endLocation = doc.get("end_location") as String,
+                                                                        distance = doc.get("distance") as Number,
+                                                                        cost = doc.get("cost") as Number,
+                                                                        scooterName = name
+                                                                    )
+                                                                )
+                                                            }
+                                                            findNavController().navigate(R.id.receiptFragment)
+                                                        }
+                                                }
+                                            }
+                                        }
+                                    }
+                            }
+                        }
+                } else findNavController().navigate(R.id.confirmationFragment)
+            }
 
-            cameraButton.setOnClickListener{
+            cameraButton.setOnClickListener {
                 println((activity as MainActivity).checkPermission())
                 findNavController().navigate((R.id.fragment_camera))
 
@@ -219,31 +233,32 @@ class MainFragment : Fragment() {
 
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    private fun getAPILevel () :String {
+    private fun getAPILevel(): String {
         return buildString {
             append("API level ")
             append(Build.VERSION.SDK_INT)
         }
     }
 
-    private fun showMessage (message : String) {
+    private fun showMessage(message: String) {
         // Print a message in the ‘Logcat ‘ system .
         Log.d(ContentValues.TAG, message)
     }
 
 }
 
- fun defaultScooter () : Scooter {
-    return Scooter("error","error","error",System.currentTimeMillis(),"")
+fun defaultScooter(): Scooter {
+    return Scooter("error", "error", "error", System.currentTimeMillis(), "")
 }
 
-fun defaultReceipt () : Receipt {
-    return Receipt("error",12345678, 12345678, "error", "error", 0, 0,"error")
+fun defaultReceipt(): Receipt {
+    return Receipt("error", 12345678, 12345678, "error", "error", 0, 0, "error")
 }
 
 

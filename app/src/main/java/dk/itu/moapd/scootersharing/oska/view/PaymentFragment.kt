@@ -29,6 +29,10 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+/**
+ * A special fragment written with jetpack compose it contains the most recent receipt and payment thereof it is showed
+ * directly after ending a ride
+ */
 class PaymentFragment : Fragment() {
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
@@ -43,7 +47,8 @@ class PaymentFragment : Fragment() {
                 val receipt = MainFragment.mostRecentRide
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val formatter = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault())
+                    val formatter =
+                        DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault())
                     val date = Instant.ofEpochMilli(receipt.startTime)
                     val startTimeReal = formatter.format(date)
                     val date2 = Instant.ofEpochMilli(receipt.endTime)
@@ -52,23 +57,22 @@ class PaymentFragment : Fragment() {
                         scooterName = receipt.scooterName,
                         ridePrice = receipt.cost,
                         distance = receipt.distance,
-                        startTime = startTimeReal ,
+                        startTime = startTimeReal,
                         endTime = endTimeReal,
                         creditCardIcon = Icons.Filled.ShoppingCart,
                         nav = nav
                     )
                 } else {
-                        ReceiptShower(
-                            scooterName = receipt.scooterName,
-                            ridePrice = receipt.cost,
-                            distance = receipt.distance,
-                            startTime = "" ,
-                            endTime = "",
-                            creditCardIcon = Icons.Outlined.Check,
-                            nav = nav
-                        )
+                    ReceiptShower(
+                        scooterName = receipt.scooterName,
+                        ridePrice = receipt.cost,
+                        distance = receipt.distance,
+                        startTime = "",
+                        endTime = "",
+                        creditCardIcon = Icons.Outlined.Check,
+                        nav = nav
+                    )
                 }
-
 
 
             }

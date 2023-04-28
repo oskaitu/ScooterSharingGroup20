@@ -28,11 +28,14 @@ import dk.itu.moapd.scootersharing.oska.model.Scooter
 import kotlinx.coroutines.selects.select
 
 
+/**
+ * The fragment for containing google maps, it is responsible for all behavior related to that.
+ */
+
 class MapFragment : Fragment() {
 
     private lateinit var _binding: FragmentMapBinding
     private val db = Firebase.firestore
-
 
 
     private val binding
@@ -41,16 +44,13 @@ class MapFragment : Fragment() {
         }
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if(MainFragment.rider)
-        {
+        if (MainFragment.rider) {
             findNavController().navigate(R.id.activeFragment)
         }
         super.onViewCreated(view, savedInstanceState)
@@ -98,11 +98,11 @@ class MapFragment : Fragment() {
                             MarkerOptions()
                                 .position(parseLatLngFromString(doc.get("location") as String))
                                 .title(doc.id)
-                                .icon(BitmapFromVector(requireContext(),R.drawable.logo_scooter))
+                                .icon(BitmapFromVector(requireContext(), R.drawable.logo_scooter))
                         )
                     }
                 }
-            googleMap.setOnMarkerClickListener {marker ->
+            googleMap.setOnMarkerClickListener { marker ->
                 val docRef = db.collection("scooters").document(marker.title!!)
                 docRef.get()
                     .addOnSuccessListener { document ->
@@ -181,8 +181,6 @@ class MapFragment : Fragment() {
         // after generating our bitmap we are returning our bitmap.
         return fromBitmap(bitmap)
     }
-
-
 
 
 }

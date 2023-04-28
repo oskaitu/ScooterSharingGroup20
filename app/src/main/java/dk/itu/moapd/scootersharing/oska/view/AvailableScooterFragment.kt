@@ -18,28 +18,28 @@ import dk.itu.moapd.scootersharing.oska.model.Scooter
 import dk.itu.moapd.scootersharing.oska.viewModel.RecyclerViewAdapter
 import dk.itu.moapd.scootersharing.oska.viewModel.ScooterViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
+/**
+ * Fragment for containing our RecyleViewAdapter
+ */
 class AvailableScooterFragment : Fragment() {
 
-    private var _binding : FragmentAvailableScooterBinding? = null
+    private var _binding: FragmentAvailableScooterBinding? = null
     private val binding
         get() = checkNotNull(_binding) {
 
         }
+
     companion object {
         lateinit var adapter: RecyclerViewAdapter
 
-        lateinit var viewModel : ScooterViewModel
+        lateinit var viewModel: ScooterViewModel
 
     }
 
 
-
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
 
         _binding = FragmentAvailableScooterBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(ScooterViewModel::class.java)
@@ -56,7 +56,7 @@ class AvailableScooterFragment : Fragment() {
         if (MainFragment.rider) {
             findNavController().navigate(R.id.activeFragment)
         } else {
-        super.onViewCreated(view, savedInstanceState)
+            super.onViewCreated(view, savedInstanceState)
         }
 
         viewModel.loadData()
@@ -67,7 +67,6 @@ class AvailableScooterFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
 
 }

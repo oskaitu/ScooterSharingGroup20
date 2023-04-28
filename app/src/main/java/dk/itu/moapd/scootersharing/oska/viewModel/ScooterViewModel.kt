@@ -12,6 +12,9 @@ import dk.itu.moapd.scootersharing.oska.model.Scooter
 import dk.itu.moapd.scootersharing.oska.view.MainActivity
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
 
+/**
+ * The viewModel containing all logic for the database. We are using cloud Firestore.
+ */
 class ScooterViewModel : ViewModel() {
 
     private val db = Firebase.firestore
@@ -50,7 +53,7 @@ class ScooterViewModel : ViewModel() {
             }
     }
 
-    fun getScooter(id : String) : Scooter? {
+    fun getScooter(id: String): Scooter? {
         var scooter: Scooter? = null
         val docRef = db.collection("scooters").document(id)
         docRef.get()
@@ -87,7 +90,7 @@ class ScooterViewModel : ViewModel() {
     /*
     This is for adding new scooters through an admin menu
      */
-    fun addDocumentSimple(collection: String, data: HashMap<String, Any>, ) {
+    fun addDocumentSimple(collection: String, data: HashMap<String, Any>) {
         // [START add_document]
         // Add a new document with a generated id.
 
@@ -136,7 +139,7 @@ class ScooterViewModel : ViewModel() {
             }
     }
 
-    fun deleteDocument(collection: String, id : String) {
+    fun deleteDocument(collection: String, id: String) {
         // [START delete_document]
         db.collection(collection).document(id)
             .delete()
@@ -144,11 +147,6 @@ class ScooterViewModel : ViewModel() {
             .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
         // [END delete_document]
     }
-
-
-
-
-
 
 
 }

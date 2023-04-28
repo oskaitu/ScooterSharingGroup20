@@ -39,7 +39,9 @@ import org.opencv.objdetect.QRCodeDetector
 import java.io.ByteArrayOutputStream
 import java.io.File
 
-
+/**
+ * Fragment for our camera, this also contains the logic for saving images and MLkit for object labeling
+ */
 class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
     private lateinit var _binding: FragmentCameraBinding
@@ -63,8 +65,6 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         get() = checkNotNull(_binding) {
 
         }
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,7 +99,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
 
         //if (checkPermission())
-            startCamera()
+        startCamera()
         /*else
             ActivityCompat.requestPermissions(requireActivity(),
                 REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS )*/
@@ -130,21 +130,25 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
                 var methodId = currentMethodId + 1
                 methodId %= 2
                 viewModel.onMethodChanged(methodId)
-                if(currentMethodId == 0)
-                {
-                    Snackbar.make(binding.root.rootView,"Picture upload mode",Snackbar.LENGTH_SHORT).show()
-                } else
-                {
-                    Snackbar.make(binding.root.rootView,"Object recognition mode",Snackbar.LENGTH_SHORT).show()
+                if (currentMethodId == 0) {
+                    Snackbar.make(
+                        binding.root.rootView,
+                        "Picture upload mode",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Snackbar.make(
+                        binding.root.rootView,
+                        "Object recognition mode",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
             }
-            fragmentCameraCaptureButton.setOnClickListener{
-                if(currentMethodId == 0)
-                {
+            fragmentCameraCaptureButton.setOnClickListener {
+                if (currentMethodId == 0) {
                     SaveImage(imageMat)
 
-                } else
-                {
+                } else {
                     classifyImage(imageMat)
                 }
 
@@ -166,10 +170,12 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         else
             loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)*/
     }
+
     override fun onPause() {
         super.onPause()
         binding.fragmentCameraView.disableView()
     }
+
     override fun onDestroy() {
         super.onDestroy()
         binding.fragmentCameraView.disableView()
@@ -206,17 +212,17 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         return image
     }
 
-    private fun classifyImage(mat: Mat)
-    {
+    private fun classifyImage(mat: Mat) {
         MainFragment.labels.clear()
-       val bitmap = matToBitmap(mat)
+        val bitmap = matToBitmap(mat)
         val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
         val image = InputImage.fromBitmap(bitmap, 90)
         var text = ""
         labeler.process(image)
             .addOnSuccessListener { labels ->
                 for (label in labels) {
-                    text = "${label.text} ${Math.floor((label.confidence*100).toDouble())} % Probability  \n "
+                    text =
+                        "${label.text} ${Math.floor((label.confidence * 100).toDouble())} % Probability  \n "
                     MainFragment.labels.add(text)
                 }
                 val newFragment = MlKitFragment()
@@ -244,7 +250,10 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         var bool: Boolean? = null
         filename = file.toString()
         bool = Imgcodecs.imwrite(filename, mat)
-        if (bool == true) Log.d(TAG, "SUCCESS writing image $filename to external storage") else Log.d(
+        if (bool == true) Log.d(
+            TAG,
+            "SUCCESS writing image $filename to external storage"
+        ) else Log.d(
             TAG,
             "Fail writing image to external storage"
         )
@@ -255,28 +264,37 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
         val byteArray = matOfByte.toArray()
         val bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-        val rotated = rotateImage(90,bmp)
+        val rotated = rotateImage(90, bmp)
         val stream = ByteArrayOutputStream()
         rotated.compress(Bitmap.CompressFormat.PNG, 100, stream)
         val flippedImageByteArray: ByteArray = stream.toByteArray()
 
-        if(MainFragment.selectedScooter._name=="error")
-        {
-            val uploadTask = MainFragment.storageRef.child("images/captured/${mat}.png").putBytes(flippedImageByteArray)
+        if (MainFragment.selectedScooter._name == "error") {
+            val uploadTask = MainFragment.storageRef.child("images/captured/${mat}.png")
+                .putBytes(flippedImageByteArray)
             uploadTask.addOnFailureListener {
                 // Handle unsuccessful uploads
             }.addOnSuccessListener { taskSnapshot ->
-                Snackbar.make(binding.root.rootView,"Uploaded picture with no scooter selected!", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root.rootView,
+                    "Uploaded picture with no scooter selected!",
+                    Snackbar.LENGTH_SHORT
+                ).show()
                 // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
                 // ...
             }
-        } else
-        {
-            val uploadTask = MainFragment.storageRef.child("images/${MainFragment.selectedScooter._name}.jpg").putBytes(flippedImageByteArray)
+        } else {
+            val uploadTask =
+                MainFragment.storageRef.child("images/${MainFragment.selectedScooter._name}.jpg")
+                    .putBytes(flippedImageByteArray)
             uploadTask.addOnFailureListener {
                 // Handle unsuccessful uploads
             }.addOnSuccessListener { taskSnapshot ->
-                Snackbar.make(binding.root.rootView,"Uploaded picture with ${MainFragment.selectedScooter._name} selected!", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root.rootView,
+                    "Uploaded picture with ${MainFragment.selectedScooter._name} selected!",
+                    Snackbar.LENGTH_SHORT
+                ).show()
                 // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
                 // ...
             }
@@ -304,6 +322,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         // Initialize the callback from OpenCV Manager to handle the OpenCV library.
         binding.fragmentCameraView.enableView()
     }
+
     /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -322,7 +341,8 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
     }*/
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
-            requireContext(), it) == PackageManager.PERMISSION_GRANTED
+            requireContext(), it
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     //source for flipping images https://stackoverflow.com/questions/16950953/flip-image-stored-as-a-byte-array
@@ -334,15 +354,6 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             bitmapSrc.width, bitmapSrc.height, matrix, true
         )
     }
-
-
-
-
-
-
-
-
-
 
 
 }

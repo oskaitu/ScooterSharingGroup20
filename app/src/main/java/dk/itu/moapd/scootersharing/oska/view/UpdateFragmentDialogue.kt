@@ -10,9 +10,7 @@ import dk.itu.moapd.scootersharing.oska.view.MainFragment
 import dk.itu.moapd.scootersharing.oska.view.defaultScooter
 
 /**
- * A simple [Fragment] subclass.
- * Use the [UpdateFragmentDialogue.newInstance] factory method to
- * create an instance of this fragment.
+ * A fragment used previously to show receipts, it was replaced by paymentfragment
  */
 class UpdateFragmentDialogue : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -22,7 +20,12 @@ class UpdateFragmentDialogue : DialogFragment() {
             builder.setTitle("Ride ended for ${MainFragment.mostRecentRide.name}?")
             builder.setMessage("Total Cost ${MainFragment.mostRecentRide.cost}")
                 .setPositiveButton("Pay") { _, _ ->
-                    MainFragment.viewModel.updateDocument("scooters", scooterToBeChanged._id, "timestamp", System.currentTimeMillis())
+                    MainFragment.viewModel.updateDocument(
+                        "scooters",
+                        scooterToBeChanged._id,
+                        "timestamp",
+                        System.currentTimeMillis()
+                    )
                 }
                 .setNegativeButton("No", DialogInterface.OnClickListener { _, _ -> //nothing
 

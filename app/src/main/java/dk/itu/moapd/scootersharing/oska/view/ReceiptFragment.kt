@@ -40,6 +40,10 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+/**
+ * A special fragment written using jetpack compose, this contains a collection of receipts in a lazylist
+ * that shows all history for a user.
+ */
 class ReceiptFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,8 +60,7 @@ class ReceiptFragment : Fragment() {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     ScooterList(geocoder, nav, iconBack)
-                } else
-                {
+                } else {
                     ScooterListSimple(geocoder, nav, iconBack)
                 }
 
@@ -70,33 +73,31 @@ class ReceiptFragment : Fragment() {
 }
 
 
-
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ScooterList(geocoder: Geocoder, nav : NavController, iconBack : ImageVector) {
+fun ScooterList(geocoder: Geocoder, nav: NavController, iconBack: ImageVector) {
     val receipts = MainFragment.receipts
     val receiptsWithNoDuplicates = receipts.toSet().toList()
 
     LazyColumn {
 
-       item {
-           Button(
-               onClick = { nav.navigate(R.id.fragment_main) },
-               modifier = Modifier.fillMaxWidth(),
-               shape = RoundedCornerShape(100),
-           ) {
-               Image(
-                   imageVector = iconBack,
-                   contentDescription = "Pay with credit card"
-               )
-           }
-       }
+        item {
+            Button(
+                onClick = { nav.navigate(R.id.fragment_main) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(100),
+            ) {
+                Image(
+                    imageVector = iconBack,
+                    contentDescription = "Pay with credit card"
+                )
+            }
+        }
         items(receiptsWithNoDuplicates) { it ->
             val calc1 = it.startLocation.trim().split(",")
-            val start = convertCordsToAddress(geocoder, calc1[0].toDouble(),calc1[1].toDouble())
+            val start = convertCordsToAddress(geocoder, calc1[0].toDouble(), calc1[1].toDouble())
             val calc2 = it.startLocation.trim().split(",")
-            val end = convertCordsToAddress(geocoder, calc2[0].toDouble(),calc2[1].toDouble())
+            val end = convertCordsToAddress(geocoder, calc2[0].toDouble(), calc2[1].toDouble())
 
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                 .withZone(ZoneId.systemDefault())
@@ -109,8 +110,9 @@ fun ScooterList(geocoder: Geocoder, nav : NavController, iconBack : ImageVector)
     }
     //MainFragment.receipts.clear()
 }
+
 @Composable
-fun ScooterListSimple(geocoder: Geocoder, nav : NavController, iconBack : ImageVector) {
+fun ScooterListSimple(geocoder: Geocoder, nav: NavController, iconBack: ImageVector) {
     val receipts = MainFragment.receipts
     LazyColumn {
         item {
@@ -129,9 +131,9 @@ fun ScooterListSimple(geocoder: Geocoder, nav : NavController, iconBack : ImageV
         }
         items(receipts) { it ->
             val calc1 = it.startLocation.trim().split(",")
-            val start = convertCordsToAddress(geocoder, calc1[0].toDouble(),calc1[1].toDouble())
+            val start = convertCordsToAddress(geocoder, calc1[0].toDouble(), calc1[1].toDouble())
             val calc2 = it.startLocation.trim().split(",")
-            val end = convertCordsToAddress(geocoder, calc2[0].toDouble(),calc2[1].toDouble())
+            val end = convertCordsToAddress(geocoder, calc2[0].toDouble(), calc2[1].toDouble())
             ReceiptListItem(it, start, end, "")
         }
     }
@@ -139,7 +141,7 @@ fun ScooterListSimple(geocoder: Geocoder, nav : NavController, iconBack : ImageV
 
 
 @Composable
-fun ReceiptListItem(receipt: Receipt, start : String, end : String, startTime: String) {
+fun ReceiptListItem(receipt: Receipt, start: String, end: String, startTime: String) {
 
 
     Card(
@@ -215,25 +217,26 @@ fun ReceiptListItem(receipt: Receipt, start : String, end : String, startTime: S
     }
 }
 
-    fun convertCordsToAddress(geocoder: Geocoder, latitude: Double, longitude: Double) : String {
+fun convertCordsToAddress(geocoder: Geocoder, latitude: Double, longitude: Double): String {
 
-        val address: Address?
-        var fulladdress = ""
-        val addresses: List<Address>? = geocoder.getFromLocation(latitude, longitude, 1)
+    val address: Address?
+    var fulladdress = ""
+    val addresses: List<Address>? = geocoder.getFromLocation(latitude, longitude, 1)
 
-        if (addresses != null) {
-            if (addresses.isNotEmpty()) {
-                address = addresses[0]
-                fulladdress = address.getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex
-                var city = address.locality;
-                var state = address.adminArea;
-                var country = address.countryName;
-                var postalCode = address.postalCode;
-                var knownName = address.featureName; // Only if available else return NULL
-            } else{
-                fulladdress = "Location not found"
-            }
+    if (addresses != null) {
+        if (addresses.isNotEmpty()) {
+            address = addresses[0]
+            fulladdress =
+                address.getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex
+            var city = address.locality;
+            var state = address.adminArea;
+            var country = address.countryName;
+            var postalCode = address.postalCode;
+            var knownName = address.featureName; // Only if available else return NULL
+        } else {
+            fulladdress = "Location not found"
         }
-        return fulladdress
     }
+    return fulladdress
+}
 

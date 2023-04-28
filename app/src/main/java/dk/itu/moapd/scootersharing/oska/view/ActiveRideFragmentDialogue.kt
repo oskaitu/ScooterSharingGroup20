@@ -25,11 +25,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.absoluteValue
 
-
+/**
+ * Fragment for when you are riding a scooter
+ */
 class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
-    private lateinit var speedSensor : Sensor
+    private lateinit var speedSensor: Sensor
     private var stepCount = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -42,64 +44,67 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
         sensorManager.registerListener(this, speedSensor, SensorManager.SENSOR_DELAY_NORMAL)
 
         val scooterToBeChanged = MainFragment.selectedScooter
-        val view = View.inflate(context, dk.itu.moapd.scootersharing.oska.R.layout.fragment_active, null)
+        val view =
+            View.inflate(context, dk.itu.moapd.scootersharing.oska.R.layout.fragment_active, null)
 
-       /* val stepCountTextView = view.findViewById<TextView>(R.id.step_counter)
-        stepCountTextView.text = stepCount.toString()*/
+        /* val stepCountTextView = view.findViewById<TextView>(R.id.step_counter)
+         stepCountTextView.text = stepCount.toString()*/
 
 
-        val simpleChronometer = view.findViewById(dk.itu.moapd.scootersharing.oska.R.id.simpleChronometer) as Chronometer
+        val simpleChronometer =
+            view.findViewById(dk.itu.moapd.scootersharing.oska.R.id.simpleChronometer) as Chronometer
         val startTime = System.currentTimeMillis()
         val startLocation = (activity as MainActivity).gps.getLocation()!!
         return activity?.let {
-        val builder = AlertDialog.Builder(requireActivity())
-            .setCancelable(false)
-            .setTitle("Ride time")
-            .setMessage("You are driving ${scooterToBeChanged._name} Vroom Vroom \n")
-            .setPositiveButton("Stop driving") { _, _ ->
-                try {
-                    simpleChronometer.stop()
-                    val endLocation = (activity as MainActivity).gps.getLocation()!!
-                    var results = FloatArray(1)
-                    var readableLocation =
-                        convertCordsToAddress(endLocation.latitude, endLocation.longitude)
-                    Location.distanceBetween(
-                        startLocation.latitude,
-                        startLocation.longitude,
-                        endLocation.latitude,
-                        endLocation.longitude,
-                        results
-                    )
-                    val rideData = hashMapOf<String, Any>()
-                    rideData["cost"] =
-                        15 + results[0].toInt()
-                    rideData["end_time"] = System.currentTimeMillis()
-                    rideData["scooterid"] = scooterToBeChanged._id
-                    rideData["start_time"] = startTime
-                    rideData["start_location"] =
-                        "${startLocation.latitude}, ${startLocation.longitude}"
-                    rideData["end_location"] = "${endLocation.latitude}, ${endLocation.longitude}"
-                    rideData["distance"] = results[0].toInt()
-                    val rentalData = hashMapOf<String, Any>()
-                    rentalData["date"] = startTime
-                    MainFragment.viewModel.addDocumentRentalAndRides(
-                        rideData = rideData,
-                        rentalData = rentalData
-                    )
-                    MainFragment.viewModel.updateDocument(
-                        collection = "scooters",
-                        item = MainFragment.selectedScooter._id,
-                        fieldToUpdate = "location",
-                        newData = "${endLocation.latitude}, ${endLocation.longitude}"
-                    )
-                    MainFragment.viewModel.updateDocument(
-                        collection = "scooters",
-                        item = MainFragment.selectedScooter._id,
-                        fieldToUpdate = "translated_location",
-                        newData = readableLocation
-                    )
-                    MainFragment.rider = false
-                    MainFragment.mostRecentRide = Receipt(
+            val builder = AlertDialog.Builder(requireActivity())
+                .setCancelable(false)
+                .setTitle("Ride time")
+                .setMessage("You are driving ${scooterToBeChanged._name} Vroom Vroom \n")
+                .setPositiveButton("Stop driving") { _, _ ->
+                    try {
+                        simpleChronometer.stop()
+                        val endLocation = (activity as MainActivity).gps.getLocation()!!
+                        var results = FloatArray(1)
+                        var readableLocation =
+                            convertCordsToAddress(endLocation.latitude, endLocation.longitude)
+                        Location.distanceBetween(
+                            startLocation.latitude,
+                            startLocation.longitude,
+                            endLocation.latitude,
+                            endLocation.longitude,
+                            results
+                        )
+                        val rideData = hashMapOf<String, Any>()
+                        rideData["cost"] =
+                            15 + results[0].toInt()
+                        rideData["end_time"] = System.currentTimeMillis()
+                        rideData["scooterid"] = scooterToBeChanged._id
+                        rideData["start_time"] = startTime
+                        rideData["start_location"] =
+                            "${startLocation.latitude}, ${startLocation.longitude}"
+                        rideData["end_location"] =
+                            "${endLocation.latitude}, ${endLocation.longitude}"
+                        rideData["distance"] = results[0].toInt()
+                        val rentalData = hashMapOf<String, Any>()
+                        rentalData["date"] = startTime
+                        MainFragment.viewModel.addDocumentRentalAndRides(
+                            rideData = rideData,
+                            rentalData = rentalData
+                        )
+                        MainFragment.viewModel.updateDocument(
+                            collection = "scooters",
+                            item = MainFragment.selectedScooter._id,
+                            fieldToUpdate = "location",
+                            newData = "${endLocation.latitude}, ${endLocation.longitude}"
+                        )
+                        MainFragment.viewModel.updateDocument(
+                            collection = "scooters",
+                            item = MainFragment.selectedScooter._id,
+                            fieldToUpdate = "translated_location",
+                            newData = readableLocation
+                        )
+                        MainFragment.rider = false
+                        MainFragment.mostRecentRide = Receipt(
                             name = "Newest",
                             endLocation = "",
                             endTime = System.currentTimeMillis(),
@@ -107,15 +112,16 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
                             distance = results[0].toDouble(),
                             scooterName = MainFragment.selectedScooter._name,
                             startLocation = "-",
-                            startTime = startTime)
+                            startTime = startTime
+                        )
                         MainFragment.selectedScooter = defaultScooter()
-                    findNavController().navigate(R.id.paymentFragment)
+                        findNavController().navigate(R.id.paymentFragment)
 
-                } catch (e :IllegalArgumentException) //fix for oneplus specific error on this
-                {
-                    println(e.message)
+                    } catch (e: IllegalArgumentException) //fix for oneplus specific error on this
+                    {
+                        println(e.message)
+                    }
                 }
-            }
             builder.setView(view)
             simpleChronometer.start()
             builder.create()
@@ -124,7 +130,8 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
         } ?: throw IllegalStateException("something exploded")
 
     }
-    fun convertCordsToAddress(latitude: Double, longitude: Double) : String {
+
+    fun convertCordsToAddress(latitude: Double, longitude: Double): String {
         val geocoder = (activity as MainActivity).geocoder
 
         val addresses: List<Address>?
@@ -135,20 +142,21 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
         if (addresses != null) {
             if (addresses.isNotEmpty()) {
                 address = addresses[0]
-                fulladdress = address.getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex
+                fulladdress =
+                    address.getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex
                 var city = address.locality;
                 var state = address.adminArea;
                 var country = address.countryName;
                 var postalCode = address.postalCode;
                 var knownName = address.featureName; // Only if available else return NULL
-            } else{
+            } else {
                 fulladdress = "Location not found"
             }
         }
-    return fulladdress
+        return fulladdress
     }
 
-    private fun Address.toAddressString() : String {
+    private fun Address.toAddressString(): String {
         val address = this
 
         // Create a `String` with multiple lines.
@@ -161,6 +169,7 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
         }
         return stringBuilder.toString()
     }
+
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_LINEAR_ACCELERATION) {
             val speed = event.values[0] * 3.6 // Convert m/s to km/h
@@ -169,15 +178,15 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
             speedTextView.text = "${speed.toInt().absoluteValue} km/h"
         }
     }
+
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // Handle accuracy changes here...
     }
+
     override fun onDestroy() {
         super.onDestroy()
         sensorManager.unregisterListener(this)
     }
-
-
 
 
 }

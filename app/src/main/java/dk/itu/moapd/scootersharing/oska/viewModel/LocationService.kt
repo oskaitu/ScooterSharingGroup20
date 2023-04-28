@@ -13,11 +13,14 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.ActivityCompat
 
-
-class LocationService(context: Context, locationManager: LocationManager) : Service(), LocationListener
-{
-    private val context : Context
-    private val locationManager : LocationManager
+/**
+ * Our locationService implemented using locationListener nad LocationManager instead of Fused Location Provider API client
+ * This has been OKed by Fabricio
+ */
+class LocationService(context: Context, locationManager: LocationManager) : Service(),
+    LocationListener {
+    private val context: Context
+    private val locationManager: LocationManager
 
     // flag for GPS status
     private var isGPSEnabled = false
@@ -41,8 +44,8 @@ class LocationService(context: Context, locationManager: LocationManager) : Serv
     // The minimum time between updates in milliseconds
     private val MIN_TIME_BW_UPDATES = (1000 * 60 * 1 // 1 minute
             ).toLong()
-    init
-    {
+
+    init {
         this.context = context
         this.locationManager = locationManager
 
@@ -72,12 +75,12 @@ class LocationService(context: Context, locationManager: LocationManager) : Serv
                         MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), this
                     )
                     Log.d("Network", "Network")
-                        location = locationManager
-                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                        if (location != null) {
-                            latitude = location!!.latitude
-                            longitude = location!!.longitude
-                        }
+                    location = locationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                    if (location != null) {
+                        latitude = location!!.latitude
+                        longitude = location!!.longitude
+                    }
                 }
 
                 // if GPS Enabled get lat/long using GPS Services
@@ -89,12 +92,12 @@ class LocationService(context: Context, locationManager: LocationManager) : Serv
                             MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), this
                         )
                         Log.d("GPS Enabled", "GPS Enabled")
-                            location = locationManager
-                                .getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                            if (location != null) {
-                                latitude = location!!.latitude
-                                longitude = location!!.longitude
-                            }
+                        location = locationManager
+                            .getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                        if (location != null) {
+                            latitude = location!!.latitude
+                            longitude = location!!.longitude
+                        }
                     }
                 }
             }

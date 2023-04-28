@@ -4,7 +4,6 @@ import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 
 
-
 /**
  * An utility class to manage a set of image analysis algorithms.
  */
@@ -50,8 +49,10 @@ object OpenCVUtils {
 
         // Apply an automatic threshold to create a binary image.
         val thresh = Mat()
-        val otsuThresh = Imgproc.threshold(grayscale, thresh,
-            0.0, 255.0, Imgproc.THRESH_BINARY or Imgproc.THRESH_OTSU)
+        val otsuThresh = Imgproc.threshold(
+            grayscale, thresh,
+            0.0, 255.0, Imgproc.THRESH_BINARY or Imgproc.THRESH_OTSU
+        )
 
         // Apply the Canny filter.
         val canny = Mat()

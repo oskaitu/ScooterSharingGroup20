@@ -19,9 +19,13 @@ import dk.itu.moapd.scootersharing.oska.view.MainFragment
 import dk.itu.moapd.scootersharing.oska.view.StartRideFragmentDialogue
 import java.util.*
 
+/**
+ * A RecyclerViewAdapter used to populate the List of scooters and making sure they are all clickable in that list.
+ *
+ */
 //we have to supress this since we have no way of knowing what to chang
 @SuppressLint("NotifyDataSetChanged")
-class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
+class RecyclerViewAdapter(private val scooterViewModel: ScooterViewModel) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
     companion object {
         private val TAG = RecyclerViewAdapter::class.qualifiedName
@@ -33,7 +37,8 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
             notifyDataSetChanged()
         }
     }
-     class ViewHolder(private val binding: CardviewitemBinding) :
+
+    class ViewHolder(private val binding: CardviewitemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(scooter: Scooter) {
@@ -64,10 +69,13 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
 
 
             }
-            binding.root.setOnClickListener{
-                MainFragment.selectedScooter =scooter
+            binding.root.setOnClickListener {
+                MainFragment.selectedScooter = scooter
 
-                val navHostFragment = (binding.root.context as FragmentActivity).supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+                val navHostFragment =
+                    (binding.root.context as FragmentActivity).supportFragmentManager.findFragmentById(
+                        R.id.fragment_container
+                    ) as NavHostFragment
 
                 // Get a reference to the NavController
                 val navController = navHostFragment.navController
@@ -82,7 +90,6 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
             }
         }
     }
-
 
 
     /**
@@ -146,6 +153,7 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
             holder.bind(scooter)
         }
     }
+
     /**
      * Returns the total number of items in the data set held by the adapter.
      *

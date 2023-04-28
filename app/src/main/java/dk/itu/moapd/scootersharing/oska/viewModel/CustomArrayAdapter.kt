@@ -12,12 +12,16 @@ import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.model.Scooter
 import java.util.Date
 
-class CustomArrayAdapter( context: Context, private var resource: Int, data: List<Scooter>) :
+/**
+ * A customArrayAdapter for to showing scooters in a list
+ */
+class CustomArrayAdapter(context: Context, private var resource: Int, data: List<Scooter>) :
     ArrayAdapter<Scooter>(context, R.layout.scooter_list_item, data) {
 
     companion object {
         private val TAG = CustomArrayAdapter::class.qualifiedName
     }
+
     private class ViewHolder(view: View) {
         val name: TextView = view.findViewById(R.id.scooter_name_item)
         val location: TextView = view.findViewById(R.id.scooter_location_item)
@@ -25,28 +29,30 @@ class CustomArrayAdapter( context: Context, private var resource: Int, data: Lis
     }
 
     @SuppressLint("SuspiciousIndentation")
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View{
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         var view = convertView
-        val viewHolder : ViewHolder
+        val viewHolder: ViewHolder
 
-        if (view == null){
+        if (view == null) {
             val inflater = LayoutInflater.from(context)
-            view = inflater.inflate(resource, parent,false)
+            view = inflater.inflate(resource, parent, false)
             viewHolder = ViewHolder(view)
         } else
-                viewHolder = view.tag as ViewHolder
+            viewHolder = view.tag as ViewHolder
 
-            val scooter = getItem(position)
+        val scooter = getItem(position)
 
-            Log.d(TAG, "populate $position")
+        Log.d(TAG, "populate $position")
 
-            viewHolder.name.text = parent.context.getString(R.string.name, scooter?._name)
-            viewHolder.location.text = parent.context.getString(R.string.location, scooter?._translated_location)
-            viewHolder.timestamp.text = parent.context.getString(R.string.time, Date(scooter?._timestamp!!))
+        viewHolder.name.text = parent.context.getString(R.string.name, scooter?._name)
+        viewHolder.location.text =
+            parent.context.getString(R.string.location, scooter?._translated_location)
+        viewHolder.timestamp.text =
+            parent.context.getString(R.string.time, Date(scooter?._timestamp!!))
 
-            view?.tag = viewHolder
-            return view!!
-        }
+        view?.tag = viewHolder
+        return view!!
+    }
 
 }
