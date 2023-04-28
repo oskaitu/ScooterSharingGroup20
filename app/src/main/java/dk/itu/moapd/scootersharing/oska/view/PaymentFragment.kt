@@ -1,5 +1,6 @@
 package dk.itu.moapd.scootersharing.oska.view
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,6 +30,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class PaymentFragment : Fragment() {
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,13 +41,13 @@ class PaymentFragment : Fragment() {
             setContent {
                 val nav = findNavController()
                 val receipt = MainFragment.mostRecentRide
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        val formatter = DateTimeFormatter.ofPattern("HH:mm")
-                        .withZone(ZoneId.systemDefault())
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val formatter = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault())
                     val date = Instant.ofEpochMilli(receipt.startTime)
                     val startTimeReal = formatter.format(date)
-                        val date2 = Instant.ofEpochMilli(receipt.endTime)
-                        val endTimeReal = formatter.format(date2)
+                    val date2 = Instant.ofEpochMilli(receipt.endTime)
+                    val endTimeReal = formatter.format(date2)
                     ReceiptShower(
                         scooterName = receipt.scooterName,
                         ridePrice = receipt.cost,

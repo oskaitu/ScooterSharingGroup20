@@ -2,23 +2,29 @@ package dk.itu.moapd.scootersharing.oska.view
 
 import android.location.Address
 import android.location.Geocoder
+import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import dk.itu.moapd.scootersharing.oska.R
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
@@ -45,13 +51,14 @@ class ReceiptFragment : Fragment() {
             setContent {
                 val geocoder = (activity as MainActivity).geocoder
                 val nav = findNavController()
+                val iconBack = Icons.Outlined.ArrowBack
 
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    ScooterList(geocoder, nav)
+                    ScooterList(geocoder, nav, iconBack)
                 } else
                 {
-                    ScooterListSimple(geocoder, nav)
+                    ScooterListSimple(geocoder, nav, iconBack)
                 }
 
             }
@@ -67,24 +74,28 @@ class ReceiptFragment : Fragment() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ScooterList(geocoder: Geocoder, nav : NavController) {
+fun ScooterList(geocoder: Geocoder, nav : NavController, iconBack : ImageVector) {
     val receipts = MainFragment.receipts
     val receiptsWithNoDuplicates = receipts.toSet().toList()
+
     LazyColumn {
 
+       item {
+           Button(
+               onClick = { nav.navigate(R.id.fragment_main) },
+               modifier = Modifier.fillMaxWidth(),
+               shape = RoundedCornerShape(100),
 
 
-        item {
-            Button(
-                onClick = { nav.popBackStack() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(text = "Back")
-            }
-        }
 
+
+           ) {
+               Image(
+                   imageVector = iconBack,
+                   contentDescription = "Pay with credit card"
+               )
+           }
+       }
         items(receiptsWithNoDuplicates) { it ->
             val calc1 = it.startLocation.trim().split(",")
             val start = convertCordsToAddress(geocoder, calc1[0].toDouble(),calc1[1].toDouble())
@@ -103,17 +114,21 @@ fun ScooterList(geocoder: Geocoder, nav : NavController) {
     //MainFragment.receipts.clear()
 }
 @Composable
-fun ScooterListSimple(geocoder: Geocoder, nav : NavController) {
+fun ScooterListSimple(geocoder: Geocoder, nav : NavController, iconBack : ImageVector) {
     val receipts = MainFragment.receipts
     LazyColumn {
         item {
             Button(
-                onClick = { nav.popBackStack() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(text = "Back")
+                onClick = { nav.navigate(R.id.fragment_main) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(40),
+
+
+                ) {
+                Image(
+                    imageVector = iconBack,
+                    contentDescription = "Pay with credit card"
+                )
             }
         }
         items(receipts) { it ->
@@ -129,6 +144,7 @@ fun ScooterListSimple(geocoder: Geocoder, nav : NavController) {
 
 @Composable
 fun ReceiptListItem(receipt: Receipt, start : String, end : String, startTime: String) {
+
 
     Card(
         elevation = 4.dp,
