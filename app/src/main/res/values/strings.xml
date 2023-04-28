@@ -43,6 +43,9 @@
     <string name="map">Map</string>
     <string name="list">List</string>
     <string name="home">Home</string>
+    <string name="welcome_scooter"><![CDATA[Welcome to scootersharing app by Nicolai & Oscar]]></string>
+    <string name="show_receipts">Show receipts</string>
+    <string name="camera">Camera</string>
 
 
 </resources>

@@ -91,7 +91,7 @@ class MainFragment : Fragment() {
                 findNavController().navigate(R.id.activeFragment)
             }
 
-            StartRideButton.setOnClickListener {
+            /*StartRideButton.setOnClickListener {
                 if(selectedScooter._name!="error")
                 {
                     if(rider)
@@ -109,9 +109,9 @@ class MainFragment : Fragment() {
                 {
                     Snackbar.make(binding.root.rootView,"You need to select a scooter first!", Snackbar.LENGTH_SHORT).show()
                 }
-            }
+            }*/
 
-            APIButton.setOnClickListener { view ->
+            checkApiVersion.setOnClickListener { view ->
 
                 view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                     if (APIversion.text.equals("")) {
@@ -122,7 +122,7 @@ class MainFragment : Fragment() {
                         APIversion.text = ""
                     }
             }
-            DeleteRideButton.setOnClickListener {
+            showReceipt.setOnClickListener {
                 receipts.clear()
                 if(selectedScooter._name=="error")
                 {
@@ -179,7 +179,13 @@ class MainFragment : Fragment() {
                                                             } } } } } } } }
                 else findNavController().navigate(R.id.confirmationFragment) }
 
-            UpdateRideButton.setOnClickListener {
+            cameraButton.setOnClickListener{
+                println((activity as MainActivity).checkPermission())
+                findNavController().navigate((R.id.fragment_camera))
+
+            }
+
+            /*UpdateRideButton.setOnClickListener {
                 findNavController().navigate(R.id.paymentFragment)
 
             }
@@ -204,16 +210,12 @@ class MainFragment : Fragment() {
                 }else
                     Snackbar.make(binding.root.rootView,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
             }
-            Gotocamera.setOnClickListener{
-                println((activity as MainActivity).checkPermission())
-                    findNavController().navigate((R.id.fragment_camera))
 
-            }
             Gotoscanner.setOnClickListener{
                 println((activity as MainActivity).checkPermission())
                 findNavController().navigate((R.id.fragment_scanner))
 
-            }
+            }*/
 
         }
     }
