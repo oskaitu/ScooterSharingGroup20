@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -51,6 +52,12 @@ class AvailableScooterFragment : Fragment() {
 
         binding.availableScooterRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.availableScooterRecyclerview.adapter = adapter
+
+        if (MainFragment.rider) {
+            findNavController().navigate(R.id.activeFragment)
+        } else {
+        super.onViewCreated(view, savedInstanceState)
+        }
 
         viewModel.loadData()
 

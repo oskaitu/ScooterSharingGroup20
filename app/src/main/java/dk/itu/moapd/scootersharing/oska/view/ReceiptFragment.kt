@@ -2,6 +2,7 @@ package dk.itu.moapd.scootersharing.oska.view
 
 import android.location.Address
 import android.location.Geocoder
+import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -51,7 +52,7 @@ class ReceiptFragment : Fragment() {
                     ScooterList(geocoder, nav)
                 } else
                 {
-                    ScooterListSimple(geocoder, nav)
+                    ScooterListSimple(geocoder = geocoder, nav = nav)
                 }
 
             }
@@ -81,7 +82,11 @@ fun ScooterList(geocoder: Geocoder, nav : NavController) {
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text(text = "Back")
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back"
+                )
+                Text(text = "Button")
             }
         }
 
@@ -113,7 +118,11 @@ fun ScooterListSimple(geocoder: Geocoder, nav : NavController) {
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text(text = "Back")
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back"
+                )
+                Text(text = "Button")
             }
         }
         items(receipts) { it ->

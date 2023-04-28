@@ -6,13 +6,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.CardviewitemBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
+import dk.itu.moapd.scootersharing.oska.view.MainActivity
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
+import dk.itu.moapd.scootersharing.oska.view.StartRideFragmentDialogue
 import java.util.*
 
 //we have to supress this since we have no way of knowing what to chang
@@ -62,6 +66,13 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
             }
             binding.root.setOnClickListener{
                 MainFragment.selectedScooter =scooter
+
+                val navHostFragment = (binding.root.context as FragmentActivity).supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+
+                // Get a reference to the NavController
+                val navController = navHostFragment.navController
+                navController.navigate(R.id.startFragment)
+
 
                 Snackbar.make(
                     binding.root.rootView,
@@ -129,10 +140,6 @@ class RecyclerViewAdapter(private val scooterViewModel : ScooterViewModel) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val scooter = scooterViewModel.scooters.value?.get(position)
         Log.d(TAG, "Populate an item at position: $position")
-
-
-
-
 
 
         if (scooter != null) {

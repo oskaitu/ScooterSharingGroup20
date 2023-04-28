@@ -164,6 +164,7 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
 
             if (MainFragment.selectedScooter._id == scanner.detectAndDecode(imageMat)) {
                 parentFragmentManager.popBackStack()
+
                 MainFragment.rider = true
                 Snackbar.make(
                     binding.root.rootView,
