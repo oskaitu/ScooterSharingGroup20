@@ -6,17 +6,17 @@
         android:id="@+id/logout"
         android:title="@string/LogoutMenu"
         android:icon="@drawable/baseline_logout_24"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_user"
         android:orderInCategory="300"
-        android:title="User"
-        app:showAsAction="always"></item>
+        android:title="@string/user"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/profile_picture"
         android:icon="@drawable/logo_scooter"
-        android:title="profilepicture"
+        android:title="@string/profilepicture"
         android:orderInCategory="400"
-        app:showAsAction="always"></item>
+        app:showAsAction="ifRoom" />
 
 </menu>

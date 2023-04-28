@@ -16,6 +16,6 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:src="@drawable/fui_ic_facebook_white_22dp"
-        />
+        android:contentDescription="@string/stuff" />
 
 </FrameLayout>

@@ -12,7 +12,7 @@
         android:id="@+id/welcome_scooter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:layout_gravity="center"
         android:textAlignment="center"
         android:text="@string/welcome_scooter" />
