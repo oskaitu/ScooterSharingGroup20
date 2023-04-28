@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_fragment_main_to_receiptFragment"
             app:destination="@id/receiptFragment" />
+        <action
+            android:id="@+id/action_fragment_main_to_paymentFragment"
+            app:destination="@id/paymentFragment" />
 
 
     </fragment>
@@ -109,6 +112,10 @@
             android:id="@+id/action_receiptFragment_to_fragment_main"
             app:destination="@id/fragment_main" />
     </fragment>
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="dk.itu.moapd.scootersharing.oska.view.PaymentFragment"
+        android:label="PaymentFragment" />
 
 
 </navigation>
