@@ -9,17 +9,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
+import dk.itu.moapd.scootersharing.oska.R
+
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import dk.itu.moapd.scootersharing.oska.model.Receipt
 import java.time.Instant
 import java.time.ZoneId
@@ -32,29 +40,51 @@ class ReceiptFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return ComposeView(requireContext()).apply {
+        val view = ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 val geocoder = (activity as MainActivity).geocoder
+                val nav = findNavController()
+
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    ScooterList(geocoder)
+                    ScooterList(geocoder, nav)
                 } else
                 {
-                    ScooterListSimple(geocoder)
+                    ScooterListSimple(geocoder, nav)
                 }
+
             }
+
         }
+        return view
     }
+
 }
+
+
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ScooterList(geocoder: Geocoder) {
+fun ScooterList(geocoder: Geocoder, nav : NavController) {
     val receipts = MainFragment.receipts
     val receiptsWithNoDuplicates = receipts.toSet().toList()
-
     LazyColumn {
+
+
+
+        item {
+            Button(
+                onClick = { nav.popBackStack() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(text = "Back")
+            }
+        }
+
         items(receiptsWithNoDuplicates) { it ->
             val calc1 = it.startLocation.trim().split(",")
             val start = convertCordsToAddress(geocoder, calc1[0].toDouble(),calc1[1].toDouble())
@@ -68,13 +98,24 @@ fun ScooterList(geocoder: Geocoder) {
             val startTime = formatter.format(date)
             ReceiptListItem(it, start, end, startTime)
         }
+
     }
     //MainFragment.receipts.clear()
 }
 @Composable
-fun ScooterListSimple(geocoder: Geocoder) {
+fun ScooterListSimple(geocoder: Geocoder, nav : NavController) {
     val receipts = MainFragment.receipts
     LazyColumn {
+        item {
+            Button(
+                onClick = { nav.popBackStack() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(text = "Back")
+            }
+        }
         items(receipts) { it ->
             val calc1 = it.startLocation.trim().split(",")
             val start = convertCordsToAddress(geocoder, calc1[0].toDouble(),calc1[1].toDouble())
@@ -183,3 +224,4 @@ fun ReceiptListItem(receipt: Receipt, start : String, end : String, startTime: S
         }
         return fulladdress
     }
+

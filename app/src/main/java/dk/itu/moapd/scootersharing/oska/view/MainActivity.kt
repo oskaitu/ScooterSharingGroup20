@@ -168,11 +168,7 @@ class MainActivity : AppCompatActivity() {
             }
         // [END auth_fui_signout]
     }
-    private fun showFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
-    }
+
 
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
