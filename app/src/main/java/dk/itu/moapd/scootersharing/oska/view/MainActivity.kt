@@ -1,6 +1,7 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 import android.Manifest
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.location.Geocoder

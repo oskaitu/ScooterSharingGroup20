@@ -18,7 +18,9 @@ import android.widget.Chronometer
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
 import dk.itu.moapd.scootersharing.oska.R
+import dk.itu.moapd.scootersharing.oska.model.Receipt
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.absoluteValue
@@ -97,7 +99,17 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
                         newData = readableLocation
                     )
                     MainFragment.rider = false
-                    MainFragment.selectedScooter = defaultScooter()
+                    MainFragment.mostRecentRide = Receipt(
+                            name = "Newest",
+                            endLocation = "",
+                            endTime = System.currentTimeMillis(),
+                            cost = 15 + results[0].toDouble(),
+                            distance = results[0].toDouble(),
+                            scooterName = MainFragment.selectedScooter._name,
+                            startLocation = "-",
+                            startTime = startTime)
+                        MainFragment.selectedScooter = defaultScooter()
+                    findNavController().navigate(R.id.paymentFragment)
 
                 } catch (e :IllegalArgumentException) //fix for oneplus specific error on this
                 {

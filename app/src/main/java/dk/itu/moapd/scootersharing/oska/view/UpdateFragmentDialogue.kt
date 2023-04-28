@@ -19,8 +19,9 @@ class UpdateFragmentDialogue : DialogFragment() {
         var scooterToBeChanged = MainFragment.selectedScooter
         return activity?.let {
             val builder = AlertDialog.Builder(it)
-            builder.setMessage("Are you sure you want to update ${scooterToBeChanged._name}?")
-                .setPositiveButton("Yes") { _, _ ->
+            builder.setTitle("Ride ended for ${MainFragment.mostRecentRide.name}?")
+            builder.setMessage("Total Cost ${MainFragment.mostRecentRide.cost}")
+                .setPositiveButton("Pay") { _, _ ->
                     MainFragment.viewModel.updateDocument("scooters", scooterToBeChanged._id, "timestamp", System.currentTimeMillis())
                 }
                 .setNegativeButton("No", DialogInterface.OnClickListener { _, _ -> //nothing

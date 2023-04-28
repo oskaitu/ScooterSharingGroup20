@@ -56,6 +56,7 @@ class MainFragment : Fragment() {
         lateinit var storage: FirebaseStorage
         lateinit var storageRef : StorageReference
         var selectedScooter : Scooter = defaultScooter()
+        var mostRecentRide : Receipt = defaultReceipt()
         var rider = false
         var labels = mutableListOf<String>()
         val user = FirebaseAuth.getInstance().currentUser
@@ -106,7 +107,7 @@ class MainFragment : Fragment() {
 
                 } else
                 {
-                    Snackbar.make(it,"You need to select a scooter first!", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root.rootView,"You need to select a scooter first!", Snackbar.LENGTH_SHORT).show()
                 }
             }
 
@@ -161,7 +162,7 @@ class MainFragment : Fragment() {
                                                         docRef.get()
                                                             .addOnSuccessListener { document ->
                                                                 if (document != null) {
-                                                                    val name = document.get("name") as String
+                                                                        val name = document.get("name") as String
                                                     receipts.add(
                                                         Receipt(
                                                             name = doc.id,
@@ -179,7 +180,7 @@ class MainFragment : Fragment() {
                 else findNavController().navigate(R.id.confirmationFragment) }
 
             UpdateRideButton.setOnClickListener {
-                findNavController().navigate(R.id.updateFragment)
+                findNavController().navigate(R.id.paymentFragment)
 
             }
            ShowListButton.setOnClickListener {
@@ -192,7 +193,7 @@ class MainFragment : Fragment() {
                 {
                     findNavController().navigate((R.id.fragment_geolocation))
                 }else
-                    Snackbar.make(it,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root.rootView,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
             }
             Gotomap.setOnClickListener{
                 if(!(activity as MainActivity).checkPermission())
@@ -201,7 +202,7 @@ class MainFragment : Fragment() {
 
                     findNavController().navigate((R.id.fragment_map))
                 }else
-                    Snackbar.make(it,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root.rootView,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
             }
             Gotocamera.setOnClickListener{
                 println((activity as MainActivity).checkPermission())
@@ -237,6 +238,10 @@ class MainFragment : Fragment() {
 
  fun defaultScooter () : Scooter {
     return Scooter("error","error","error",System.currentTimeMillis(),"")
+}
+
+fun defaultReceipt () : Receipt {
+    return Receipt("error",12345678, 12345678, "error", "error", 0, 0,"error")
 }
 
 

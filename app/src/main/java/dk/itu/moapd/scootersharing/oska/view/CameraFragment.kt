@@ -132,10 +132,10 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
                 viewModel.onMethodChanged(methodId)
                 if(currentMethodId == 0)
                 {
-                    Snackbar.make(requireView(),"Picture upload mode",Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root.rootView,"Picture upload mode",Snackbar.LENGTH_SHORT).show()
                 } else
                 {
-                    Snackbar.make(requireView(),"Object recognition mode",Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root.rootView,"Object recognition mode",Snackbar.LENGTH_SHORT).show()
                 }
             }
             fragmentCameraCaptureButton.setOnClickListener{
@@ -266,7 +266,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             uploadTask.addOnFailureListener {
                 // Handle unsuccessful uploads
             }.addOnSuccessListener { taskSnapshot ->
-                Snackbar.make(requireView(),"Uploaded picture with no scooter selected!", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root.rootView,"Uploaded picture with no scooter selected!", Snackbar.LENGTH_SHORT).show()
                 // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
                 // ...
             }
@@ -276,7 +276,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             uploadTask.addOnFailureListener {
                 // Handle unsuccessful uploads
             }.addOnSuccessListener { taskSnapshot ->
-                Snackbar.make(requireView(),"Uploaded picture with ${MainFragment.selectedScooter._name} selected!", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root.rootView,"Uploaded picture with ${MainFragment.selectedScooter._name} selected!", Snackbar.LENGTH_SHORT).show()
                 // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
                 // ...
             }

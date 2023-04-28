@@ -166,7 +166,7 @@ class ScannerFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2  
                 parentFragmentManager.popBackStack()
                 MainFragment.rider = true
                 Snackbar.make(
-                    requireView(),
+                    binding.root.rootView,
                     scanner.detectAndDecode(imageMat),
                     Snackbar.LENGTH_SHORT
                 ).show()
