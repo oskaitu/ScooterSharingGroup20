@@ -1,26 +1,13 @@
 package dk.itu.moapd.scootersharing.oska.view
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
 import android.location.Location
 import android.os.Bundle
-import android.view.View
-import android.widget.Chronometer
-import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
-import com.bumptech.glide.annotation.GlideModule
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.module.AppGlideModule
 import dk.itu.moapd.scootersharing.oska.R
-import dk.itu.moapd.scootersharing.oska.view.MainFragment
-import dk.itu.moapd.scootersharing.oska.view.defaultScooter
-import kotlin.concurrent.thread
 
 /**
  * A Fragment used to display info to a user as a dialogue when they are clicked on the map or in the list

@@ -4,10 +4,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.DialogFragment
-import dk.itu.moapd.scootersharing.oska.view.MainFragment
-import dk.itu.moapd.scootersharing.oska.view.defaultScooter
 
 /**
  * A fragment used previously to show receipts, it was replaced by paymentfragment

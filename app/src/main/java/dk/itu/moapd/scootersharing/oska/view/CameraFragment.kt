@@ -66,13 +66,6 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
         }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -97,15 +90,7 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
             currentMethodId = it
         }
 
-
-        //if (checkPermission())
         startCamera()
-        /*else
-            ActivityCompat.requestPermissions(requireActivity(),
-                REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS )*/
-
-
-
 
         binding.apply {
 
@@ -161,14 +146,6 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         super.onResume()
 
         OpenCVLoader.initDebug()
-        // Try to initialize OpenCV using the newest init method. Otherwise, use the asynchronous
-        // one.
-        /*if (!OpenCVLoader.initDebug())
-            OpenCVLoader.initAsync(
-                OpenCVLoader.OPENCV_VERSION,
-                this.activity, loaderCallback)
-        else
-            loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)*/
     }
 
     override fun onPause() {
@@ -308,8 +285,6 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
      * This method is used to start the video camera device stream.
      */
     private fun startCamera() {
-        //OpenCVLoader.initDebug()
-
         // Setup the OpenCV camera view.
         binding.fragmentCameraView.apply {
             visibility = SurfaceView.VISIBLE
@@ -323,22 +298,6 @@ class CameraFragment : Fragment(), CameraBridgeViewBase.CvCameraViewListener2 {
         binding.fragmentCameraView.enableView()
     }
 
-    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                            grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        // Check if the user has accepted the permissions to access the camera.
-        if (requestCode == REQUEST_CODE_PERMISSIONS)
-            if (allPermissionsGranted())
-            startCamera()
-
-            // If permissions are not granted, present a toast to notify the user that the
-            // permissions were not granted.
-            else {
-                //snackBar("Permissions not granted by the user.")
-                //finish()
-            }
-    }*/
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
             requireContext(), it

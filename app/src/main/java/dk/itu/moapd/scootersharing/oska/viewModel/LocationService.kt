@@ -107,39 +107,6 @@ class LocationService(context: Context, locationManager: LocationManager) : Serv
         return location
     }
 
-    /*
-    fun stopUsingGPS() {
-        {
-            locationManager.removeUpdates(this@LocationService)
-        }
-    }
-    */
-
-
-    /**
-     * Function to get latitude
-     */
-
-
-    /**
-     * Function to get longitude
-     */
-    fun getLongitude(): Double {
-        if (location != null) {
-            longitude = location!!.longitude
-        }
-
-        // return longitude
-        return longitude
-    }
-
-    /**
-     * Function to check GPS/wifi enabled
-     * @return boolean
-     */
-    fun canGetLocation(): Boolean {
-        return canGetLocation
-    }
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -148,14 +115,5 @@ class LocationService(context: Context, locationManager: LocationManager) : Serv
     override fun onLocationChanged(p0: Location) {
         getLocation()
     }
-
-    fun checkPermission() =
-        ActivityCompat.checkSelfPermission(
-            this, Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    this, Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-
 
 }
