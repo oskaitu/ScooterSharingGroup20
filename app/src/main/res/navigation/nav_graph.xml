@@ -16,9 +16,6 @@
             android:id="@+id/action_fragment_main_to_confirmationFragment"
             app:destination="@id/confirmationFragment" />
         <action
-            android:id="@+id/action_fragment_main_to_updateFragment"
-            app:destination="@id/updateFragment" />
-        <action
             android:id="@+id/action_fragment_main_to_startFragment2"
             app:destination="@id/startFragment" />
         <action
@@ -72,23 +69,13 @@
     <fragment
         android:id="@+id/fragment_scanner"
         android:name="dk.itu.moapd.scootersharing.oska.view.ScannerFragment"
-        tools:layout="@layout/fragment_scanner" >
-        <action
-            android:id="@+id/fragment_geolocation"
-            app:destination="@id/fragment_geolocation"/>
-
-    </fragment>
+        tools:layout="@layout/fragment_scanner" />
 
     <dialog
         android:id="@+id/confirmationFragment"
         android:name="dk.itu.moapd.scootersharing.oska.view.ConfirmationFragment"
         android:label="fragment_confirmation"
         tools:layout="@layout/fragment_confirmation" />
-    <dialog
-        android:id="@+id/updateFragment"
-        android:name="dk.itu.moapd.scootersharing.oska.view.UpdateFragmentDialogue"
-        android:label="fragment_update"
-        tools:layout="@layout/fragment_update" />
     <dialog
         android:id="@+id/startFragment"
         android:name="dk.itu.moapd.scootersharing.oska.view.StartRideFragmentDialogue"

@@ -20,7 +20,6 @@ import com.bumptech.glide.request.transition.Transition
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
@@ -29,11 +28,7 @@ import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.oska.viewModel.LocationService
-import java.lang.Math.*
 import java.util.*
-import kotlin.math.cos
-import kotlin.math.sin
-
 
 /**
  * MIT License
@@ -60,17 +55,9 @@ SOFTWARE.
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var bottomNavigationView: BottomNavigationView
-
-
     lateinit var deviceLocation: Location
-
-    //lateinit var deviceLocation2 : Location
     lateinit var geocoder: Geocoder
-
     lateinit var auth: FirebaseAuth
-
-
     lateinit var gps: LocationService
 
     companion object {
@@ -80,19 +67,14 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
-
-
     }
 
     private val db = Firebase.firestore
-
     private var newUser = true
-
     private val settings: FirebaseFirestoreSettings = firestoreSettings {
         cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
         isPersistenceEnabled = true
     }
-
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
     ) { res ->
@@ -266,15 +248,8 @@ class MainActivity : AppCompatActivity() {
 
         // Check if the user has accepted the permissions to access the camera.
         if (requestCode == REQUEST_CODE_PERMISSIONS)
-            if (allPermissionsGranted())
-            //startCamera()
-
-            // If permissions are not granted, present a toast to notify the user that the
-            // permissions were not granted.
-            else {
-                //snackBar("Permissions not granted by the user.")
+            if (!allPermissionsGranted())
                 finish()
-            }
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -285,11 +260,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(dk.itu.moapd.scootersharing.oska.R.menu.logout, menu)
-
-
         val userItem = menu?.findItem(R.id.action_user)
-
-
         val currentUser = FirebaseAuth.getInstance().currentUser
         val photoUrl = currentUser?.photoUrl
         Glide.with(this)
@@ -360,20 +331,6 @@ fun getNameWithInitial(fullName: String): String {
 
     return firstName + " " + lastNameInitial
 }
-
-fun calculateDistance(lat1: Long, lon1: Long, lat2: Long, lon2: Long): Double {
-
-    return acos(
-        sin(lat1.toDouble()) * sin(lat2.toDouble()) + cos(lat1.toDouble()) * cos(
-            lat2.toDouble()
-        ) * cos(
-            (lon2 - lon1).toDouble()
-        )
-    ) * 6371
-
-}
-
-
 
 
 

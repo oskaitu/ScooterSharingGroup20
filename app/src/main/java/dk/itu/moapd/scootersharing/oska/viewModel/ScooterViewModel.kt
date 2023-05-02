@@ -7,9 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import dk.itu.moapd.scootersharing.oska.model.Receipt
 import dk.itu.moapd.scootersharing.oska.model.Scooter
-import dk.itu.moapd.scootersharing.oska.view.MainActivity
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
 
 /**

@@ -1,9 +1,7 @@
 package dk.itu.moapd.scootersharing.oska.view
 
 
-import android.Manifest
 import android.content.ContentValues
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,19 +9,13 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -130,7 +122,6 @@ class MainFragment : Fragment() {
             }
             showReceipt.setOnClickListener {
                 receipts.clear()
-                if (selectedScooter._name == "error") {
                     db.collection("rental_history")
                         .addSnapshotListener { value, error ->
                             if (error != null) {
@@ -190,13 +181,19 @@ class MainFragment : Fragment() {
                                     }
                             }
                         }
-                } else findNavController().navigate(R.id.confirmationFragment)
             }
 
             cameraButton.setOnClickListener {
                 println((activity as MainActivity).checkPermission())
                 findNavController().navigate((R.id.fragment_camera))
 
+            }
+            fragmentGeolocation.setOnClickListener{
+                if(!(activity as MainActivity).checkPermission())
+                {
+                    findNavController().navigate((R.id.fragment_geolocation))
+                }else
+                    Snackbar.make(binding.root.rootView,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
             }
 
             /*UpdateRideButton.setOnClickListener {
@@ -208,13 +205,7 @@ class MainFragment : Fragment() {
 
                findNavController().navigate(R.id.available_scooter_recyclerview)
             }
-            Gotolocation.setOnClickListener{
-                if(!(activity as MainActivity).checkPermission())
-                {
-                    findNavController().navigate((R.id.fragment_geolocation))
-                }else
-                    Snackbar.make(binding.root.rootView,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
-            }
+
             Gotomap.setOnClickListener{
                 if(!(activity as MainActivity).checkPermission())
                 {

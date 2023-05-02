@@ -1,43 +1,22 @@
 package dk.itu.moapd.scootersharing.oska.view
 
-import android.content.ContentValues.TAG
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
 import android.hardware.camera2.CameraCharacteristics
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-
 import com.google.android.material.snackbar.Snackbar
-import com.google.rpc.Code
-import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.FragmentScannerBinding
-import dk.itu.moapd.scootersharing.oska.view.MainActivity.Companion.REQUIRED_PERMISSIONS
 import dk.itu.moapd.scootersharing.oska.viewModel.MainActivityVM
-import dk.itu.moapd.scootersharing.oska.viewModel.OpenCVUtils
-import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.android.OpenCVLoader
 import org.opencv.core.Core
 import org.opencv.core.CvType
 import org.opencv.core.Mat
-import org.opencv.core.MatOfByte
-import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.objdetect.QRCodeDetector
-import java.io.ByteArrayOutputStream
-import java.io.File
 
 /**
  * A fragment containing the QR scanner, implemented using OpenCV

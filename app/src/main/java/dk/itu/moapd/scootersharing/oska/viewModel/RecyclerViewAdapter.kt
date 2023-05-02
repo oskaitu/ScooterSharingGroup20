@@ -14,9 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.oska.R
 import dk.itu.moapd.scootersharing.oska.databinding.CardviewitemBinding
 import dk.itu.moapd.scootersharing.oska.model.Scooter
-import dk.itu.moapd.scootersharing.oska.view.MainActivity
 import dk.itu.moapd.scootersharing.oska.view.MainFragment
-import dk.itu.moapd.scootersharing.oska.view.StartRideFragmentDialogue
 import java.util.*
 
 /**

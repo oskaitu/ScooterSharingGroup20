@@ -32,12 +32,8 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
     private lateinit var speedSensor: Sensor
-    private var stepCount = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        /*sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)*/
-
         sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         speedSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
 
@@ -47,8 +43,6 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
         val view =
             View.inflate(context, dk.itu.moapd.scootersharing.oska.R.layout.fragment_active, null)
 
-        /* val stepCountTextView = view.findViewById<TextView>(R.id.step_counter)
-         stepCountTextView.text = stepCount.toString()*/
 
 
         val simpleChronometer =
@@ -174,7 +168,7 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
         if (event?.sensor?.type == Sensor.TYPE_LINEAR_ACCELERATION) {
             val speed = event.values[0] * 3.6 // Convert m/s to km/h
 
-            val speedTextView = dialog!!.findViewById<TextView>(R.id.step_counter)
+            val speedTextView = dialog!!.findViewById<TextView>(R.id.speed_counter)
             speedTextView.text = "${speed.toInt().absoluteValue} km/h"
         }
     }

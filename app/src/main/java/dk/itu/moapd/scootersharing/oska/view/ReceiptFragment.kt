@@ -2,7 +2,6 @@ package dk.itu.moapd.scootersharing.oska.view
 
 import android.location.Address
 import android.location.Geocoder
-import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,27 +11,20 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import dk.itu.moapd.scootersharing.oska.R
-
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import dk.itu.moapd.scootersharing.oska.model.Receipt
 import java.time.Instant
@@ -228,11 +220,6 @@ fun convertCordsToAddress(geocoder: Geocoder, latitude: Double, longitude: Doubl
             address = addresses[0]
             fulladdress =
                 address.getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex
-            var city = address.locality;
-            var state = address.adminArea;
-            var country = address.countryName;
-            var postalCode = address.postalCode;
-            var knownName = address.featureName; // Only if available else return NULL
         } else {
             fulladdress = "Location not found"
         }
