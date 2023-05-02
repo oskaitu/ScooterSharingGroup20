@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -187,6 +188,13 @@ class MainFragment : Fragment() {
                 findNavController().navigate((R.id.fragment_camera))
 
             }
+            fragmentGeolocation.setOnClickListener{
+                if(!(activity as MainActivity).checkPermission())
+                {
+                    findNavController().navigate((R.id.fragment_geolocation))
+                }else
+                    Snackbar.make(binding.root.rootView,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
+            }
 
             /*UpdateRideButton.setOnClickListener {
                 findNavController().navigate(R.id.paymentFragment)
@@ -197,13 +205,7 @@ class MainFragment : Fragment() {
 
                findNavController().navigate(R.id.available_scooter_recyclerview)
             }
-            Gotolocation.setOnClickListener{
-                if(!(activity as MainActivity).checkPermission())
-                {
-                    findNavController().navigate((R.id.fragment_geolocation))
-                }else
-                    Snackbar.make(binding.root.rootView,"You need to enable locations in App settings", Snackbar.LENGTH_SHORT).show()
-            }
+
             Gotomap.setOnClickListener{
                 if(!(activity as MainActivity).checkPermission())
                 {

@@ -168,7 +168,7 @@ class ActiveRideFragmentDialogue : DialogFragment(), SensorEventListener {
         if (event?.sensor?.type == Sensor.TYPE_LINEAR_ACCELERATION) {
             val speed = event.values[0] * 3.6 // Convert m/s to km/h
 
-            val speedTextView = dialog!!.findViewById<TextView>(R.id.step_counter)
+            val speedTextView = dialog!!.findViewById<TextView>(R.id.speed_counter)
             speedTextView.text = "${speed.toInt().absoluteValue} km/h"
         }
     }

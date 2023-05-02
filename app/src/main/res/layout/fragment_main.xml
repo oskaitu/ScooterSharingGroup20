@@ -34,6 +34,14 @@
         android:text="@string/camera"
 
         />
+    <Button
+        android:layout_marginTop="20dp"
+        android:id="@+id/fragment_geolocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Go to location"
+        />
 
     <Button
         android:layout_marginTop="20dp"
